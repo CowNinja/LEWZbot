@@ -237,12 +237,12 @@ Mouse_Click(X,Y, Options := "") {
 	; ControlClick, Qt5QWindowIcon, LEWZ001,, Left, 1, x%X_Pixel% y%Y_Pixel% NA
 
 	SetControlDelay -1
-	if !DownUp
+	; if !DownUp
 		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
-	else if (DownUp = "Down")
-		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA D
-	else if (DownUp = "Up")
-		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA U
+	; else if (DownUp = "Down")
+	; 	ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA D
+	; else if (DownUp = "Up")
+	; 	ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA U
 		
 	DllCall("Sleep","UInt",Timeout)		; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
 	GUI_Update()
@@ -311,11 +311,13 @@ GUI_Update() {
 	return
 }
 
-; example: Mouse_Drag(199, 250, 150, 300, {Wait: 500})
+; example: Mouse_Drag(199, 250, 150, 300, {EndMovement: F, SwipeTime: 500})
 Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
+	SwipeTime := (Options.HasKey("SwipeTime")) ? Options.SwipeTime : "10"
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
+	EndMovement := (Options.HasKey("EndMovement")) ? Options.EndMovement : True
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
 	CoordModeTargetType := (Options.HasKey("TargetType")) ? Options.TargetType : "Mouse"
 
@@ -340,7 +342,7 @@ Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 	MsgBox, Done
 	*/
 
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
 	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X1% y%Y1% D NA
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
 	;Mouse_Click(X1,Y1, {DownUp: Down, Timeout: 0})
@@ -349,17 +351,22 @@ Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 		Move_X := Round(X1 + A_Index * (X_Delta/Steps))+0
 		Move_Y := Round(Y1 + A_Index * (Y_Delta/Steps))+0
 		; Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title)
-		; ControlMouseMove(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
+		; Mouse_MoveControl(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
 		Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
+		DllCall("Sleep","UInt",(SwipeTime/Steps))
 		; FileAppend, %A_NOW%`,Move`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
 	}
+	
 
 	; FileAppend, %A_NOW%`,UPup`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
+	; DllCall("Sleep","UInt",SwipeTime)
 	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X2% y%Y2% U NA
+	if !EndMovement
+		return
+		
 	;Mouse_Click(X2,Y2, {DownUp: Up, Timeout: 0})
-	loop, (%Steps%/2)
+	Steps /= 2
+	loop, (%Steps%)
 	{
 		Move_X := Round(X2 - A_Index * (X_Delta/X_Delta))+0
 		Move_Y := Round(Y2 - A_Index * (Y_Delta/Y_Delta))+0
@@ -368,9 +375,9 @@ Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 		if (Move_Y = 0)
 			Move_Y := Y2
 		; Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title)
-		; ControlMouseMove(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
+		; Mouse_MoveControl(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
 		Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
+		DllCall("Sleep","UInt",(SwipeTime/Steps))
 		; FileAppend, %A_NOW%`,Move`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
 	}
 
@@ -524,7 +531,6 @@ DropFiles(window, files*)
 
 ; example: Search_Captured_Text_OCR("Wages", {Pos: [115, 30], Size: [560, 75], Timeout: 8})
 Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
-	All_Save()
 	if (isEmptyOrEmptyStringsOnly(Search_Text_Array))
 	{
 		Timeout := 8
@@ -533,17 +539,13 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
-	OCR_X := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
-	OCR_Y := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
-	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "560"
+	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
+	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
+	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "450"	;  "560"
 	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
+	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
+	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
-	OCR_X1 := OCR_X ; + X_Pixel_offset)
-	OCR_Y1 := OCR_Y ; + Y_Pixel_offset)
-	OCR_X2 := (OCR_X + OCR_W ) ; + X_Pixel_offset)
-	OCR_Y2 := (OCR_Y + OCR_H ) ; + Y_Pixel_offset)
-	OCR_W := OCR_W
-	OCR_H := OCR_H
 
 	Search_Captured_Text_Begin:
 	; WinRestore, %FoundAppTitle%
@@ -551,8 +553,9 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; WinShow
 	; if !WinActive(%FoundAppTitle%), WinActivate, %FoundAppTitle%
 	; if WinExist(FoundAppTitle), WinRestore
+	; ControlFocus, %FoundAppControl%, %FoundAppTitle%
 	; if !IsWindowVisible(App_Title)
-		Win_WaitRegEX(FoundAppTitle)
+	;	Win_WaitRegEX(FoundAppTitle)
 
 	/*
 	is_visible := IsWindowVisible(FoundAppTitle)
@@ -575,11 +578,21 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	}
 	*/
 
+	; ClipBoard_Save()
 	; Gosub Capture2Text_CLI
 	; Gosub Capture2Text_EXE
-	; if !WinActive(%FoundAppTitle%), WinActivate, %FoundAppTitle%
-
 	Capture_Screen_Text := OCR([OCR_X1, OCR_Y1, OCR_W, OCR_H], "eng")
+	; ClipBoard_Restore()
+	
+	For index, value in Search_Text_Array
+		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
+		if !( value == "" )
+			If (RegExMatch(Capture_Screen_Text,value))
+				return 1
+	Goto Search_Captured_Text_END
+	
+	/*
+	; old Search captured text
 	For index, value in Search_Text_Array
 	{
 		; MsgBox, (%OCR_X1%,%OCR_Y1%) (%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
@@ -592,7 +605,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		; else
 			; MsgBox, NOTFound index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
 	}
-	Goto Search_Captured_Text_END
+	*/
 
 	Capture2Text_CLI:
 	{
@@ -660,7 +673,6 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	Goto Search_Captured_Text_END
 
 	Search_Captured_Text_END:
-	All_Restore()
 
 	if (Timeout = 0)
 		return 0
@@ -736,7 +748,7 @@ Text_To_Screen(Text_To_Send, Options := "") {
 	ControlSend, %Win_Control%, %Text_To_Send%, %Win_Title%
 
 	/*
-	If (RegExMatch(Text_To_Send,"^[{\!\^]+"))
+	If (RegExMatch(Text_To_Send,"^[{}\!\^]+"))
 	{
 		ControlSend, %Win_Control%, %Text_To_Send%, %Win_Title%
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
@@ -753,7 +765,7 @@ Text_To_Screen(Text_To_Send, Options := "") {
 		; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
 	}
 	*/
-	; DllCall("Sleep","UInt",Timeout) ; Sleep, 500
+	DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
 	return
 }
 
