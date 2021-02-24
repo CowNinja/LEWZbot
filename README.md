@@ -10,7 +10,7 @@ Settings:
 	Global App_Win_Y := 0
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
-
+	
 ; CowNinja_Functions.ahk
 Check_Window_Geometry:
 	WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
