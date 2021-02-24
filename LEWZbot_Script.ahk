@@ -19,7 +19,7 @@
 #HotkeyInterval 99000000
 #KeyHistory 0
 ListLines Off	; Omits subsequently-executed lines from the history.
-ListLines On	; Includes subsequently-executed lines in the history. This is the starting default for all scripts.
+; ListLines On	; Includes subsequently-executed lines in the history. This is the starting default for all scripts.
 Process, Priority, , H
 SetBatchLines, -1
 SetKeyDelay, -1, 20 ; -1 ; default
