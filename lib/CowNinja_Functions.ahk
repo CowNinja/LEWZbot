@@ -330,9 +330,9 @@ GUI_Update() {
 		Gui, Status:Margin, 0, 0
 		Gui, Status:add,text,, Account %User_Name%
 		if (Subroutine_Running = A_ThisLabel)
-			Gui, Status:add,text,, Routine: %Subroutine_Running%
+			Gui, Status:add,text,, %Subroutine_Running% (%X_Pixel%,%Y_Pixel%)
 		Else
-			Gui, Status:add,text,, Routine: %Subroutine_Running%:%A_ThisLabel%
+			Gui, Status:add,text,, %Subroutine_Running%:%A_ThisLabel% (%X_Pixel%,%Y_Pixel%)
 		Gui, Status:show, x731 y0 w350 h500
 		GUI_Count := 0
 	}
@@ -351,9 +351,9 @@ GUI_Update() {
 		; Gui, Status:add,text,, Click %X_Pixel%, %Y_Pixel%
 		
 		if (Subroutine_Running = A_ThisLabel)
-			Gui, Status:add,text,, Routine: %Subroutine_Running% (%X_Pixel%,%Y_Pixel%)
+			Gui, Status:add,text,, %Subroutine_Running% (%X_Pixel%,%Y_Pixel%)
 		Else
-			Gui, Status:add,text,, Routine: %Subroutine_Running%:%A_ThisLabel% (%X_Pixel%,%Y_Pixel%)
+			Gui, Status:add,text,, %Subroutine_Running%:%A_ThisLabel% (%X_Pixel%,%Y_Pixel%)
 		Gui, Status:show, x731 y0 w350 h500
 	}
 	return
