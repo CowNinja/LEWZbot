@@ -158,14 +158,11 @@ Move_MsgBox(P)
 	Global WinWidth := 0 ; initialize Width of app window
 	Global WinHeight := 0 ; initialize Height of app window
 
-	; Define desired window position and size
-	
+	; Define desired window position and size	
 	Global App_Win_X := 0
 	Global App_Win_Y := 0
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
-	Global MEmu_WinWidth := 730
-	Global MEmu_WinHeight := 1249
 	Global MEmu_Operation_Recorder_X := App_Win_X
 	Global MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
 	Global Operation_Recorder_Window := "MEmu"
