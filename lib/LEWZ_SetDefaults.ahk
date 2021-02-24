@@ -100,10 +100,10 @@ Move_MsgBox(P)
 	Global rand_max := 10 ; Max time wait between buttons (ms)
 	Global rand_wait
 	Random, rand_wait, %rand_min%, %rand_max%
-	Global Delay_Micro := (50 + rand_wait) ; 50 ; default delay for MICRO pauses
-	Global Delay_Short := (2*Delay_Micro) ; 100 ; default delay for SHORT pauses
-	Global Delay_Medium := (5*Delay_Short) ; 500 ; default delay for MEDIUM pauses
-	Global Delay_Long := (2*Delay_Medium) ; 1000 ; default delay for LONG pauses
+	Global Delay_Micro := (50 + 0) ; 50 ; default delay for MICRO pauses
+	Global Delay_Short := (2*Delay_Micro + 0) ; 100 ; default delay for SHORT pauses
+	Global Delay_Medium := (5*Delay_Short + 0) ; 500 ; default delay for MEDIUM pauses
+	Global Delay_Long := (2*Delay_Medium + 0) ; 1000 ; default delay for LONG pauses
 
 	; Entire desktop coordinates
 	Global SysGet, VirtualWidth, 78
