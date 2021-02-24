@@ -139,7 +139,7 @@ while WinExist(FoundAppTitle)
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
 				; Gosub Active_Skill
-				; Gosub Donate_tech
+				; Gosub Gather_On_Base_RSS
 				; Gosub Depot_Rewards
 				; Gosub Launch_Lewz
 				; Gosub Enter_Login_Password_PIN
@@ -4264,39 +4264,26 @@ Gather_On_Base_RSS:
 	; Gosub Go_Back_To_Home_Screen
 
 	Swipe_Up_Left_RSS:
-	loop, 4
-		Mouse_Drag(481, 786, 143, 0, {EndMovement: F, SwipeTime: 500})
-	/*
+	loop, 5
 	{
-		; WinActivate, LEWZ001 ahk_class Qt5QWindowIcon
-		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-		Click, 481, 786 Left, Down
-		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-		Click, 467, 755, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 434, 678, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 371, 482, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 365, 459, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 143, 0 Left, Up
+		Mouse_Drag(560, 900, 50, 600, {EndMovement: F, SwipeTime: 300})
+		; Mouse_Drag(481, 786, 143, 50, {EndMovement: F, SwipeTime: 500})
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
-	*/
 
 	loop, 2 {
 		Mouse_Click(405,653) ; Plot # 50
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(396,553) ; Plot # 49
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(397,453) ; Plot # 47
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
@@ -4306,138 +4293,146 @@ Gather_On_Base_RSS:
 
 	loop, 2 {
 		Mouse_Click(350,374) ; Plot # 35
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(329,281) ; Plot # 34
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(238,233) ; Plot # 32
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
-	Search_Captured_Text := ["Desert"]
-	Capture_Screen_Text := OCR([236, 41, 215, 57], "eng") ; check if
-	If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
+	; inserts pause
+	; Search_Captured_Text := ["Desert"]
+	; Capture_Screen_Text := OCR([236, 41, 215, 57], "eng") ; check if
+	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
+	
+	if Search_Captured_Text_OCR(["Desert"], {Timeout: 0})
 		Goto END_Gather_Base_RSS
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(305,587) ; Plot # 48
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(292,508) ; Plot # 46
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(251,337) ; Plot # 33
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(159,282) ; Plot # 31
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(137,817) ; Plot # 40
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
-	}
-
-	loop, 2 {
-		Mouse_Click(36,760) ; Plot # 39 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	}
-
-	loop, 2 {
-		Mouse_Click(28,726) ; Plot # 37 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	}
-
-	; inserts pause
-	Search_Captured_Text := ["Desert"]
-	Capture_Screen_Text := OCR([236, 41, 215, 57], "eng") ; check if
-	If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
-		Goto END_Gather_Base_RSS
-
-	loop, 2 {
-		Mouse_Click(530,1033) ; Click next to speaker
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
+		Mouse_Click(36,760) ; Plot # 39 - screen moves
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+
+	loop, 2 {
+		Mouse_Click(28,726) ; Plot # 37 - screen moves
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	}
+	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+
+	; inserts pause
+	; Search_Captured_Text := ["Desert"]
+	; Capture_Screen_Text := OCR([236, 41, 215, 57], "eng") ; check if
+	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
+	
+	if Search_Captured_Text_OCR(["Desert"], {Timeout: 0})
+		Goto END_Gather_Base_RSS
+
+	loop, 2 {
+		Mouse_Click(530,1033) ; Click next to speaker
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
+	}
+
+	loop, 2 {
 		Mouse_Click(130,827) ; Plot # 38
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(40,769) ; Plot # 36 - screen moves
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(445,583) ; Plot # 45
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(367,542) ; Plot # 43
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(272,493) ; Plot # 41
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(485,511) ; Plot # 44
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(381,462) ; Plot # 42
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	Swipe_Right_RSS_02:
-	Mouse_Drag(147, 854, 373, 648, {EndMovement: T, SwipeTime: 500})
+	Mouse_Drag(147, 854, 330, 648, {EndMovement: T, SwipeTime: 500})
+	; Mouse_Drag(147, 854, 373, 648, {EndMovement: T, SwipeTime: 500})
 	/*
 	{
 		Click, 147, 854 Left, Down
@@ -4468,108 +4463,114 @@ Gather_On_Base_RSS:
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(307,424) ; Plot # 29
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(399,376) ; Plot # 30
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(359,293) ; Plot # 28
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(167,412) ; Plot # 26
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(273,354) ; Plot # 27
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(110,601) ; Plot # 24 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	loop, 2 {
 		Mouse_Click(34,540) ; Plot # 22 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(160,679) ; Plot # 25
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(110,644) ; Plot # 23 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	loop, 2 {
 		Mouse_Click(74,593) ; Plot # 21 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
-
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	
 	loop, 2 {
 		Mouse_Click(530,1033) ; Click next to speaker
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(167,826) ; Plot # 19
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
-	}
-
-	loop, 2 {
-		Mouse_Click(86,769) ; Plot # 17 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
-	}
-
-	loop, 2 {
-		Mouse_Click(530,1033) ; Click next to speaker
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
+		Mouse_Click(86,769) ; Plot # 17 - screen moves
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	}
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+
+	loop, 2 {
+		Mouse_Click(530,1033) ; Click next to speaker
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
+	}
+
+	loop, 2 {
 		Mouse_Click(309,781) ; Plot # 20
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(202,711) ; Plot # 18
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	loop, 2 {
 		Mouse_Click(114,665) ; Plot # 16 - screen moves
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	END_Gather_Base_RSS:
 	Gosub Go_Back_To_Home_Screen
