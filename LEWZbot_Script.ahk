@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 ; #NoEnv Recommended for performance and compatibility with future AutoHotkey releases, it disables environment variables.
 ; #Warn ; Enable warnings to assist with detecting common errors.
 ; default #MaxHotkeysPerInterval along with #HotkeyInterval will stop your script by showing message boxes if you have some kind of rapid autofire loop in it.
