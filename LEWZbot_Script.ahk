@@ -5197,9 +5197,9 @@ Check_Window_Geometry:
 	; WinMove, X, Y
 	; WinMove, FoundAppTitle, WinText, X, Y [, Width, Height, ExcludeTitle, ExcludeText]
 	if FoundAppTitle contains MEmu
-		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, MEmu_WinWidth, MEmu_WinHeight ; Move the window to the top left corner.
+		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 	else
-		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window to the top left corner.
+		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
 	return
 
