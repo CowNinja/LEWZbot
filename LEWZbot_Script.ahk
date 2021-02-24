@@ -61,8 +61,9 @@ while WinExist(FoundAppTitle)
 
 		; MouseMove UpperX+(WinWidth/2), UpperY+(WinHeight/2)
 
+		; Generate Random time interval to add to all delays and pauses
 		Random, rand_wait, %rand_min%, %rand_max%
-		Key_Menu()
+		Key_Menu() ; display/update keyboard shortcut menu
 		; Process_Menu()
 
 		; Switch User
