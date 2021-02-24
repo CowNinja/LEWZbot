@@ -16,7 +16,7 @@
 ;	Mouse_Move(X1, Y1, X2, Y2, Options := "") {
 ;	Mouse_GetPos(Options := 3) {
 ;	Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse") {
-;	Search_OCR(OCR_Array, Options := "") {
+;	Search_OCR(Search_OCR_Array, Options := "") {
 ;	DropFiles(window, files*)
 ;	Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 ;	Search_Pixels(Search_Pixels_Array, Options := "") {
@@ -500,7 +500,7 @@ Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", Exclude
 ; example: Search_OCR("Wages")
 ; example: Search_OCR("Wages", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
 ; example: Search_OCR(ArrayOfText, {X1: 115, Y1: 30, X2: 259, Y2: 60, Timeout: 1})
-Search_OCR(OCR_Array, Options := "") {
+Search_OCR(Search_OCR_Array, Options := "") {
 	X1 := (Options.HasKey("X1")) ? Options.X1 : "115"
 	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : "30"
 	W := (Options.HasKey("W")) ? Options.W : "560"
@@ -539,12 +539,12 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
-	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
-	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
-	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "450"	;  "560"
-	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
-	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
-	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
+	Search_OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
+	Search_OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
+	Search_OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "450"	;  "560"
+	Search_OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
+	Search_OCR_X2 := (Search_OCR_X1 + Search_OCR_W ) ; + X_Pixel_offset)
+	Search_OCR_Y2 := (Search_OCR_Y1 + Search_OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
 
 	Search_Captured_Text_Begin:
@@ -581,11 +581,11 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; ClipBoard_Save()
 	; Gosub Capture2Text_CLI
 	; Gosub Capture2Text_EXE
-	Capture_Screen_Text := OCR([OCR_X1, OCR_Y1, OCR_W, OCR_H], "eng")
+	Capture_Screen_Text := OCR([Search_OCR_X1, Search_OCR_Y1, Search_OCR_W, Search_OCR_H], "eng")
 	; ClipBoard_Restore()
 	
 	For index, value in Search_Text_Array
-		MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
+		; MsgBox, %Subroutine_Running% (%Search_OCR_X1%,%Search_OCR_Y1%,%Search_OCR_W%,%Search_OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
 		if !( value == "" )
 			If (RegExMatch(Capture_Screen_Text,value))
 				return 1
@@ -595,7 +595,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; old Search captured text
 	For index, value in Search_Text_Array
 	{
-		; MsgBox, (%OCR_X1%,%OCR_Y1%) (%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
+		; MsgBox, (%Search_OCR_X1%,%Search_OCR_Y1%) (%Search_OCR_W%,%Search_OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
 		if !( value == "" )
 		{
 			; MsgBox, Found index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
@@ -611,8 +611,8 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	{
 		Capture2TextRUN := Capture2TextPATH . Capture2TextCLI
 		Capture_Screen_Text := Clipboard := ""
-		; Capture2Text_Coords := """" . OCR_X1 . " " . OCR_Y1 . " " . OCR_X2 . " " . OCR_Y2 . """"
-		Capture2Text_Coords := OCR_X1 . " " . OCR_Y1 . " " . OCR_X2 . " " . OCR_Y2
+		; Capture2Text_Coords := """" . Search_OCR_X1 . " " . Search_OCR_Y1 . " " . Search_OCR_X2 . " " . Search_OCR_Y2 . """"
+		Capture2Text_Coords := Search_OCR_X1 . " " . Search_OCR_Y1 . " " . Search_OCR_X2 . " " . Search_OCR_Y2
 		Run, %Capture2TextRUN% --screen-rect "%Capture2Text_Coords%" --clipboard
 		ClipWait, 3
 		Capture_Screen_Text := Clipboard
@@ -653,19 +653,19 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 		Clipboard := ""
 		; Sleep, 500
-		Click, %OCR_X1%, %OCR_Y1%, 0
+		Click, %Search_OCR_X1%, %Search_OCR_Y1%, 0
 		; Sleep, 50
 
 		Send, {LControl Down}{LAlt Down}{q}{LAlt Up}{LControl Up}
 		; Sleep, 50
 
-		Click, %OCR_X2%, %OCR_Y2%, 0
+		Click, %Search_OCR_X2%, %Search_OCR_Y2%, 0
 		Sleep, 100
 
 		Send, {LControl Down}{LAlt Down}{q}{LAlt Up}{LControl Up}
 		ClipWait, 3
 
-		; MsgBox, 0, , %Clipboard%`n(%OCR_X1%,%OCR_Y1%) to (%OCR_X2%,%OCR_Y2%)
+		; MsgBox, 0, , %Clipboard%`n(%Search_OCR_X1%,%Search_OCR_Y1%) to (%Search_OCR_X2%,%Search_OCR_Y2%)
 		Capture_Screen_Text := clipboard
 		return
 	}
