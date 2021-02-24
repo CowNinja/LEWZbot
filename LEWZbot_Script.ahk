@@ -154,14 +154,14 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Gosub Mail_Collection
 				; Gosub Desert_Oasis
-				; Gosub Donate_Tech
+				Gosub Donate_Tech
 				; Gosub Activity_Center_Wonder
 				; Gosub BruteForcePIN
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Depot_Rewards
 				; Gosub Reserve_Factory
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				; ******************************************
 				; Gosub Mail_Collection
@@ -3365,11 +3365,15 @@ Donate_Tech:
 				Mouse_Click(469,Tech_Click_Y) ; select tech
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-				if Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30], Timeout: 0})
+				OCR_Donate_04 := Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30], Timeout: 0})
+				OCR_Donate_imm := Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
+				OCR_Donate_Buy := Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
+				
+				if (OCR_Donate_04.Found)
 					return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
-				else if Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
+				else if (OCR_Donate_imm.Found)
 					return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
-				else if Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
+				else if (OCR_Donate_Buy.Found)
 					loop, 21
 					{
 						Loop, 2
@@ -3382,6 +3386,8 @@ Donate_Tech:
 							Mouse_Click(100,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 1
 						DllCall("Sleep","UInt",(1*Delay_Micro+0))
 					}
+					
+				MsgBox, % OCR_Donate_04.Found OCR_Donate_04.Value OCR_Donate_04.Text "`n" OCR_Donate_imm.Found OCR_Donate_imm.Value OCR_Donate_imm.Text "`n" OCR_Donate_Buy.Found OCR_Donate_Buy.Value OCR_Donate_Buy.Text
 
 				Gosub Click_Top_Tech
 			}
