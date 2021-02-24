@@ -1485,7 +1485,10 @@ Peace_Shield:
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			; Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
 			If Shield_Ends_Pos01.Found
+			{
+				Shield_Ends := (Shield_Ends_Pos01.Text)
 				Goto, Shield_Already_Active
+			}
 			Else
 				Goto, Activate_Shield
 		}
@@ -1500,12 +1503,80 @@ Peace_Shield:
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			; Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
 			If Shield_Ends_Pos02.Found
+			{
+				Shield_Ends := (Shield_Ends_Pos02.Text)
 				Goto, Shield_Already_Active
+			}
 			Else
 				Goto, Activate_Shield
 		}
 		
 		; MsgBox, % Shield_Pos01.Found """" Shield_Pos01.Value """ """ Shield_Pos01.Text """`n"	Shield_Ends_Pos01.Found """" Shield_Ends_Pos01.Value """ """ Shield_Ends_Pos01.Text """`n" Shield_Pos02.Found """" Shield_Pos02.Value """ """ Shield_Pos02.Text """`n" Shield_Ends_Pos02.Found """" Shield_Ends_Pos02.Value """ """ Shield_Ends_Pos02.Text """"
+	}
+	
+	Shield_Ends_Calc:
+	{
+		; Calculate Day and hour
+		;Shield_Ends10 := StrReplace(Shield_Ends, "Ends in", "")
+		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[\r\n\h-]+")
+		;Shield_Ends11 := RegExReplace(Shield_Ends10,"[^\d\:d]+")
+		
+		;Shield_Ends20 := RegExReplace(Shield_Ends,"Ends\h*in")
+		; Shield_Ends21 := RegExReplace(Shield_Ends20,"[\r\n\h-]+")
+		;Shield_Ends21 := RegExReplace(Shield_Ends20,"[^\d\:d]+")
+		
+		; Extract shild days remaining
+		if RegExMatch(Shield_Ends,"\d+d",Shield_Days1)
+			RegExMatch(Shield_Days1,"\d+",Shield_DD)
+		
+		; Extract shild hours remaining
+		; Shield_Hours2 := RegExReplace(Shield_Ends,"\h*Ends\h*in\h*\d+d\h*")
+		if RegExMatch(Shield_Ends,"\d+\:\d+\:\d+",Shield_Hours1)
+			Shield_Hours2 := RegExReplace(Shield_Hours1,"[^\d]")
+			Shield_Hour_Array := StrSplit(Shield_Hours1, ":")
+		Shield_HH := Shield_Hour_Array[1]
+		Shield_MM := Shield_Hour_Array[2]
+		Shield_SS := Shield_Hour_Array[3]
+		
+		; calculate shield ecxpiration date and time
+		; A_Now contains the current local time in YYYYMMDDHH24MISS format
+		; MM = Month 01
+		; DD = Day 01
+		; HH24 = Hour 00
+		; MI = Minute 00
+		; SS = Second 00
+		
+		; Shield_Expires1 := "000000" . Shield_DD . "HH" . Shield_HH . Shield_MM . Shield_SS
+		Shield_Expires2 := "000000" . Shield_DD . Shield_HH . Shield_MM . Shield_SS
+		
+		; Shield_Expires2 := DateAdd(A_Now, %Shield_Expires1%, "YYYYMMDDHH24MISS")
+		; MsgBox FormatTime(Shield_Expires)
+		
+		; Shield_Expires3 := (A_Now + Shield_Expires1)
+		Shield_Expires4 := (A_Now + Shield_Expires2)
+			
+		
+		Shield_Expires_Day := FormatTime(Shield_Expires4, "dddd")
+		Shield_Expires_Hour := FormatTime(Shield_Expires4, "HH")
+		
+		MsgBox, % "Shield_Ends:" Shield_Ends "`nDD:" Shield_DD " HH:" Shield_HH " MM:" Shield_MM " SS:" Shield_SS "`nExpires1:" Shield_Expires1 " Expires3:" Shield_Expires3 "`nExpires2:" Shield_Expires2 " Expires4:" Shield_Expires4 "`nShield_Expires_Day:" Shield_Expires_Day " Shield_Expires_Hour:" Shield_Expires_Hour
+		
+		if At_War
+			Goto, Shield_for_3Day
+		else if (Shield_Expires_Day = "Thursday")
+			Goto, Shield_for_3Day
+		else if (Shield_Expires_Day = "Friday")
+			Goto, Shield_for_3Day
+		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour <= 19)
+			Goto, Shield_for_3Day
+		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour >= 19)
+			Goto, Shield_for_24hour
+		else if (Shield_Expires_Day = "Sunday" && Shield_Expires_Hour <= 19)
+			Goto, Shield_for_24hour
+		else
+			Goto, Peace_Shield_END
+
+		return
 	}
 	
 	Shield_Not_Found:
@@ -1518,6 +1589,7 @@ Peace_Shield:
 		goto Peace_Shield_END
 
 	Shield_Already_Active:
+	gosub Shield_Ends_Calc
 	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (10 second Timeout & skip),10
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
