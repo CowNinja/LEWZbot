@@ -159,9 +159,9 @@ Move_MsgBox(P)
 	Global WinHeight := 0 ; initialize Height of app window
 
 	; Define desired window position and size
+	
 	Global App_Win_X := 0
-	Global App_Win_Y := 0	
-	App_Win_X := InputBox2("App Y", "App Y location 0, 1200, 2400, 3600", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:App_Win_X})
+	Global App_Win_Y := 0
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
 	Global MEmu_WinWidth := 730
@@ -240,11 +240,9 @@ stdout.WriteLine(A_Now " ****************************************** ")
 stdout.WriteLine(A_Now " ******** STARTUP & INITIALIZATION ******** ")
 stdout.WriteLine(A_Now " ****************************************** ")
 
-User_Logins := "LEWZ_User_Logins.ini"
-	User_Logins := InputBox2("User_Logins", "User_Logins file", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:User_Logins})
 ; load User Logins
 User_Logins := {}
-Loop, Read, %User_Logins%
+Loop, Read, LEWZ_User_Logins.ini
 {
 	row := StrSplit(A_LoopReadLine, ",")
 	user := row[1]
@@ -387,7 +385,7 @@ loop
 	; MsgBox, 1. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
 	global FoundAppClass := "Qt5QWindowIcon"
 	global FoundAppControl := "Qt5QWindowIcon19"
-	NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
+	; NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
 	LEWZApp := Win_WaitRegEX(NewTitle)
 	global FoundAppTitle := LEWZApp.title
 	global FoundAppClass := LEWZApp.Class
