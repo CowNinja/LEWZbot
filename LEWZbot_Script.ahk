@@ -1516,27 +1516,32 @@ Peace_Shield:
 	
 	Shield_Ends_Calc:
 	{
-		; Calculate Day and hour
-		;Shield_Ends10 := StrReplace(Shield_Ends, "Ends in", "")
-		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[\r\n\h-]+")
-		;Shield_Ends11 := RegExReplace(Shield_Ends10,"[^\d\:d]+")
+		; initialize values:
+		Shield_DD := Shield_HH := Shield_MM := Shield_SS := 0
 		
-		;Shield_Ends20 := RegExReplace(Shield_Ends,"Ends\h*in")
+		; Calculate Day and hour
+		; Shield_Ends10 := StrReplace(Shield_Ends, "Ends in", "")
+		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[\r\n\h-]+")
+		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[^\d\:d]+")
+		
+		; Shield_Ends20 := RegExReplace(Shield_Ends,"Ends\h*in")
 		; Shield_Ends21 := RegExReplace(Shield_Ends20,"[\r\n\h-]+")
-		;Shield_Ends21 := RegExReplace(Shield_Ends20,"[^\d\:d]+")
+		; Shield_Ends21 := RegExReplace(Shield_Ends20,"[^\d\:d]+")
 		
 		; Extract shild days remaining
 		if RegExMatch(Shield_Ends,"\d+d",Shield_Days1)
 			RegExMatch(Shield_Days1,"\d+",Shield_DD)
 		
-		; Extract shild hours remaining
+		; Extract shild hours, minutes and seconds remaining
 		; Shield_Hours2 := RegExReplace(Shield_Ends,"\h*Ends\h*in\h*\d+d\h*")
 		if RegExMatch(Shield_Ends,"\d+\:\d+\:\d+",Shield_Hours1)
+		{
 			Shield_Hours2 := RegExReplace(Shield_Hours1,"[^\d]")
 			Shield_Hour_Array := StrSplit(Shield_Hours1, ":")
-		Shield_HH := Shield_Hour_Array[1]
-		Shield_MM := Shield_Hour_Array[2]
-		Shield_SS := Shield_Hour_Array[3]
+			Shield_HH := Shield_Hour_Array[1]
+			Shield_MM := Shield_Hour_Array[2]
+			Shield_SS := Shield_Hour_Array[3]
+		}
 		
 		; calculate shield ecxpiration date and time
 		; A_Now contains the current local time in YYYYMMDDHH24MISS format
@@ -1546,36 +1551,97 @@ Peace_Shield:
 		; MI = Minute 00
 		; SS = Second 00
 		
-		; Shield_Expires1 := "000000" . Shield_DD . "HH" . Shield_HH . Shield_MM . Shield_SS
-		Shield_Expires2 := "000000" . Shield_DD . Shield_HH . Shield_MM . Shield_SS
+		Shield_Expires10 := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
+		Shield_Expires11 := FormatTime(A_Now, "YYYYMMDDHH24MISS")
+		EnvAdd, Shield_Expires12, Shield_DD, d
+		EnvAdd, Shield_Expires12, Shield_HH, h
+		EnvAdd, Shield_Expires12, Shield_MM, m
+		EnvAdd, Shield_Expires12, Shield_SS, s
+		Shield_Expires13 := FormatTime(Shield_Expires12)
 		
-		; Shield_Expires2 := DateAdd(A_Now, %Shield_Expires1%, "YYYYMMDDHH24MISS")
-		; MsgBox FormatTime(Shield_Expires)
+		/*
+		Shield_Expires20 := "000000" . Shield_DD . Shield_HH . Shield_MM . Shield_SS		
+		Shield_Expires21 := FormatTime(A_Now, "YYYYMMDDHHMISS")		
+		EnvAdd, Shield_Expires22, Shield_DD, d
+		EnvAdd, Shield_Expires22, Shield_HH, h
+		EnvAdd, Shield_Expires22, Shield_MM, m
+		EnvAdd, Shield_Expires22, Shield_SS, s
+		Shield_Expires23 := FormatTime(Shield_Expires22)
 		
-		; Shield_Expires3 := (A_Now + Shield_Expires1)
-		Shield_Expires4 := (A_Now + Shield_Expires2)
+		Shield_Expires11 := DateAdd(%A_Now%, Shield_DD, "Days")
+		Shield_Expires11 := DateAdd(%A_Now%, Shield_HH, "Hours")
+		Shield_Expires11 := DateAdd(%A_Now%, Shield_MM, "Minutes")
+		Shield_Expires11 := DateAdd(%A_Now%, Shield_SS, "Seconds")
+		Shield_Expires11 := FormatTime(Shield_Expires11, "YYYYMMDDHH24MISS")
+		
+		Shield_Expires21 := DateAdd(%A_Now%, Shield_DD, "Days")
+		Shield_Expires21 := DateAdd(%A_Now%, Shield_HH, "Hours")
+		Shield_Expires21 := DateAdd(%A_Now%, Shield_MM, "Minutes")
+		Shield_Expires21 := DateAdd(%A_Now%, Shield_SS, "Seconds")
+		Shield_Expires21 := FormatTime(Shield_Expires21, "YYYYMMDDHH24MISS")
+		Shield_Expires12 := (A_Now + Shield_Expires10)
+		Shield_Expires22 := (A_Now + Shield_Expires20)
+		*/
+		
+		; MsgBox % "1:""" FormatTime(Shield_Expires10) """`n2:""" FormatTime(Shield_Expires20) """`n3:""" FormatTime(Shield_Expires11) """`n4:""" FormatTime(Shield_Expires21) """`n5:""" FormatTime(Shield_Expires12) """`n6:""" FormatTime(Shield_Expires22) """"
 			
+		/*
+		Shield_Expires_Day := FormatTime(Shield_Expires21, "dddd")
+		Shield_Expires_Hour1 := FormatTime(Shield_Expires21, "HH")
+		Shield_Expires_Hour2 := FormatTime(Shield_Expires21, "H")
+		Shield_Expires_Hour3 := FormatTime(Shield_Expires21, "hh")
+		Shield_Expires_Hour4 := FormatTime(Shield_Expires21, "h")
 		
-		Shield_Expires_Day := FormatTime(Shield_Expires4, "dddd")
-		Shield_Expires_Hour := FormatTime(Shield_Expires4, "HH")
-		
-		MsgBox, % "Shield_Ends:" Shield_Ends "`nDD:" Shield_DD " HH:" Shield_HH " MM:" Shield_MM " SS:" Shield_SS "`nExpires1:" Shield_Expires1 " Expires3:" Shield_Expires3 "`nExpires2:" Shield_Expires2 " Expires4:" Shield_Expires4 "`nShield_Expires_Day:" Shield_Expires_Day " Shield_Expires_Hour:" Shield_Expires_Hour
+		MsgBox, % "Shield_Ends:" Shield_Ends "`nDD:" Shield_DD " HH:" Shield_HH " MM:" Shield_MM " SS:" Shield_SS "`nExpires1:" Shield_Expires10 " Expires3:" Shield_Expires11 "`nExpires2:" Shield_Expires20 " Expires4:" Shield_Expires21 "`nExpires Day:" Shield_Expires_Day " Hour1:" Shield_Expires_Hour1 " Hour:2" Shield_Expires_Hour2 " Hour3:" Shield_Expires_Hour3 " Hour4:" Shield_Expires_Hour4
+		*/
 		
 		if At_War
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
-		else if (Shield_Expires_Day = "Thursday")
+		}
+		else if (Shield_Expires11 = "Thursday")
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
-		else if (Shield_Expires_Day = "Friday")
+		}
+		else if (Shield_Expires11 = "Friday")
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
-		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour <= 19)
+		}
+		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour <= 19)
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
-		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour >= 19)
+		}
+		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour >= 19)
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
-		else if (Shield_Expires_Day = "Sunday" && Shield_Expires_Hour <= 19)
+		}
+		else if (Shield_Expires11 = "Sunday" && Shield_Expires_Hour <= 19)
+		{
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (10 sec Timeout & auto),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
+		}
 		else
+		{
+			MsgBox, Shield expires on %Shield_Expires13%`, No shield needed. (10 sec Timeout & auto),10
 			Goto, Peace_Shield_END
-
+		}
 		return
 	}
 	
