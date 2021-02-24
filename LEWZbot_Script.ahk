@@ -154,15 +154,16 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Gosub Mail_Collection
 				; Gosub Desert_Oasis
-				Gosub Donate_Tech
+				; Gosub Donate_Tech
 				; Gosub Activity_Center_Wonder
 				; Gosub BruteForcePIN
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Depot_Rewards
 				; Gosub Reserve_Factory
+				Gosub Peace_Shield
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				goto END_of_user_loop
 				; ******************************************
 				; Gosub Mail_Collection
 				; Activity_Center_Open()
@@ -3316,6 +3317,7 @@ Donate_Tech:
 	Collapse_X := 100
 	Collapse_Y := 240
 	Collapse_Delta = 60
+	/*
 	loop, 4
 	{
 		Gosub Donate_Tech_Find_And_Click
@@ -3329,31 +3331,10 @@ Donate_Tech:
 	; Mouse_Click(469,300) ; Rank 02 - 30, 280-322 = 300
 	; Mouse_Click(469,360) ; Rank 03 - 30, 343-386 = 360
 	; Mouse_Click(469,420) ; Rank 04 - 30, 407-451 = 420
-	 
+	*/
 
-
-	Donate_Tech_Control_Desk_Expand:
-	{
-		loop, 2
-		{
-			Mouse_Click(7,637) ; Tap to Expand Control Desk
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		loop, 2
-			Mouse_Drag(326, 405, 326, 957, {EndMovement: F, SwipeTime: 500})
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		Mouse_Click(469,960, {Timeout: 0}) ; Tap Goto Alliance Donation
-
-		Mouse_Click(469,1005, {Timeout: 0}) ; Tap Goto Alliance Donation (Alt button) ; 476, 1001
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		return
-	}
-	
 	Donate_Tech_Find_And_Click:
+	loop, 4
 	{
 		Tech_Click_Y := Tech_Click_Initial
 		Outer_Loop_Donation:
@@ -3372,7 +3353,7 @@ Donate_Tech:
 				OCR_Donate_Buy := Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
 				
 				if (OCR_Donate_04.Found)
-					return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
+					Goto Donations_OVER ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
 				else if (OCR_Donate_Buy.Found)
 				{
 					loop, 22
@@ -3395,11 +3376,12 @@ Donate_Tech:
 					}
 					DllCall("Sleep","UInt",(2*Delay_Long+0))
 					if (OCR_Donate_04.Found)
-						return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
+						Goto Donations_OVER ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
 				}
 				; else if (OCR_Donate_imm.Found)
 				; 	return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
 					
+				/*
 				VAR1 := % "1. F:""" OCR_Donate_04.Found """ V:""" OCR_Donate_04.Value """ T:""" RegExReplace(OCR_Donate_04.Text,"[\r\n]+") """"
 				; VAR2 := % "2. F:""" OCR_Donate_imm.Found """ V:""" OCR_Donate_imm.Value """ T:""" RegExReplace(OCR_Donate_imm.Text,"[\r\n]+") """"
 				VAR3 := % "3. F:""" OCR_Donate_Buy.Found """ V:""" OCR_Donate_Buy.Value """ T:""" RegExReplace(OCR_Donate_Buy.Text,"[\r\n]+") """"
@@ -3408,6 +3390,7 @@ Donate_Tech:
 				; VAR2 := RegExReplace(VAR2,"[\r\n]+")
 				; VAR3 := RegExReplace(VAR3,"[\r\n]+")
 				MsgBox, 0, OCR return, % "Was value (F)ound? Using what (V)alue? Found (T)ext:`n" VAR1 "`n" VAR2 "`n" VAR3
+				*/
 			}
 				; Gosub Click_Top_Tech
 				
@@ -3420,8 +3403,32 @@ Donate_Tech:
 		}
 		Outer_Loop_Donation_Break:
 		Gosub Click_Top_Tech
+		; return
+		Mouse_Click(Collapse_X,Collapse_Y) ; Tap To expand previous Rank Tech
+		Collapse_Y += Collapse_Delta
+	}
+	
+	Donate_Tech_Control_Desk_Expand:
+	{
+		loop, 2
+		{
+			Mouse_Click(7,637) ; Tap to Expand Control Desk
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		}
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+
+		loop, 2
+			Mouse_Drag(326, 405, 326, 957, {EndMovement: F, SwipeTime: 500})
+
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+		Mouse_Click(469,960, {Timeout: 0}) ; Tap Goto Alliance Donation
+
+		Mouse_Click(469,1005, {Timeout: 0}) ; Tap Goto Alliance Donation (Alt button) ; 476, 1001
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		return
 	}
+	
 
 	Donate_Tech_Collapse_Tech_Short:
 	{
