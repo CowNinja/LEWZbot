@@ -81,7 +81,7 @@ Move_MsgBox(P)
 		Process, Exist
 		DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 		if WinExist("ahk_class #32770 ahk_pid " ErrorLevel)
-			WinMove, MsgWinMove_X, MsgWinMove_Y	; WinMove, 731, 1000
+			WinMove, 731, 1000
 		DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 	}
 }
@@ -100,10 +100,10 @@ Move_MsgBox(P)
 	Global rand_max := 10 ; Max time wait between buttons (ms)
 	Global rand_wait
 	Random, rand_wait, %rand_min%, %rand_max%
-	Global Delay_Micro := (50 + 0) ; 50 ; default delay for MICRO pauses
-	Global Delay_Short := (2*Delay_Micro + 0) ; 100 ; default delay for SHORT pauses
-	Global Delay_Medium := (5*Delay_Short + 0) ; 500 ; default delay for MEDIUM pauses
-	Global Delay_Long := (2*Delay_Medium + 0) ; 1000 ; default delay for LONG pauses
+	Global Delay_Micro := (50 + rand_wait) ; 50 ; default delay for MICRO pauses
+	Global Delay_Short := (2*Delay_Micro) ; 100 ; default delay for SHORT pauses
+	Global Delay_Medium := (5*Delay_Short) ; 500 ; default delay for MEDIUM pauses
+	Global Delay_Long := (2*Delay_Medium) ; 1000 ; default delay for LONG pauses
 
 	; Entire desktop coordinates
 	Global SysGet, VirtualWidth, 78
@@ -141,7 +141,7 @@ Move_MsgBox(P)
 	Global FoundAppProcess := ""
 	Global FoundAppID := ""
 	Global FoundAppPID := 0
-	Global NewTitle := "LEWZ0"
+	Global NewTitle := "LEWZ00"
 	Global FoundAppX := 0
 	; Global FoundAppX := 1200
 	; Global FoundAppX := 2400
@@ -159,7 +159,6 @@ Move_MsgBox(P)
 	Global WinHeight := 0 ; initialize Height of app window
 
 	; Define desired window position and size
-	
 	Global App_Win_X := 0
 	Global App_Win_Y := 0
 	Global App_WinWidth := 730
@@ -169,12 +168,6 @@ Move_MsgBox(P)
 	Global MEmu_Operation_Recorder_X := App_Win_X
 	Global MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
 	Global Operation_Recorder_Window := "MEmu"
-	Global WinMove_X := 0 ; initialize location upper left X coord of app window
-	Global WinMove_Y := 0 ; initialize location upper left Y coord of app window
-	; WinMove, 731, 1000
-	; WinMove, MsgWinMove_X, MsgWinMove_Y
-	Global MsgWinMove_X := (App_Win_X + App_WinWidth + 1) ; initialize location upper left X coord of MSg Window
-	Global MsgWinMove_Y := (App_Win_Y + 1000) ; initialize location upper left Y coord of MSg Window
 
 	Global GameArea_X1 := App_Win_X
 	Global GameArea_Y1 := (App_Win_Y + 33)
@@ -218,14 +211,14 @@ Move_MsgBox(P)
 	; CoordMode Pixel, Client ; Coordinates are relative to the active window's client area, which excludes the window's title bar, menu (if it has a standard one) and borders. Client coordinates are less dependent on OS version and theme.
 
 	; room and battle time out
-	; Global Room_Wait_Count := 0 ; COUNTS UP, wait time in room
-	; Global Timeout_Count := 100 ; SET, loop wait count, set value
-	; Global View_click := False ; IF False, reset viewpoint in battle
-	; Global Resetting_Posit := False ; Set default reset view to false
-	; Global Go_Back_Home_Delay_Long := False ; set default delay to false, or NOT LONG
+	Global Room_Wait_Count := 0 ; COUNTS UP, wait time in room
+	Global Timeout_Count := 100 ; SET, loop wait count, set value
+	Global View_click := False ; IF False, reset viewpoint in battle
+	Global Resetting_Posit := False ; Set default reset view to false
+	Global Go_Back_Home_Delay_Long := False ; set default delay to false, or NOT LONG
 
 	; counter resets every successful battle
-	; Global Battle_counter := 0 ; COUNTS UP, how many battles
+	Global Battle_counter := 0 ; COUNTS UP, how many battles
 
 	; counter resets every successful program restart
 	Global Main_Loop_Counter := 0 ; COUNTS UP, how many loops
@@ -383,10 +376,8 @@ loop
 
 ; Select_App() {
 	; MsgBox, 1. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
-	global FoundAppClass := "Qt5QWindowIcon"
-	global FoundAppControl := "Qt5QWindowIcon19"
-	; NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
-	LEWZApp := Win_WaitRegEX(NewTitle)
+	global FoundAppControl := "Qt5QWindowIcon25"
+	LEWZApp := Win_WaitRegEX("LEWZ0")
 	global FoundAppTitle := LEWZApp.title
 	global FoundAppClass := LEWZApp.Class
 	global FoundAppProcess := byref FoundAppControl ; LEWZApp.ID
