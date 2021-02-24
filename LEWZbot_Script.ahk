@@ -1436,6 +1436,8 @@ Peace_Shield:
 			Capture_Screen_Text := OCR([362, 512, 44, 14], "eng")
 			; MsgBox, 0, , Found"%Capture_Screen_Text%"
 			If Capture_Screen_Text contains Buff
+			
+			if Search_Captured_Text_OCR(["Buff"], {Pos: [362, 512], Size: [44, 14], Timeout: 0})
 			{
 				Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -3272,19 +3274,10 @@ Reserve_Factory:
 	return
 }
 
+
 Donate_Tech:
 {
 	Subroutine_Running := "Donate_tech"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
-
-	; Gosub Donate_Tech_Control_Desk_Expand
-
-	; Search_Captured_Text := ["Wages"]
-	; Capture_Screen_Text := OCR([236, 40, 215, 57], "eng") ; check if
-	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
-	; goto Donations_OVER
 
 	Search_Captured_Text := ["Technology"]
 	loop, 3
@@ -3294,7 +3287,7 @@ Donate_Tech:
 		{
 			Gosub Click_Top_Tech
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0})
-				goto Donate_Tech_Open
+				goto Donate_Tech_Open_NEXT ; Donate_Tech_Open
 		}
 		Gosub Go_Back_To_Home_Screen
 	}
@@ -3308,173 +3301,43 @@ Donate_Tech:
 	OCR_H := 40
 	loop, 4
 	{
-		goto Donate_Tech_Open_NEXT
 		Gosub Click_Top_Tech
+		goto Donate_Tech_Open_NEXT
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 			goto Donate_Tech_Open_NEXT
 	}
-	; goto Donations_OVER
 
 	Donate_Tech_Open_NEXT:
+	Gosub Click_Top_Tech
 	global Tech_Click_Initial := 350
 	global Tech_Click_Inc := 140
 	global Tech_Click_Y := Tech_Click_Initial
-
-	; skip to next
-	; SearchTerm_003 := "Only R4 and R5"
-	; OCR_X := 160
-	; OCR_Y := 620
-	; OCR_W := 200
-	; OCR_H := 30
-
-	; Donate_Tech_Text_Skip_Donations_Array := ["OnlyR4andR5","Technology","Locked"]			; Next tech
-	; Donate_Tech_Text_End_Donations_Array := ["4\:\d+\:\d","Clear","donations","awesome"]	; end donations
-
-	Gosub Donate_Tech_Collapse_Tech_Short
-
-	; Gosub Donate_Tech_Find_And_Click
-
-	Goto Donations_OVER
-
-	; Gosub Click_Top_Tech
-	; Gosub Donate_Tech_Collapse_Tech_Old ; Contribute to 2nd tier tech
-
-	; loop, 2
-	; 	Mouse_Click(342,879) ; Tap Tech #5
-
-	; Gosub Donate_Tech_Collapse_Tech_Old ; Contribute to 2nd tier tech
-
-	; Mouse_Click(469,350) ; Tap Tech #1 Y = 275-375 / Rank #2 Y = 340-440 / #3 405-505 RankDelta = 65 (deltaY = 140)
-	; Mouse_Click(469,490) ; Tap Tech #2 Y = 415-515 (deltaY = 140)
-	; Mouse_Click(469,629) ; Tap Tech #3 Y = 555-655
-	; Mouse_Click(469,767) ; Tap Tech #4
-	; Mouse_Click(469,905) ; Tap Tech #5
-	; Mouse_Click(469,1045) ; Tap Tech #6
-	; Mouse_Click(469,1184) ; Tap Tech #7
-	; DllCall("Sleep","UInt",(rand_wait + 4*Delay_Short+0))
-
-	Donate_Tech_Find_And_Click:
+	
+	Collapse_X := 100
+	Collapse_Y := 240
+	Collapse_Delta = 60
+	loop, 4
 	{
-		; MsgBox, Donate_Tech_Find_And_Click
-		Tech_Click_Y := Tech_Click_Initial
-		Outer_Loop_Donation:
-		loop, 7
-		{
-			Subroutine_Running := "Donate_tech #" . Round(1+(Tech_Click_Y - Tech_Click_Initial)/Tech_Click_Inc, 0)
-			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-
-
-			Inner_Loop_Donation:
-			loop, 2
-			{
-				; MsgBox, Inner_Loop_Donation
-				Mouse_Click(469,Tech_Click_Y) ; select tech
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-				; Check_If_Max_Donations:	
-				; Capture_Screen_Text := OCR([68, 819, 566, 44], "eng") ; Buy buttons 
-				; Capture_Screen_Text := OCR([73, 822, 50, 34], "eng") ; 1st buy button
-				; Capture_Screen_Text := OCR([297, 734, 99, 27], "eng") ; search time field
-				; Capture_Screen_Text := OCR([177, 668, 78, 29], "eng") ; search "highest" level reached
-				; Capture_Screen_Text := OCR([232, 872, 81, 31], "eng") ; search "Locked"
-				
-				; if Search_Captured_Text_OCR([RegExMatch(Capture_Screen_Text,"04\:\d\d\:\d\d")], {Pos: [292, 730], Size: [110, 32], Timeout: 0})
-				; if Search_Captured_Text_OCR(["04:"], {Pos: [292, 730], Size: [50, 32], Timeout: 0})
-				if Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30], Timeout: 0})
-					Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
-				if Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
-					loop, 15
-					{
-						Loop, 2
-							Mouse_Click(420,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 3
-						Loop, 2
-							Mouse_Click(260,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 2
-						Loop, 2
-							Mouse_Click(100,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 1
-						; DllCall("Sleep","UInt",(rand_wait + 5*Delay_Micro+0))
-					}
-				if Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
-					Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
-				; else
-				;	break
-			
-				/*
-				; if Search_Captured_Text_OCR(["04:04:","04:14:"], {Pos: [292, 730], Size: [110, 32], Timeout: 0})
-				;	Goto Outer_Loop_Donation_Break
-				
-				
-				; 85,870 to 315,900 "Technology Locked" text
-				if Search_Captured_Text_OCR(["Technology","Locked"], {Pos: [80, 870], Size: [235, 40], Timeout: 0}) ; ["Technology Locked"]
-					Goto Inner_Loop_Donation_Break
-				
-				; if Search_Captured_Text_OCR(["Technology","R4","R5"], {Pos: [110, 625], Size: [220, 30], ; Timeout: 0}) ; ["This Technology","R4 and R5"]
-				; 	Goto Inner_Loop_Donation_Break
-					
-				; 323,780 to 368, 808 "OK" button
-				if Search_Captured_Text_OCR(["OK"], {Pos: [320, 780], Size: [50, 30], Timeout: 0})
-					Goto Inner_Loop_Donation_Break
-		
-				; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-				Capture_Screen_Text := OCR([295, 730, 105, 40], "eng")
-				Capture_Screen_Text .= OCR([160, 620, 200, 60], "eng")
-				Capture_Screen_Text .= OCR([80, 870, 140, 40], "eng")
-				Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
-
-				; MsgBox, OCR:(%OCR_X%:%OCR_Y%) Click:(%Click_X%:%Click_Y%) text:%Capture_Screen_Text%
-
-				For index, value in Donate_Tech_Text_End_Donations_Array
-					If (RegExMatch(Capture_Screen_Text,value))
-					{
-						; OCR_Y := Max_Y
-						; Click_Y := Min_Y
-						; Gosub Click_Top_Tech
-						break ; return
-						; goto Outer_Loop_Donation_Break
-						; Break Outer_Loop_Donation
-					}
-
-				For index, value in Donate_Tech_Text_Skip_Donations_Array
-					If (RegExMatch(Capture_Screen_Text,value))
-						goto Inner_Loop_Donation_Break
-						; Break Inner_Loop_Donation
-
-				; MsgBox, !BREAK Donate_Text_Combo: %Donate_Text_Combo%
-
-				Donate_tech_Click:
-				loop, 22
-				{
-					Loop, 2
-						Mouse_Click(420,1000) ;, {Timeout: 1*Delay_Short+0}) ; Tap On Donation Box 3
-					Loop, 2
-						Mouse_Click(260,1000) ;, {Timeout: 1*Delay_Short+0}) ; Tap On Donation Box 2
-					Loop, 2
-						Mouse_Click(100,1000) ;, {Timeout: 1*Delay_Short+0}) ; Tap On Donation Box 1
-					DllCall("Sleep","UInt",(rand_wait + 5*Delay_Micro+0))
-				}
-				*/
-				Gosub Click_Top_Tech
-			}
-				if Pause_Script
-					MsgBox, 0, Pause, Press OK to resume (No Timeout)
-					
-				Inner_Loop_Donation_Break:
-				Tech_Click_Y += Tech_Click_Inc
-				Gosub Click_Top_Tech
-		}
-		Outer_Loop_Donation_Break:
-		Gosub Click_Top_Tech
-		return
+		Gosub Donate_Tech_Find_And_Click
+		Mouse_Click(Collapse_X,Collapse_Y) ; Tap To expand previous Rank Tech
+		Collapse_Y += Collapse_Delta
 	}
+	Goto Donations_OVER
+	
+	; Mouse_Click(469,350) ; Tap Tech #1 Y = 275-375 / Rank #2 Y = 340-440 / #3 405-505 RankDelta = 65 (deltaY = 140)
+	; Mouse_Click(469,240) ; Rank 01 - 30, 222-259 = 240
+	; Mouse_Click(469,300) ; Rank 02 - 30, 280-322 = 300
+	; Mouse_Click(469,360) ; Rank 03 - 30, 343-386 = 360
+	; Mouse_Click(469,420) ; Rank 04 - 30, 407-451 = 420
+	 
+
 
 	Donate_Tech_Control_Desk_Expand:
 	{
-		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-		Mouse_Click(7,637) ; Tap to Expand Control Desk
-		; Mouse_Click(27,612) ; Tap to Expand Control Desk
-		DllCall("Sleep","UInt",(rand_wait + 9*Delay_Short+0))
 		Mouse_Click(7,637) ; Tap to Expand Control Desk
 		DllCall("Sleep","UInt",(rand_wait + 9*Delay_Short+0))
-
-		; Swipe Down (linear)
+		Mouse_Click(7,637) ; Tap to Expand Control Desk
+		DllCall("Sleep","UInt",(rand_wait + 9*Delay_Medium+0))
 
 		loop, 2
 			Mouse_Drag(326, 405, 326, 957, {EndMovement: F, SwipeTime: 500})
@@ -3487,32 +3350,71 @@ Donate_Tech:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		return
 	}
+	
+	Donate_Tech_Find_And_Click:
+	{
+		Tech_Click_Y := Tech_Click_Initial
+		Outer_Loop_Donation:
+		loop, 7
+		{
+			Subroutine_Running := "Donate_tech #" . Round(1+(Tech_Click_Y - Tech_Click_Initial)/Tech_Click_Inc, 0)
+
+			Inner_Loop_Donation:
+			; loop, 2
+			{
+				Mouse_Click(469,Tech_Click_Y) ; select tech
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+				if Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30], Timeout: 0})
+					return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
+				else if Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
+					return ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
+				else if Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
+					loop, 21
+					{
+						Loop, 2
+							Mouse_Click(420,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 3
+						DllCall("Sleep","UInt",(1*Delay_Micro+0))
+						Loop, 2
+							Mouse_Click(260,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 2
+						DllCall("Sleep","UInt",(1*Delay_Micro+0))
+						Loop, 2
+							Mouse_Click(100,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 1
+						DllCall("Sleep","UInt",(1*Delay_Micro+0))
+					}
+
+				Gosub Click_Top_Tech
+			}
+				if Pause_Script
+					MsgBox, 0, Pause, Press OK to resume (No Timeout)
+
+				Inner_Loop_Donation_Break:
+				Tech_Click_Y += Tech_Click_Inc
+				Gosub Click_Top_Tech
+		}
+		Outer_Loop_Donation_Break:
+		Gosub Click_Top_Tech
+		return
+	}
 
 	Donate_Tech_Collapse_Tech_Short:
 	{
-		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-		; Capture_Screen_Text := ""
 		Min_Y := 225 ; 215
 		Max_Y := 395 ; 455 ; Rank 1: 215, 2: 275, 3: 335, 4: 395, 5: 455, 6: 515
 		Min_X := Max_X := OCR_X := Click_X := 70 ; 66
-		; OCR_X := 66
 		OCR_Y := Min_Y
 		OCR_W := 75 ; 100
 		OCR_H := 40 ; 50
-		; Click_X := 200
 		Click_Y := (OCR_Y + 25)
 		OCR_Y_Delta := 60
 
 		while (OCR_Y <= Max_Y)
 		{
-			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 			Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
 			Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
 
 			If (RegExMatch(Capture_Screen_Text,"Ran"))
 				goto Donate_Tech_Collapse_Tech_Next
-			; If !(RegExMatch(Capture_Screen_Text,"Ran"))
-			; 	goto Donate_Tech_Collapse_Tech_END
 			If (RegExMatch(Capture_Screen_Text,"Needed"))
 				goto Donate_Tech_Collapse_Tech_END
 			If (RegExMatch(Capture_Screen_Text,""))
@@ -3526,7 +3428,7 @@ Donate_Tech:
 			Tech_Click_Initial := (Click_Y + 110)
 			Mouse_Click(Click_X,Click_Y) ; Tap To expand previous Rank Tech
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-			Gosub Donate_Tech_Find_And_Click
+			; Gosub Donate_Tech_Find_And_Click
 			return
 
 			Donate_Tech_Collapse_Tech_Next:
@@ -3551,74 +3453,16 @@ Donate_Tech:
 		return
 	}
 
-	Donate_Tech_Collapse_Tech_Long:
-	{
-		loop, 6
-		{
-			OCR_X := 66
-			OCR_Y := 215
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 1", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,240) ; Tap To Collapse Rank 1 Tech
-			OCR_X := 66
-			OCR_Y := 275
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 2", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,300) ; Tap To Collapse Rank 2 Tech
-			OCR_X := 66
-			OCR_Y := 335
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 3", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,360) ; Tap To Collapse Rank 3 Tech
-			OCR_X := 66
-			OCR_Y := 395
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 4", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,420) ; Tap To Collapse Rank 4 Tech
-			OCR_X := 66
-			OCR_Y := 455
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 5", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,480) ; Tap To Collapse Rank 5 Tech
-			OCR_X := 66
-			OCR_Y := 515
-			OCR_W := 100
-			OCR_H := 50
-			if Search_Captured_Text_OCR("Rank 6", {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Mouse_Click(200,540) ; Tap To Collapse Rank 6 Tech
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-		}
-		return
-	}
-
 	Click_Top_Tech:
 	loop, 3
 	{
 		Mouse_Click(340,70) ; Tap header
-		; Mouse_Click(397,150) ; Tap top of alliance tech list
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
 	return
-
-	Donate_Tech_Collapse_Tech_Old:
-	{
-		; Mouse_Click(393,252) ; Tap To Collapse Rank 1 Tech
-
-		; Mouse_Click(393,295) ; Tap To Collapse Rank 2 Tech
-
-		; Mouse_Click(393,359) ; Tap To Collapse Rank 3 Tech
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-		return
-	}
-
+	
 	Donations_OVER:
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 	Gosub Go_Back_To_Home_Screen
 	return
 }
