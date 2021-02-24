@@ -379,7 +379,7 @@ Quit_LEWZ:
 			break
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Ledium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Gosub Check_Window_Geometry
 	}
 
@@ -1170,7 +1170,7 @@ Collect_Collisions:
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(515,375) ; Tap Collision
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
@@ -1219,7 +1219,7 @@ Collect_Equipment_Crafting:
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(430,390) ; Tap Craft
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
@@ -1268,7 +1268,7 @@ Collect_Recruits:
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(350,375) ; Tap Recruit
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
@@ -1297,7 +1297,7 @@ Collect_Recruits:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	;loop, 2
 		Mouse_Click(430,280) ; Tap Command Center
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(430,280) ; Tap Recruit ; Mouse_Click(200,1160) ; Tap Recruit
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	loop, 3
@@ -1320,7 +1320,7 @@ Collect_Runes:
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(570,340) ; Rune Extraction
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
