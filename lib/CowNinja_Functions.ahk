@@ -356,17 +356,17 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		goto Search_Captured_Text_MessageBox
 	}
 	
-	OCR_Capture_X := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
-	OCR_Capture_Y := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
-	OCR_Capture_W := (Options.HasKey("Size")) ? Options.Size[1] : "560"
-	OCR_Capture_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
+	OCR_X := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
+	OCR_Y := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
+	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "560"
+	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
-	OCR_X1 := (OCR_Capture_X ) ; + X_Pixel_offset)
-	OCR_Y1 := (OCR_Capture_Y ) ; + Y_Pixel_offset)
-	OCR_X2 := (OCR_Capture_X + OCR_Capture_W ) ; + X_Pixel_offset)
-	OCR_Y2 := (OCR_Capture_Y + OCR_Capture_H ) ; + Y_Pixel_offset)
-	OCR_W := OCR_Capture_W
-	OCR_H := OCR_Capture_H
+	OCR_X1 := (OCR_X ) ; + X_Pixel_offset)
+	OCR_Y1 := (OCR_Y ) ; + Y_Pixel_offset)
+	OCR_X2 := (OCR_X + OCR_W ) ; + X_Pixel_offset)
+	OCR_Y2 := (OCR_Y + OCR_H ) ; + Y_Pixel_offset)
+	OCR_W := OCR_W
+	OCR_H := OCR_H
 	
 	Search_Captured_Text_Begin:
 	ClipSaved := ClipboardAll
@@ -593,7 +593,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		if !(value == "")
 		{
 			WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-			Capture_Screen_Text := OCR([OCR_Capture_X, OCR_Capture_Y, OCR_Capture_W, OCR_Capture_H], "eng")
+			Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
 			; MsgBox, index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
 			If (RegExMatch(Capture_Screen_Text,value))
 				return 1
