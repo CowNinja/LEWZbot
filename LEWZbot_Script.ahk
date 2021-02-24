@@ -6372,6 +6372,7 @@ F3::
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 Return
 
+; Terminate running routine
 F9::
 Gosub Go_Back_To_Home_Screen
 Gosub, Exit_Sub
@@ -6381,6 +6382,7 @@ return
 Exit_Sub:
 Exit ; Terminate this subroutine as well as the calling subroutine.
 
+; Close running AHK
 F4::ExitApp
 ; #c:: OCR()
 #g:: Vis2.OCR.google() ; Googles the text instead of saving it to clipboard.
