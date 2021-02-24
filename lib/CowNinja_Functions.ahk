@@ -205,9 +205,9 @@ Mouse_Click(X,Y, Options := "") {
 	Random, rand_wait, %rand_min%, %rand_max%
 	Random, rand_pixel, %Min_Pix%, %Max_Pix%
 
-	; Win_Control := WinControl
+	; Win_Control := FoundAppControl
 
-	Win_Control := (Options.HasKey("Control")) ? Options.Control : WinControl
+	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
 	Button := (Options.HasKey("Button")) ? Options.Button : "Left"
 	Clicks := (Options.HasKey("Clicks")) ? Options.Clicks : "1"
@@ -231,30 +231,56 @@ Mouse_Click(X,Y, Options := "") {
 	X_Pixel := (X + rand_pixel + X_Pixel_offset)
 	Y_Pixel := (Y + rand_pixel + Y_Pixel_offset)
 	; SendEvent {Click, %X_Pixel%, %Y_Pixel%} ; Where to click
-	; MsgBox, 3. Mouse_Click input:(%X%:%Y%) incremented:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%)
-
 	; ControlClick, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText
 	; ControlClick, x%X_Pixel% y%Y_Pixel%, %FoundAppTitle%,,,, Pos NA
 	; ControlClick, %Win_Control%, %FoundAppTitle%,, Left, 1, x%X_Pixel% y%Y_Pixel% NA
 	; ControlClick, Qt5QWindowIcon, LEWZ001,, Left, 1, x%X_Pixel% y%Y_Pixel% NA
 
 	SetControlDelay -1
-	if DownUp = "Down"
-		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA D
-	if DownUp = "Up"
-		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA U
-	Else
+	if !DownUp
 		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
+	else if (DownUp = "Down")
+		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA D
+	else if (DownUp = "Up")
+		ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA U
+		
+	DllCall("Sleep","UInt",Timeout)		; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
+	GUI_Update()
+	
+	stdout.WriteLine(A_Now " Executing Mouse_Click for FoundAppTitle " FoundAppTitle " Subroutine " Subroutine_Running " at " FoundPictureX "," FoundPictureY " (X,Y_Pixel: " X_Pixel "," Y_Pixel ") (rand_pixel: " rand_pixel ") (X,Y_Pixel_offset:" X_Pixel_offset "," Y_Pixel_offset ")" )
+	
+	return
 
+	; MsgBox, 3. Mouse_Click input:(%X%:%Y%) incremented:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%)
 	; MsgBox, ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
+	; MsgBox, Mouse_Click input:(%X%:%Y%) math:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%) Ctr:"%Win_Control%" or "%FoundAppControl%" Title:"%FoundAppTitle%" Button:"%Button%" Clicks:"%Clicks%" Timeout:"%Timeout%"
+	; stdout.WriteLine(A_Now " Found " image_name " at " FoundPictureX "," FoundPictureY)
+	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	
+	return
+}
 
-	; %Win_Control% = RenderWindowWindow
+Key_Menu() {
+	Gui, Keys:New, , Keys
+	Gui, Keys:Margin, 0, 0
+	Gui, Keys:add,text,, F1 Switch App
+	Gui, Keys:add,text,, F3 Quick Collect
+	Gui, Keys:add,text,, F4 Exit Script
+	Gui, Keys:add,text,, F5 Reload MEmu
+	Gui, Keys:add,text,, F6 Reload Script
+	; Gui, Keys:add,text,, F7 Reset_Posit = %Resetting_Posit% ; or (%Resetting_Posit% ? "True" : "False")
+	Gui, Keys:add,text,, % "F7 Reset_Posit = " (Resetting_Posit ? "Yes" : "No")
+	Gui, Keys:add,text,, % "Pause Script = " (A_IsPaused ? "Yes" : "No")
+	Gui, Keys:show, x731 y700 w150 h250
 
-	DllCall("Sleep","UInt",Timeout)
+	; ; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; MsgBox, Mouse_Click input:(%X%:%Y%) math:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%) Ctr:"%Win_Control%" or "%WinControl%" Title:"%FoundAppTitle%" Button:"%Button%" Clicks:"%Clicks%" Timeout:"%Timeout%"
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	return
+}
 
-	; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
+GUI_Update() {
 
 	if GUI_Count++>13
 	{
@@ -282,20 +308,12 @@ Mouse_Click(X,Y, Options := "") {
 		Gui, Status:add,text,, %Subroutine_Running% Running (%X_Pixel%,%Y_Pixel%)
 		Gui, Status:show, x731 y0 w300 h500
 	}
-
-	stdout.WriteLine(A_Now " Executing Mouse_Click for FoundAppTitle " FoundAppTitle " Subroutine " Subroutine_Running " at " FoundPictureX "," FoundPictureY " (X,Y_Pixel: " X_Pixel "," Y_Pixel ") (rand_pixel: " rand_pixel ") (X,Y_Pixel_offset:" X_Pixel_offset "," Y_Pixel_offset ")" )
-
-	; stdout.WriteLine(A_Now " Found " image_name " at " FoundPictureX "," FoundPictureY)
-
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 ; example: Mouse_Drag(199, 250, 150, 300, {Wait: 500})
 Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
-	Win_Control := (Options.HasKey("Control")) ? Options.Control : WinControl
+	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
@@ -513,7 +531,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		goto Search_Captured_Text_MessageBox
 	}
 
-	Win_Control := (Options.HasKey("Control")) ? Options.Control : WinControl
+	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
 	OCR_X := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
 	OCR_Y := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
@@ -533,33 +551,33 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; WinShow
 	; if !WinActive(%FoundAppTitle%), WinActivate, %FoundAppTitle%
 	; if WinExist(FoundAppTitle), WinRestore
-	if !IsWindowVisible(App_Title)
+	; if !IsWindowVisible(App_Title)
 		Win_WaitRegEX(FoundAppTitle)
-
-	; Gosub Capture2Text_CLI
-	; Gosub Capture2Text_EXE
-	; if !WinActive(%FoundAppTitle%), WinActivate, %FoundAppTitle%
 
 	/*
 	is_visible := IsWindowVisible(FoundAppTitle)
-
+	
 	If( is_visible > 0 )
 	{
-		MsgBox, Window %FoundAppTitle% is visible!
-		Win_WaitRegEX(FoundAppTitle)
+		; MsgBox, Window %FoundAppTitle% is visible!
+		; Win_WaitRegEX(FoundAppTitle)
 		Sleep, 0
 	}
 	else If( is_visible < 0 )
 	{
-		MsgBox, Window %FoundAppTitle% not found!
+		; MsgBox, Window %FoundAppTitle% not found!
 		return False
 	}
 	else
 	{
-		MsgBox, Window %FoundAppTitle% is NOT visible!
+		; MsgBox, Window %FoundAppTitle% is NOT visible!
 		Win_WaitRegEX(FoundAppTitle)
 	}
 	*/
+
+	; Gosub Capture2Text_CLI
+	; Gosub Capture2Text_EXE
+	; if !WinActive(%FoundAppTitle%), WinActivate, %FoundAppTitle%
 
 	Capture_Screen_Text := OCR([OCR_X1, OCR_Y1, OCR_W, OCR_H], "eng")
 	For index, value in Search_Text_Array
@@ -612,46 +630,6 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		return
 	}
 
-	Capture2Text_EXE_old:
-	{
-		Capture2TextRUN := Capture2TextPATH . Capture2TextEXE
-		Capture_Screen_Text :=
-		Process, Exist, %Capture2TextEXE% ; check to see if running
-		If (ErrorLevel = 0) ; If not running
-			RunNoWaitOne(Capture2TextRUN)
-
-		; MsgBox, ErrorLevel:%ErrorLevel% RunNoWaitOne(%Capture2TextRUN%)
-
-		; 1. Position your mouse pointer at the top-left corner of the text that you want to OCR.
-		SendEvent {Click, %OCR_X1%, %OCR_Y1%, 0}
-		DllCall("Sleep","UInt",rand_wait + (1*Delay_Micro))
-
-		; 2. Press the OCR hotkey (Windows Key + Q) to begin an OCR capture.
-		; SendEvent, ^!Q
-		; Text_To_Screen("^!Q")
-		Text_To_Screen("^!Q")
-		; Control, EditPaste, ^!Q, Qt5QWindowIcon38, LEWZ001
-		; ControlSetText, Qt5QWindowIcon38, ^!Q, LEWZ001
-
-		; 3. Move your mouse to resize the blue capture box over the text that you want to OCR. You may hold down the right mouse button and drag to move the entire capture box.
-		; SendEvent {Click, Down}
-		DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-		SendEvent {Click, %OCR_X2%, %OCR_Y2% Left, 1}
-		DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-		; SendEvent {Click, Up}
-		; DllCall("Sleep","UInt",rand_wait + (1*Delay_Micro))
-
-		; 4. Press the OCR hotkey again (or left-click or press ENTER) to complete the OCR capture. The OCR'd text will be placed in the clipboard and a popup showing the captured text will appear (the popup may be disabled in the settings).
-		; SendEvent, #Q
-		; Text_To_Screen("#Q")
-		; SendEvent, {Enter}
-		; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
-
-		Capture_Screen_Text := %Clipboard%
-		; msgbox, 1. Capture_Screen_Text:"%Capture_Screen_Text%" Clipboard:"%Clipboard%"
-		return
-	}
-
 	Capture2Text_EXE:
 	{
 		Capture2TextRUN := Capture2TextPATH . Capture2TextEXE
@@ -679,265 +657,6 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		return
 	}
 
-	Capture2Text_EXE_OLD3:
-	{
-		Sub_Name := "Capture2Text_EXE"
-		Capture_Screen_Text := Clipboard := ""
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Mouse_MoveControl(OCR_X1, OCR_Y1, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X1% y%OCR_Y1% U NA
-		Capture_Screen_Text1 := clipboard
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))=
-		;Gosub Control_Alt_Q
-		Text_To_Screen("{LControl Down}{LAlt Down}{q}{LAlt Up}{LControl Up}")
-		Capture_Screen_Text2 := clipboard
-		Gosub Move_OCR_Mouse
-		Text_To_Screen("{LControl Down}{LAlt Down}{q}{LAlt Up}{LControl Up}")
-		Capture_Screen_Text3 := clipboard
-		ClipWait, 3
-		Capture_Screen_Text4 := clipboard
-		MsgBox, 0, , 1. Sub_Name:%Sub_Name%`n(%OCR_X1%,%OCR_Y1%) to (%OCR_X2%,%OCR_Y2%)`nCaptured: 1:"%Capture_Screen_Text1%" 2:"%Capture_Screen_Text2%" 3:"%Capture_Screen_Text3%" 4:"%Capture_Screen_Text4%" ClipBoard:"%ClipBoard%"
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Mouse_MoveControl(OCR_X1, OCR_Y1, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X1% y%OCR_Y1% U NA
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))=
-		Text_To_Screen("{Control}{Alt}Q")
-		Capture_Screen_Text1 := clipboard
-		Gosub Move_OCR_Mouse
-		Text_To_Screen("{Control}{Alt}Q")
-		Capture_Screen_Text2 := clipboard
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X2% y%OCR_Y2% NA
-		Capture_Screen_Text3 := clipboard
-		ClipWait, 3
-		Capture_Screen_Text4 := clipboard
-		MsgBox, 0, , 2. Sub_Name:%Sub_Name%`n(%OCR_X1%,%OCR_Y1%) to (%OCR_X2%,%OCR_Y2%)`nCaptured: 1:"%Capture_Screen_Text1%" 2:"%Capture_Screen_Text2%" 3:"%Capture_Screen_Text3%" 4:"%Capture_Screen_Text4%" ClipBoard:"%ClipBoard%"
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Mouse_MoveControl(OCR_X1, OCR_Y1, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X1% y%OCR_Y1% U NA
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Text_To_Screen("{Control}{Alt}Q", {Control: Win_Control})
-		Capture_Screen_Text1 := clipboard
-		Gosub Move_OCR_Mouse
-		Text_To_Screen("{Control}{Alt}Q", {Control: Win_Control})
-		Capture_Screen_Text2 := clipboard
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X2% y%OCR_Y2% NA
-		Capture_Screen_Text3 := clipboard
-		ClipWait, 3
-		Capture_Screen_Text4 := clipboard
-		MsgBox, 0, , 3. Sub_Name:%Sub_Name%`n(%OCR_X1%,%OCR_Y1%) to (%OCR_X2%,%OCR_Y2%)`nCaptured: 1:"%Capture_Screen_Text1%" 2:"%Capture_Screen_Text2%" 3:"%Capture_Screen_Text3%" 4:"%Capture_Screen_Text4%" ClipBoard:"%ClipBoard%"
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Mouse_MoveControl(OCR_X1, OCR_Y1, Win_Control, Win_Title, "", "L K")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X1% y%OCR_Y1% U NA
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		Gosub Control_Alt_Q
-		ClipWait, 3
-		Capture_Screen_Text1 := clipboard
-		Gosub Move_OCR_Mouse
-		Gosub Control_Alt_Q
-		ClipWait, 3
-		Capture_Screen_Text2 := clipboard
-		ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%OCR_X2% y%OCR_Y2% NA
-		Capture_Screen_Text3 := clipboard
-		ClipWait, 3
-		Capture_Screen_Text4 := clipboard
-		MsgBox, 0, , 4. Sub_Name:%Sub_Name%`n(%OCR_X1%,%OCR_Y1%) to (%OCR_X2%,%OCR_Y2%)`nCaptured: 1:"%Capture_Screen_Text1%" 2:"%Capture_Screen_Text2%" 3:"%Capture_Screen_Text3%" 4:"%Capture_Screen_Text4%" ClipBoard:"%ClipBoard%"
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-		; ClipWait, 3
-		; Capture_Screen_Text := clipboard
-
-		return
-
-		Move_OCR_Mouse:
-		; Mouse_MoveControl(OCR_X2, OCR_Y2, Win_Control, Win_Title, "", "L K")
-
-		X_Delta := (OCR_X2 - OCR_X1)
-		Y_Delta := (OCR_Y2 - OCR_Y1)
-		Move_X := OCR_X1
-		Move_Y := OCR_Y1
-		Steps := 16
-		loop, %Steps%
-		{
-			Move_X := Round(OCR_X1 + A_Index * (X_Delta/Steps))+0
-			Move_Y := Round(OCR_Y1 + A_Index * (Y_Delta/Steps))+0
-			; Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title)
-			; ControlMouseMove(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
-			Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title, "", "L K")
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
-			FileAppend, %A_NOW%`,Move`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%OCR_X1%`,Y1:`,%OCR_Y1%`,X2:`,%OCR_X2%`,Y2:`,%OCR_Y2%`n, %AppendCSVFile%
-		}
-		return
-
-		Control_Alt_Q:
-		{
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
-			Text_To_Screen("{Control Down}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{Alt Down}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{q}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{Alt Up}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{Control Up}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
-			Return
-		}
-
-	}
-
-	Capture2Text_EXE_old2:
-	{
-		Capture2TextRUN := Capture2TextPATH . Capture2TextEXE
-		Process, Exist, %Capture2TextEXE% ; check to see if running
-		If (ErrorLevel = 0) ; If not running
-		{
-			Run, %Capture2TextRUN%,,, PID
-			; RunNoWaitOne(Capture2TextRUN)
-			WinWait, ahk_pid %PID%  ; Wait for it to appear.
-		}
-
-		; Gosub Capture2Text_ControlSend
-		; Gosub Capture2Text_Control
-		; Gosub Capture2Text_ControlSetText
-		Gosub Capture2Text_Send
-		return
-
-		Capture2Text_ControlSend:
-		{
-			Gosub, Move_Mouse_Start
-
-			Sub_Name := "Capture2Text_ControlSend"
-			Text_To_Screen("^!Q")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
-
-			Gosub, Move_Mouse_Finish
-			Return
-		}
-
-		Capture2Text_Control:
-		{
-			Gosub, Move_Mouse_Start
-
-			Sub_Name := "Capture2Text_Control"
-			Control, EditPaste, ^!Q, Qt5QWindowIcon38, LEWZ001
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
-
-			Gosub, Move_Mouse_Finish
-			Return
-		}
-
-		Capture2Text_ControlSetText:
-		{
-			Gosub, Move_Mouse_Start
-
-			Sub_Name := "Capture2Text_ControlSetText"
-			ControlSetText, Qt5QWindowIcon38, ^!Q, LEWZ001
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
-
-			Gosub, Move_Mouse_Finish
-			Return
-		}
-
-		Capture2Text_Send_old:
-		{
-			Gosub, Move_Mouse_Start
-
-			Sub_Name := "Capture2Text_Send"
-			Text_To_Screen("{Control Down}{Alt Down}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Micro))
-			Text_To_Screen("{q}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Micro))
-			Text_To_Screen("{Alt Up}{Control Up}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
-
-			Gosub, Move_Mouse_Finish
-			Return
-		}
-
-		Capture2Text_Send:
-		{
-			Sub_Name := "Capture2Text_Send"
-			Capture_Screen_Text :=
-			clipboard := ""
-			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-			MsgBox, 0, , (%OCR_X1%:%OCR_Y1%) to (%OCR_X2%:%OCR_Y2%)
-			; SendEvent {Click, %OCR_X1%, %OCR_Y1%, 0}
-
-			gosub Move_Mouse_Start
-			Gosub Control_Alt_Q2
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			; SendEvent {Click, %OCR_X2%, %OCR_Y2%}
-			gosub Move_Mouse_Finish
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Gosub Control_Alt_Q2
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
-			ClipWait, 3
-			Capture_Screen_Text := clipboard
-			MsgBox, 0, , Sub_Name:%Sub_Name% Capture_Screen_Text:"%Capture_Screen_Text%" ClipBoard:"%ClipBoard%"
-			Return
-		}
-
-		Control_Alt_Q2:
-		{
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
-			Text_To_Screen("{Control Down}{Alt Down}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{q}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
-			Text_To_Screen("{Alt Up}{Control Up}")
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
-			Return
-		}
-
-		Move_Mouse_Start:
-		{
-			Capture_Screen_Text :=
-			clipboard := ""
-			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-			Mouse_MoveControl(OCR_X1, OCR_Y1, Win_Control, Win_Title, "", "L K")
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
-			; SendEvent {Click, %OCR_X1%, %OCR_Y1%, 0}
-			Return
-		}
-
-		Move_Mouse_Finish:
-		{
-			Mouse_MoveControl(OCR_X2, OCR_Y2, Win_Control, Win_Title, "", "L K")
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
-			return
-			; Click, %OCR_X2%, %OCR_Y2% Left, 1
-			; DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
-			ClipWait, 3
-			Capture_Screen_Text := clipboard
-			MsgBox, 0, , Sub_Name:%Sub_Name% Capture_Screen_Text:"%Capture_Screen_Text%" ClipBoard:"%ClipBoard%"
-			; Click, %OCR_X1%, %OCR_Y1%, 0
-			Return
-		}
-		return
-	}
-
-	Search_Captured_Text_Begin_old:
-	For index, value in Search_Text_Array
-	{
-		; MsgBox, index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
-		if !(value == "")
-		{
-			WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-			Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
-			; MsgBox, index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
-			If (RegExMatch(Capture_Screen_Text,value))
-				return 1
-		}
-	}
 	Goto Search_Captured_Text_END
 
 	Search_Captured_Text_END:
@@ -1013,7 +732,10 @@ Text_To_Screen(Text_To_Send, Options := "") {
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : "ahk_parent"
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
+	
+	ControlSend, %Win_Control%, %Text_To_Send%, %Win_Title%
 
+	/*
 	If (RegExMatch(Text_To_Send,"^[{\!\^]+"))
 	{
 		ControlSend, %Win_Control%, %Text_To_Send%, %Win_Title%
@@ -1030,6 +752,7 @@ Text_To_Screen(Text_To_Send, Options := "") {
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
 		; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
 	}
+	*/
 	; DllCall("Sleep","UInt",Timeout) ; Sleep, 500
 	return
 }
@@ -1249,15 +972,18 @@ Mouse_Restore() {
 
 Window_Save() {
 	Global SavedWinId
+	; Global SavedWinIdFull
 	; Save active window:
 	WinGet, SavedWinId, ID, A					; Save current active window
+	; SavedWinIdFull := "ahk_id " . SavedWinId
 	return
 }
 
 Window_Restore() {
 	Global SavedWinId
+	; Global SavedWinIdFull
 	; restore active window:
-	WinActivate ahk_id %SavedWinId%				; Restore original window
+	if !WinActive("ahk_id " . SavedWinId), WinActivate ahk_id %SavedWinId%				; Restore original window
 	return
 }
 
