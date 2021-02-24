@@ -57,31 +57,36 @@
 ; ****************************************************************************
 Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := ""){	; Win_GetInfo(Options := ""){
 ; SetTitleMatchMode, RegEx
-	; MsgBox, 1. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%"`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	; MsgBox, 1. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
 	
 	if (App_Title = FoundAppTitle)
 		Get_App_Title := FoundAppTitle
 	if (App_ID = FoundAppID)
 		Get_App_ID = FoundAppID
 	
-	; MsgBox, 2. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%"`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	; MsgBox, 2. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
 			
 	; Goal: to Get App ID
 	; Was an App ID passed to function? If So, use it
 	
 	if !Get_App_ID
-		if !App_ID
-			if !Get_App_Title
+		if !Get_App_Title
+			if !App_ID
 				if !App_Title
 					Get_App_ID := DllCall("GetParent", UInt,WinExist("A")), Get_App_ID := !Get_App_ID ? WinExist("A") : Get_App_ID
 				Else
 					Get_App_ID := Win_WaitRegEX(App_Title).ID
 			Else
-				Get_App_ID := FoundAppID ; := Win_WaitRegEX(Get_App_Title).ID
+				Get_App_ID := App_ID
 		Else
-			Get_App_ID := App_ID
+			Get_App_ID := Win_WaitRegEX(Get_App_Title).ID
 
-	; MsgBox, 3. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%"`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	; MsgBox, 3. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	
+	if !Get_App_ID
+		Get_App_ID := DllCall("GetParent", UInt,WinExist("A")), Get_App_ID := !Get_App_ID ? WinExist("A") : Get_App_ID
+	
+	; MsgBox, 4. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
 
 	/*
 	; old Openening
@@ -98,7 +103,7 @@ Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := ""){	; Win_GetI
 	WinGetClass, Get_App_Class, ahk_id %Get_App_ID%
 	WinGetPos, App_X, App_Y, App_W, App_H, %Get_App_ID%
 	
-	; MsgBox, 4. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%"`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	; MsgBox, 5. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
 
 	; if Get_App_Class, FoundAppClass := Get_App_Class
 	; if Get_App_Title, FoundAppTitle := Get_App_Title
@@ -145,37 +150,6 @@ WindowFromPoint(x, y)
 	Return
 }
 
-Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
-	SetTitleMatchMode, RegEx
-	; MsgBox, 1. Begin, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
-	
-	WinWait, %Win_WaitRegEX_Title%, %WinText%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
-	if ErrorLevel
-	{
-		Win_WaitRegEX_Title := RegExReplace(Win_WaitRegEX_Title,"[^w]+")
-		WinWait, %Win_WaitRegEX_Title%, %WinText%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
-		if ErrorLevel
-			return 0
-	}
-	WinActivate, %Win_WaitRegEX_Title% ; If not active, It activates it
-	; WinWaitActive, %Win_WaitRegEX_Title% ; Waits until the specified window is active or not active.
-	WinGetTitle, Win_WaitGetTitle, A
-	
-	Win_WaitGetID := WinActive(%Win_WaitRegEX_Title%)
-	if !Win_WaitGetID
-		Win_WaitGetID := DllCall("GetParent", UInt,WinExist("A")), Win_WaitGetID := !Win_WaitGetID ? WinExist("A") : Win_WaitGetID
-	if !WinActive(Win_WaitRegEX_Title)
-		WinActivate, %Win_WaitRegEX_Title%
-		
-	if !Win_WaitGetTitle
-		WinGetTitle, Win_WaitGetTitle, ahk_id %Win_WaitGetID%
-		
-	; MsgBox, 2. End, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
-
-	Return {Title: Win_WaitGetTitle, ID: Win_WaitGetID}
-}
-
-
 ; ****************************************************************************
 ; ****************************************************************************
 ; allow users to use objects with the function and return the data they want.
@@ -183,7 +157,7 @@ Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", Excl
 ; Examples:
 ; Win_WaitRegEX("LEWZ")
 ; ****************************************************************************
-Win_WaitRegEX_OLD2(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
+Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
 	SetTitleMatchMode, RegEx
 	; MsgBox, 1. Begin, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
 	; WinWait , WinTitle, WinText, Timeout, ExcludeTitle, ExcludeText
@@ -202,7 +176,7 @@ Win_WaitRegEX_OLD2(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="",
 	WinGetTitle, Win_WaitGetTitle, A
 	Win_WaitGetID := DllCall("GetParent", UInt,WinExist("A")), Win_WaitGetID := !Win_WaitGetID ? WinExist("A") : Win_WaitGetID
 
-	MsgBox, 2. Middle, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
+	; MsgBox, 2. Middle, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
 
 	if WinActive(%Win_WaitRegEX_Title%)
 	{
@@ -326,7 +300,6 @@ Mouse_Click(X,Y, Options := "") {
 }
 
 Key_Menu() {
-	Goto Key_Menu_END
 	Gui, Keys:New, , Keys
 	Gui, Keys:Margin, 0, 0
 	Gui, Keys:add,text,, F1 Switch App
@@ -337,24 +310,25 @@ Key_Menu() {
 	; Gui, Keys:add,text,, F7 Reset_Posit = %Resetting_Posit% ; or (%Resetting_Posit% ? "True" : "False")
 	Gui, Keys:add,text,, % "F7 Reset_Posit = " (Resetting_Posit ? "Yes" : "No")
 	Gui, Keys:add,text,, % "Pause Script = " (A_IsPaused ? "Yes" : "No")
-	Gui, Keys:show, x731 y700 w150 h250
+	Gui, Status:show, x%MsgWinMove_X% y700 w150 h250
+	; Gui, Status:show, x731 y700 w150 h250
 
-	WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
+	; ; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
-	Key_Menu_END:
 	return
 }
 
 GUI_Update() {
-	Goto GUI_Update_END
+
 	if GUI_Count++>13
 	{
 		Gui, Status:new, , Status
 		Gui, Status:Margin, 0, 0
 		Gui, Status:add,text,, Account %User_Name%
 		Gui, Status:add,text,, Routine: %Routine_Running%
-		Gui, Status:show, x731 y0 w300 h500
+		Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
+		; Gui, Status:show, x731 y0 w300 h500
 		GUI_Count := 0
 	}
 
@@ -372,10 +346,9 @@ GUI_Update() {
 		; Gui, Status:add,text,, Click %X_Pixel%, %Y_Pixel%
 
 		Gui, Status:add,text,, %Subroutine_Running% Running (%X_Pixel%,%Y_Pixel%)
-		Gui, Status:show, x731 y0 w300 h500
+		Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
+		; Gui, Status:show, x731 y0 w300 h500
 	}
-	WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	GUI_Update_END:
 	return
 }
 
@@ -614,6 +587,11 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
 	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
+	
+	OCR_X1 += App_Win_X
+	OCR_Y1 += App_Win_Y
+	OCR_X2 += App_Win_X
+	OCR_Y2 += App_Win_Y
 
 	Search_Captured_Text_Begin:
 	; WinRestore, %FoundAppTitle%
@@ -654,7 +632,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	
 	For index, value in Search_Text_Array
 	{
-		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:"%index%" value:"%value%" `nCapture_Screen_Text:"%Capture_Screen_Text%" Win_Control:"%Win_Control%" `nFoundAppControl:"%FoundAppControl%" FoundAppTitle:"%FoundAppTitle%"
+		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:"%index%"`nSearch:"%value%" `nFound:"%Capture_Screen_Text%"`nWin_Control:"%Win_Control%" FoundAppControl:"%FoundAppControl%" FoundAppTitle:"%FoundAppTitle%"
 		if !( value == "" )
 			If (RegExMatch(Capture_Screen_Text,value))
 				return 1
@@ -835,7 +813,7 @@ Text_To_Screen(Text_To_Send, Options := "") {
 		; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
 	}
 	*/
-	Timeout += (StrLen(Text_To_Send) * 1+Delay_Short)
+	Timeout += (StrLen(Text_To_Send) * 1+Delay_Micro)
 	DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
 	return
 }
