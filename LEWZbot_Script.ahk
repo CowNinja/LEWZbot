@@ -54,7 +54,7 @@ while WinExist(FoundAppTitle)
 	main_program:
 	loop
 	{
-		;  ([Subroutine_Running,A_ThisLabel,FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
+		; ([Subroutine_Running,A_ThisLabel,FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
 		; stdout.WriteLine(A_Now " Main_loop, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 		; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; WinActivate ; Automatically uses the window found above.
 
@@ -71,7 +71,7 @@ while WinExist(FoundAppTitle)
 			Gosub Check_Window_Geometry
 			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 			
-			;  ([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
+			; ([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
 
 			global User_Name := User
 			global User_Email := Val[1]
@@ -841,7 +841,7 @@ Quit_LEWZ:
 	; loop, 5
 	; {
 	; 	Mouse_Click(283,5, {Control: Qt5QWindowIcon}) ; close LEWZ and/or other app tabs
-	;  SendEvent {Click, 283,5}
+	; SendEvent {Click, 283,5}
 	;	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	;}
 
@@ -1146,7 +1146,7 @@ Switch_Account:
 		OCR_Y := 720
 		OCR_W := 50
 		OCR_H := 80
-	    ; Capture_Screen_Text := OCR([323, 732, 47, 77], "eng")
+		; Capture_Screen_Text := OCR([323, 732, 47, 77], "eng")
 		if Search_Captured_Text_OCR(["OK"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 			Mouse_Click(340,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap OK	
 			
@@ -1322,9 +1322,9 @@ Collect_Collisions:
 
 	loop, 2
 	{
-		Mouse_Click(430,280)  ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(515,375)  ; Tap Collision
+		Mouse_Click(515,375) ; Tap Collision
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Particle"], {Timeout: 0})
@@ -1335,11 +1335,11 @@ Collect_Collisions:
 
 	Collect_Collisions_Found:
 	{
-		Mouse_Click(180,1130)  ; Tap Collide1 times
+		Mouse_Click(180,1130) ; Tap Collide
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Loop, 3
 		{
-			Mouse_Click(450,1180)  ; Tap OK
+			Mouse_Click(450,1180) ; Tap OK
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -1353,11 +1353,12 @@ Collect_Collisions:
 		Mouse_Click(412,255) ; Tap Command Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-	Mouse_Click(540,367) ; Tap Collide 540, 399
+	Mouse_Click(540,367) ; Tap Collide
+	; Mouse_Click(540,399) ; Tap Collide
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	loop, 2
-		Mouse_Click(181,1132, {Timeout: Delay_Medium+0}) ; Tap Collide x Times
+		Mouse_Click(181,1130, {Timeout: Delay_Medium+0}) ; Tap Collide
 
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap Ok
@@ -1376,9 +1377,9 @@ Collect_Equipment_Crafting:
 
 	loop, 2
 	{
-		Mouse_Click(430,280)  ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(430,390)  ; Tap Craft
+		Mouse_Click(430,390) ; Tap Craft
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Giant"], {Timeout: 0})
@@ -1389,11 +1390,11 @@ Collect_Equipment_Crafting:
 
 	Collect_Equipment_Found:
 	{
-		Mouse_Click(183,1177)  ; Tap Craft 1 times
+		Mouse_Click(183,1177) ; Tap Craft
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Loop, 3
 		{
-			Mouse_Click(450,1180)  ; Tap OK
+			Mouse_Click(450,1180) ; Tap OK
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -1411,7 +1412,7 @@ Collect_Equipment_Crafting:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	loop, 2
-		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft x Times
+		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft
 
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap Ok
@@ -1430,9 +1431,9 @@ Collect_Recruits:
 
 	loop, 2
 	{
-		Mouse_Click(430,280)  ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(350,375)  ; Tap Recruit
+		Mouse_Click(350,375) ; Tap Recruit
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Recruitment"], {Timeout: 0})
@@ -1443,11 +1444,11 @@ Collect_Recruits:
 
 	Collect_Recruits_Found:
 	{
-		Mouse_Click(160,1180)  ; Tap Recruit 1 times
+		Mouse_Click(160,1180) ; Tap Recruit 1 times
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Loop, 3
 		{
-			Mouse_Click(450,1180)  ; Tap OK
+			Mouse_Click(450,1180) ; Tap OK
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -1464,13 +1465,13 @@ Collect_Recruits:
 	Mouse_Click(366,395) ; Tap Recruit
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	; Mouse_Click(200,1155) ; Tap Recruit x Times
+	; Mouse_Click(200,1155) ; Tap Recruit
 	loop, 3
-		Mouse_Click(180,1180, {Timeout: Delay_Long+0})
+		Mouse_Click(180,1180, {Timeout: Delay_Long+0}) ; Tap Craft
 
 	; Mouse_Click(460,1182) ; Tap OK x times
 	loop, 3
-		Mouse_Click(460,1182, {Timeout: Delay_Long+0})
+		Mouse_Click(460,1182, {Timeout: Delay_Long+0}) ; Tap OK x times
 
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap Ok
@@ -1488,9 +1489,9 @@ Collect_Runes:
 
 	loop, 2
 	{
-		Mouse_Click(430,280)  ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(570,340)  ; Rune Extraction
+		Mouse_Click(570,340) ; Rune Extraction
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Rune"], {Timeout: 0})
@@ -1501,11 +1502,11 @@ Collect_Runes:
 
 	Collect_Runes_Found:
 	{
-		Mouse_Click(180,1180)  ; Tap Extract 1 times
+		Mouse_Click(180,1180) ; Tap Extract
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Loop, 3
 		{
-			Mouse_Click(450,1180)  ; Tap OK
+			Mouse_Click(450,1180) ; Tap OK
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -1568,7 +1569,7 @@ Shield_Warrior_Trial_etc:
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		{
 
-			Mouse_Click(76,1200) ; Tap World/home button x times
+			Mouse_Click(76,1200) ; Tap World/home button
 
 			MsgBox, 0, Pause, Check location`, Press OK to return home (No Timeout)
 
@@ -1632,7 +1633,7 @@ Activity_Center_Wonder_old:
 {
 	Mouse_Drag(108, 536, 262, 536, {EndMovement: T, SwipeTime: 500})
 	/*
-	Click, 108, 536 Left, Down  ; drag home screen to right
+	Click, 108, 536 Left, Down ; drag home screen to right
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	Click, 131, 536, 0
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
@@ -1655,7 +1656,7 @@ Activity_Center_Wonder_old:
 
 	Mouse_Drag(329, 1194, 337, 848, {EndMovement: F, SwipeTime: 500})
 	/*
-	Click, 329, 1194 Left, Down  ; drag activity center list up
+	Click, 329, 1194 Left, Down ; drag activity center list up
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	Click, 337, 848, 0
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
@@ -1671,19 +1672,22 @@ Activity_Center_Wonder_old:
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 	Mouse_Click(339,987) ; Tap Collect Button
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-	Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(250,150) ; Tap Outside reward popup
+	Mouse_Click(320,70) ; Tap top title bar
+	; Mouse_Click(250,150) ; Tap Outside reward popup
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 	Mouse_Click(438,593) ; Tap and open reward box number 2
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 	Mouse_Click(329,994) ; Tap Collect Button
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-	Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(250,150) ; Tap Outside reward popup
+	Mouse_Click(320,70) ; Tap top title bar
+	; Mouse_Click(250,150) ; Tap Outside reward popup
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 	Mouse_Click(641,598) ; Tap and open reward box number 3
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 	Mouse_Click(340,1000) ; Tap Collect Button
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-	Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(250,150) ; Tap Outside reward popup
+	Mouse_Click(320,70) ; Tap top title bar
+	; Mouse_Click(250,150) ; Tap Outside reward popup
 
 	MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
 	Gosub Go_Back_To_Home_Screen
@@ -1716,22 +1720,22 @@ Activity_Center_Wonder:
 		Search_Captured_Text := ["Desert Wonder"]
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 588], Size: [300, 50], Timeout: 0})
 		{
-			Mouse_Click(282,611)  ; Tap activity 01
+			Mouse_Click(282,611) ; Tap activity 01
 			goto Activity_Center_Continue_Tab
 		}
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 778], Size: [300, 50], Timeout: 0})
 		{
-			Mouse_Click(256,803)  ; Tap activity 02
+			Mouse_Click(256,803) ; Tap activity 02
 			goto Activity_Center_Continue_Tab
 		}
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 976], Size: [300, 50], Timeout: 0})
 		{
-			Mouse_Click(242,1004)  ; Tap activity 03
+			Mouse_Click(242,1004) ; Tap activity 03
 			goto Activity_Center_Continue_Tab
 		}
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 1174], Size: [300, 50], Timeout: 0})
 		{
-			Mouse_Click(211,1201)  ; Tap activity 04
+			Mouse_Click(211,1201) ; Tap activity 04
 			goto Activity_Center_Continue_Tab
 		}
 	}
@@ -1745,7 +1749,7 @@ Activity_Center_Wonder:
 	{
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [233, 44], Size: [229, 52], Timeout: 0})
 		{
-			Mouse_Click(250,136)  ; Tap Wonder tab
+			Mouse_Click(250,136) ; Tap Wonder tab
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 			goto Activity_Center_Continue_Claim
 		}
@@ -1756,37 +1760,37 @@ Activity_Center_Wonder:
 	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
-	Mouse_Click(241,596)  ; Tap Wonder reward box 01
+	Mouse_Click(241,596) ; Tap Wonder reward box 01
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,1000)  ; Tap Collect Reward
+	Mouse_Click(330,1000) ; Tap Collect Reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,70)  ; Tap to clear reward
+	Mouse_Click(330,70) ; Tap to clear reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(438,598)  ; Tap Wonder reward box 02
+	Mouse_Click(438,598) ; Tap Wonder reward box 02
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,1000)  ; Tap Collect Reward
+	Mouse_Click(330,1000) ; Tap Collect Reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,70)  ; Tap to clear reward
+	Mouse_Click(330,70) ; Tap to clear reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(640,599)  ; Tap Wonder reward box 03
+	Mouse_Click(640,599) ; Tap Wonder reward box 03
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,1000)  ; Tap Collect Reward
+	Mouse_Click(330,1000) ; Tap Collect Reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(330,70)  ; Tap to clear reward
+	Mouse_Click(330,70) ; Tap to clear reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	
 	
-	Mouse_Click(600,802)  ; Tap "Receive Rewards" 1
+	Mouse_Click(600,802) ; Tap "Receive Rewards" 1
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
+	Mouse_Click(350, 70) ; Tap To clear popup rewards message
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(600,968)  ; Tap "Receive Rewards" 2
+	Mouse_Click(600,968) ; Tap "Receive Rewards" 2
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
+	Mouse_Click(350, 70) ; Tap To clear popup rewards message
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	Mouse_Click(600,1129) ; Tap "Receive Rewards" 3
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
+	Mouse_Click(350, 70) ; Tap To clear popup rewards message
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	
 	Activity_Center_END:
@@ -1825,19 +1829,19 @@ Benefits_Center_Monthly:
 		Mouse_Click(71,166) ; Tap Tab 1 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-		Mouse_Click(155,166)
+		Mouse_Click(155,166) ; Tap Tab 1.5 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		Mouse_Click(235,166) ; Tap Tab 2 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
-		Mouse_Click(315,166)
+		Mouse_Click(315,166) ; Tap Tab 2.5 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		Mouse_Click(395,166) ; Tap Tab 3 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
-		Mouse_Click(475,166)
+		Mouse_Click(475,166) ; Tap Tab 3.5 Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		Mouse_Click(560,166) ; Tap Tab 4 Benefits Center
@@ -2233,7 +2237,8 @@ Benefits_Center:
 		Mouse_Click(343,749) ; Claim Strengthening also silver medals
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(378,1172) ; Tap Outside Congrats Popup
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(378,1172) ; Tap Outside Congrats Popup
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 		Select_Reward_Run := False
@@ -2265,18 +2270,18 @@ Benefits_Center:
 		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		; Mouse_Click(500,1200) ; Tap Claim
 
-		Mouse_Click(560,1220)	; Select redeem steel
+		Mouse_Click(560,1220) ; Select redeem steel
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(366,680)	; Select max redeem slide bar
+		Mouse_Click(366,680) ; Select max redeem slide bar
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(336,781)	; Select Exchange button
+		Mouse_Click(336,781) ; Select Exchange button
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
-		Mouse_Click(561,975)	; Select redeem silver medals
+		Mouse_Click(561,975) ; Select redeem silver medals
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(366,680)	; Select max redeem slide bar
+		Mouse_Click(366,680) ; Select max redeem slide bar
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(336,781)	; Select Exchange button
+		Mouse_Click(336,781) ; Select Exchange button
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 		Warrior_Trial_Run := False
@@ -2304,19 +2309,19 @@ Benefits_Center:
 		;	return
 
 		Subroutine_Running := "Claim_Buttons"
-		; Mouse_Click(181,1130, {Timeout: Delay_Short+0})
+		; Mouse_Click(181,1130, {Timeout: Delay_Short+0}) ; Tap Collide
 
 		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		if (OCR([530, 478, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #1
-			Mouse_Click(600,500, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0})
+			Mouse_Click(600,500, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 01
 		if (OCR([530, 633, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #2
-			Mouse_Click(600,660, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0})
+			Mouse_Click(600,660, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 02
 		if (OCR([530, 788, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #3
-			Mouse_Click(600,800, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0})
+			Mouse_Click(600,800, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 03
 		if (OCR([530, 943, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #4
-			Mouse_Click(600,970, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0})
+			Mouse_Click(600,970, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 04
 		if (OCR([530, 1098, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #5
-			Mouse_Click(600,1130, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0})
+			Mouse_Click(600,1130, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 05
 
 		; Claim_Buttons_Run := False
 
@@ -2391,19 +2396,19 @@ Benefits_Center:
 		
 		loop, 12
 		{
-			Mouse_Click(320,70) ; Tap top title bar of Benefits Center
+			Mouse_Click(320,70) ; Tap top title bar
 			; Mouse_Click(329,1160) ; Tap Bottom Middle
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 		}
 
 		loop, 7
 		{
-			Mouse_Click(320,70) ; Tap top of Benefit Center
+			Mouse_Click(320,70) ; Tap top title bar
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		}
 
 		; loop, 12
-		; Mouse_Click(329,1231)
+		; Mouse_Click(329,1231) ; Tap Bottom Middle
 
 		Daily_Signin_Run := False
 
@@ -2420,11 +2425,8 @@ Benefits_Center:
 		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		; Claim Monthly
 		loop, 2
-			Mouse_Click(342,1215)	; Tap collect Monthly Signin
+			Mouse_Click(342,1215) ; Tap collect Monthly Signin
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-
-		; loop, 2
-		; Mouse_Click(342,1215)
 
 		Mouse_Click(153,323) ; Claim 5 Days
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
@@ -2456,7 +2458,7 @@ Benefits_Center:
 		Mouse_Click(340,1000) ; Tap Collect
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
-		Mouse_Click(340,40)	; 1215) ; Tap to Clear
+		Mouse_Click(340,40) ; 1215) ; Tap to Clear
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
 		return
@@ -2525,22 +2527,22 @@ Benefits_Center:
 
 		Battle_Honor_Click:
 		{
-			Mouse_Click(260,636, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,636, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,799, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,799, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,883, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,883, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,963, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,963, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1050, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1050, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1126, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1126, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1202, {Clicks: 2,Timeout: Delay_Short})
-			Mouse_Click(260,1202, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(260,636, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 01
+			Mouse_Click(260,636, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 01
+			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 02
+			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 02
+			Mouse_Click(260,799, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 03
+			Mouse_Click(260,799, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 03
+			Mouse_Click(260,883, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 04
+			Mouse_Click(260,883, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 04
+			Mouse_Click(260,963, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 05
+			Mouse_Click(260,963, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 05
+			Mouse_Click(260,1050, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 06
+			Mouse_Click(260,1050, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 06
+			Mouse_Click(260,1126, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 07
+			Mouse_Click(260,1126, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 07
+			Mouse_Click(260,1202, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 08
+			Mouse_Click(260,1202, {Clicks: 2,Timeout: Delay_Short}) ; Tap Battle Honor 08
 
 			return
 		}
@@ -2643,7 +2645,7 @@ Drop_Zone:
 	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
 	; {
 	; loop, 5
-	; Mouse_Click(409,1051)
+	; Mouse_Click(409,1051) ; Get Steel X Times
 	; }
 	; else
 	; break
@@ -2663,14 +2665,14 @@ Drop_Zone:
 	{
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 			loop, 20
-				Mouse_Click(409,1051, {Clicks: 2,Timeout: (1*Delay_Short+0)})
+				Mouse_Click(409,1051, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
 		; else
 		;	break
 	}
 
 	; loop, 40
 	; {
-	;	Mouse_Click(409,1051)
+	;	Mouse_Click(409,1051) ; Get Steel X Times
 	;	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	; }
 
@@ -2885,10 +2887,9 @@ Reserve_Factory:
 	Mouse_Click(111,339) ; Tap Reserve Factory Icon
 	DllCall("Sleep","UInt",(rand_wait + 6*Delay_Long+0))
 
-	; Mouse_Click(344,589) ; Tap Reserve Factory On World Map
 	loop, 3
 	{
-		Mouse_Click(344,589)
+		Mouse_Click(344,589) ; Tap Reserve Factory On World Map
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 
@@ -2910,7 +2911,7 @@ Reserve_Factory:
 	; Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
 	loop, 10
 	{
-		Mouse_Click(324,797)
+		Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -3004,10 +3005,10 @@ Donate_Tech:
 	; Gosub Click_Top_Tech
 	; Gosub Donate_Tech_Collapse_Tech_Old ; Contribute to 2nd tier tech
 
-	loop, 2
-		Mouse_Click(342,878)
+	; loop, 2
+	; 	Mouse_Click(342,878) ; Tap Tech #5
 
-	Gosub Donate_Tech_Collapse_Tech_Old ; Contribute to 2nd tier tech
+	; Gosub Donate_Tech_Collapse_Tech_Old ; Contribute to 2nd tier tech
 
 	; Mouse_Click(468,350) ; Tap Tech #1 Y = 275-375 / Rank #2 Y = 340-440 / #3 405-505 RankDelta = 65 (deltaY = 140)
 	; Mouse_Click(468,489) ; Tap Tech #2 Y = 415-515 (deltaY = 140)
@@ -3107,7 +3108,8 @@ Donate_Tech:
 	Donate_Tech_Control_Desk_Expand:
 	{
 		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-		Mouse_Click(7,637) ; Mouse_Click(27,612) ; Tap Expand Control Desk
+		Mouse_Click(7,637) ; Tap to Expand Control Desk
+		; Mouse_Click(27,612) ; Tap to Expand Control Desk
 		DllCall("Sleep","UInt",(rand_wait + 9*Delay_Short+0))
 		Mouse_Click(7,637) ; Tap to Expand Control Desk
 		DllCall("Sleep","UInt",(rand_wait + 9*Delay_Short+0))
@@ -3116,23 +3118,7 @@ Donate_Tech:
 
 		loop, 2
 			Mouse_Drag(326, 405, 326, 957, {EndMovement: F, SwipeTime: 500})
-		/*
-		{
-			Mouse_Click(326,405, {DownUp: Down, Timeout: 0})
-			Click, 326, 405 Left, Down
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 474, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 543, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 681, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 957 Left, Up
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
-			Mouse_Click(326,957, {DownUp: Up, Timeout: 0})
-		}
-		*/
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 		Mouse_Click(468,959) ; Tap Goto Alliance Donation
@@ -3327,7 +3313,7 @@ Depot_Rewards:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	; set variables
 	Max_X := Min_X := 510	; 515
-	Max_Y := (Min_Y + 3*OCR_Y_Delta)	; 1200
+	Max_Y := (Min_Y + 3*OCR_Y_Delta) ; 1200
 	; Min_X := 500
 	Min_Y := 400	; 400
 	OCR_X := Min_X ; delta 71-276-481 = 205
@@ -3349,7 +3335,8 @@ Depot_Rewards:
 
 		Depot_Rewards_Click_Found_Item:
 		Mouse_Click(Click_X,Click_Y, {Timeout: 1*Delay_Medium+0}) ; Tap found button
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(341,68, {Timeout: 1*Delay_Short+0}) ; Tap Outside Rewards Box
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(341,68, {Timeout: 1*Delay_Short+0}) ; Tap Outside Rewards Box
 		; DllCall("Sleep","UInt",rand_wait + (4*Delay_Short))
 
 		Next_Depot_Button:
@@ -3371,7 +3358,7 @@ VIP_Shop:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Mouse_Click(156,91) ; Tap VIP_Shop
+	Mouse_Click(156,91) ; Tap VIP Shop
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Search_Captured_Text := ["VIP Shop"]
@@ -3420,7 +3407,8 @@ VIP_Shop:
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Mouse_Click(350,890) ; confirm purchase
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(320,70) ; Tap top title bar of VIP ; Mouse_Click(350,1150) ; Tap Outside Rewards Box
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(350,1150) ; Tap Outside Rewards Box
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 
 		VIP_Shop_Click_Button_Next:
@@ -3525,18 +3513,18 @@ Mail_Collection:
 	{
 		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26], Timeout: 0}) ; Is the Mark as Read button displayed?
 		{
-			Mouse_Click(340,1200) ;  Left, 1  ; Tap "MARK AS READ" button
+			Mouse_Click(340,1200) ; Left, 1 ; Tap "MARK AS READ" button
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Mouse_Click(202,706) ;  Left, 1  ; Tap "CONFIRM" button
+			Mouse_Click(202,706) ; Left, 1 ; Tap "CONFIRM" button
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Mouse_Click(340,70) ;  Left, 1  ; Tap header to clear message
+			Mouse_Click(340,70) ; Left, 1 ; Tap header to clear message
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		}
 	}
 	; Tap Message back
 	; loop, 2
 	; {
-	; 	Mouse_Click(51,63)
+	; 	Mouse_Click(51,63) ; Tap Message back
 	; 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	; }
 	gosub Mail_Collection_Open
@@ -3553,7 +3541,7 @@ Mail_Collection:
 
 			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24], Timeout: 0})
 			{
-				Mouse_Click(500,1200) ;  Left, 1  ; Tap Mail
+				Mouse_Click(500,1200) ; Left, 1 ; Tap Mail
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 				Goto, Mail_Collection_Open
 			}
@@ -3814,7 +3802,7 @@ Alliance_Wages:
 		}
 
 		; loop, 3
-			; Mouse_Click(134,725)
+			; Mouse_Click(134,725) ; Tap Attendance 1
 		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		loop, 3
@@ -3824,7 +3812,7 @@ Alliance_Wages:
 		}
 
 		; loop, 3
-			; Mouse_Click(281,730)
+			; Mouse_Click(281,730) ; Tap Attendance 30
 		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		loop, 3
@@ -3834,7 +3822,7 @@ Alliance_Wages:
 		}
 
 		; loop, 3
-			; Mouse_Click(615,726)
+			; Mouse_Click(615,726) ; Tap Attendance 50
 		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	}
 
@@ -3944,7 +3932,8 @@ Alliance_Wages:
 		Mouse_Click(352,982) ; Tap Collect Daily Rewards Chest
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(366,175) ; Tap Outside Chest
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(366,175) ; Tap Outside Chest
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
 		return
@@ -3975,7 +3964,8 @@ Train_Daily_Requirement:
 		Mouse_Click(474,1186) ; Tap Mail
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
-		Mouse_Click(51,63) ; Mouse_Click(631,75) ; Tap Message back
+		Mouse_Click(51,63) ; Tap Message back
+		; Mouse_Click(631,75) ; Tap Message back
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 		; Zoom out
@@ -4010,10 +4000,10 @@ Train_Daily_Requirement:
 
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Tap Vehicle Factory
-	; Mouse_Click(393,985)
+	; Mouse_Click(393,985); Tap Vehicle Factory
 	loop, 2
 	{
-		Mouse_Click(391,940)
+		Mouse_Click(391,940) ; Tap Vehicle Factory
 		Gosub Click_Middle_Screen
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
@@ -4023,30 +4013,32 @@ Train_Daily_Requirement:
 	Gosub Training_Number
 
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Tap Warrior Camp
-	; Mouse_Click(183,852)
+	
+	; Mouse_Click(183,852) ; Tap Warrior Camp
 	loop, 2
 	{
-		Mouse_Click(219,845)
+		Mouse_Click(219,845) ; Tap Warrior Camp
 		Gosub Click_Middle_Screen
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	; Tap Train Button
-	Mouse_Click(354,878) ; Mouse_Click(324,872)
+	Mouse_Click(354,878) ; Tap Train Button
+	; Mouse_Click(324,872) ; Tap Train Button
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Gosub Training_Number
 
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Tap Shooter Camp
-	; Mouse_Click(63,769)
+	
+	; Mouse_Click(63,769) ; Tap Shooter Camp
 	loop, 2
 	{
-		Mouse_Click(100,800)
+		Mouse_Click(100,800) ; Tap Shooter Camp
 		Gosub Click_Middle_Screen
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	; Tap Train Button
-	Mouse_Click(239,850) ; Mouse_Click(271,833)
+	Mouse_Click(239,850) ; Tap Train Button
+	; Mouse_Click(271,833) ; Tap Train Button
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Gosub Training_Number
 
@@ -4055,7 +4047,7 @@ Train_Daily_Requirement:
 	; Mouse_Click(10,730) ; Tap Biochemical Center
 	loop, 2
 		{
-		Mouse_Click(11,717)
+		Mouse_Click(11,717) ; Tap Biochemical Center
 		Gosub Click_Middle_Screen
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
@@ -4103,7 +4095,7 @@ Gather_Resources:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
-	Mouse_Click(76,1200) ; Tap World button
+	Mouse_Click(76,1200) ; Tap World/home button
 	DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
 
 	Gather_Fuel:
@@ -4289,7 +4281,6 @@ Gather_Resources:
 		DllCall("Sleep","UInt",(rand_wait + 8*Delay_Short+0))
 
 		; Mouse_Click(54,965) ; Tap Do Not Remind Me Again
-		; Mouse_Click(54,965)
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 		Mouse_Click(560,1020) ; Tap Deploy
@@ -4854,14 +4845,16 @@ Golden_Chest:
 	Mouse_Click(125,1200) ; Tap open for Free
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(585,250) ; Tap outside claim banner
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(585,250) ; Tap outside claim banner
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(357,495) ; Tap Silver tab
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(118,1201) ; Tap open for Free
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(585,250) ; Tap outside claim banner
+		Mouse_Click(320,70) ; Tap top title bar
+		; Mouse_Click(585,250) ; Tap outside claim banner
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(633,598) ; Tap rankings
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -5112,7 +5105,7 @@ Get_User_Info:
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	; MsgBox, % "1. before trim "  User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
+	; MsgBox, % "1. before trim " User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 	; MsgBox, % User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 
 	; Extract User_Found_Alliance from User_State_Alliance
@@ -5140,7 +5133,7 @@ Get_User_Info:
 	; User_VIP := trim(User_VIP)
 	; User_State_Alliance := trim(User_State_Alliance)
 	; User_Power := trim(User_Power)
-	; MsgBox, % "2. after trim "  User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
+	; MsgBox, % "2. after trim " User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 
 	Gosub Go_Back_To_Home_Screen
 
@@ -5190,7 +5183,7 @@ Get_User_Location:
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	; User_City_Location := OCR([304, 663, 85, 22], "eng")
-	; User_City_Location_Array := StrSplit(User_City_Location, "`,","XY: ")  ; Omits X, Y, : and space.
+	; User_City_Location_Array := StrSplit(User_City_Location, "`,","XY: ") ; Omits X, Y, : and space.
 
 	; MsgBox, % "1. before split X`,Y:" User_City_Location " 2. after split X:Y" User_City_Location_Array[1] ":" User_City_Location_Array[2]
 	; Message_To_The_Boss .= "Location:`,""" . User_City_Location_Array[1] . ":" . User_City_Location_Array[2] . """`,"
@@ -5257,8 +5250,8 @@ Base_Search_World_Map:
 	Enter_Search_Coordinates:
 	{
 		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-		Mouse_Click(220,1000)  ; Tap Map Coordinate button
-		; Mouse_Click(188,869)
+		Mouse_Click(220,1000) ; Tap Map Coordinate button
+		; Mouse_Click(188,869); Tap Map Coordinate button
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		Mouse_Click(200,530) ; Tap inside X coordinate Box
@@ -5267,14 +5260,14 @@ Base_Search_World_Map:
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Text_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(448,530)  ; Tap inside Y coordinate Box
+		Mouse_Click(448,530) ; Tap inside Y coordinate Box
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Text_To_Screen(Map_Y)
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Text_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		; Mouse_Click(196,467)
-		Mouse_Click(350,620)  ; Tap Go To Coordinates2
+		; Mouse_Click(196,467) ; Tap Go To Coordinates1
+		Mouse_Click(350,620) ; Tap Go To Coordinates2
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 
 		return
@@ -5337,7 +5330,7 @@ Base_Search_World_Map:
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
 				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
-				Mouse_Click(FoundPictureX,FoundPictureY)
+				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 1 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
 			}
@@ -5347,7 +5340,7 @@ Base_Search_World_Map:
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
 				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
-				Mouse_Click(FoundPictureX,FoundPictureY)
+				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 2 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
 			}
@@ -5357,7 +5350,7 @@ Base_Search_World_Map:
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
 				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
-				Mouse_Click(FoundPictureX,FoundPictureY)
+				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 3 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
 			}
@@ -5367,7 +5360,7 @@ Base_Search_World_Map:
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
 				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
-				Mouse_Click(FoundPictureX,FoundPictureY)
+				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 4 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
 			}
@@ -5562,7 +5555,7 @@ Elivate_program:
 {
 	Subroutine_Running := "Elivate_program"
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-	;  ([Subroutine_Running,A_ThisLabel])
+	; ([Subroutine_Running,A_ThisLabel])
 
 	; stdout.WriteLine(A_Now " Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 
@@ -5920,7 +5913,7 @@ Check_Window_Geometry:
 Click_Middle_Screen:
 {
 	Subroutine_Running := "Click_Middle_Screen"
-	Mouse_Click((LowerX-UpperX)/2+UpperX,(LowerY-UpperY)/2+(UpperY-100))
+	Mouse_Click((LowerX-UpperX)/2+UpperX,(LowerY-UpperY)/2+(UpperY-100)) ; Tap in the middle of the screen
 }
 
 Refresh_LogFiles:
@@ -6005,7 +5998,7 @@ MsgBox, This MsgBox will never happen because of the EXIT.
 return
 
 Exit_Sub:
-Exit  ; Terminate this subroutine as well as the calling subroutine.
+Exit ; Terminate this subroutine as well as the calling subroutine.
 
 F4::ExitApp
 ; #c:: OCR()
