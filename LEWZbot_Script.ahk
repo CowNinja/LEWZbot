@@ -93,8 +93,8 @@ while WinExist(FoundAppTitle)
 				Gosub Go_Back_To_Home_Screen
 
 			Pause_Script := False
-			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 
 			; MsgBox, 4, , Enable Pause? (8 Second Timeout & skip), 8
@@ -145,8 +145,11 @@ while WinExist(FoundAppTitle)
 				; Gosub Desert_Oasis
 				; Gosub Donate_Tech
 				; Gosub Activity_Center_Wonder
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				; Gosub BruteForcePIN
+				Gosub Reserve_Factory
+				Gosub Golden_Chest
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
 
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
@@ -1059,6 +1062,11 @@ Switch_Account:
 		Use_Email_OCR_W := 160
 		Use_Email_OCR_H := 40
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [Use_Email_OCR_X, Use_Email_OCR_Y], Size: [Use_Email_OCR_W, Use_Email_OCR_H], Timeout: 0})
+		
+		Gosub Switch_Account_User_Email
+		Gosub Switch_Account_User_Password
+		goto Switch_Account_Next
+		
 			loop, 2
 			{
 				if !Email_Entered
@@ -1111,7 +1119,7 @@ Switch_Account:
 		loop, 3
 		{
 			Mouse_Click(220,382) ;, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
@@ -1127,7 +1135,7 @@ Switch_Account:
 		loop, 3
 		{
 			Mouse_Click(209,527) ; , {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
@@ -1139,10 +1147,10 @@ Switch_Account:
 	}
 
 	Switch_Account_Next:
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(455,739, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Tap Use your email to log in
 
-	loop, 10
+	loop, 15
 	{
 		OCR_X := 320
 		OCR_Y := 720
@@ -1179,9 +1187,11 @@ Switch_Account:
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 		{
 			Gosub Enter_Login_Password_PIN
-			break
+			break ; goto Switch_Account_PIN
 		}
 	}
+	
+	; gosub BruteForcePIN
 
 	/*
 	; old loop
@@ -1214,12 +1224,13 @@ Switch_Account:
 			Break
 	}
 	*/
-
+	
+	Switch_Account_PIN:
 	MsgBox, 4, User PIN, user PIN: %User_PIN% - Pause script? (10 second Timeout), 10
 	vRet := MsgBoxGetResult()
-	if (vRet = "No")
-		DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
-	else if (vRet = "Yes")
+	; if (vRet = "No")
+	;	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+	if (vRet = "Yes")
 		MsgBox, 0, Pause, User PIN: %User_PIN% Press OK to resume (No Timeout)
 
 	Switch_Account_END:
@@ -1231,7 +1242,9 @@ Switch_Account:
 
 Enter_Login_Password_PIN:
 {
-	Subroutine_Running := "Enter_Login_Password_PIN"
+	; Subroutine_Running := "Enter_Login_Password_PIN"
+	
+	Goto Enter_Login_Password_PIN_Dialog
 
 	Enter_Login_Password_PIN_Search:
 	Search_Captured_Text := ["Enter","login","password"]
@@ -1262,39 +1275,82 @@ Enter_Login_Password_PIN:
 	Enter_Login_Password_PIN_Dialog:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 6
-		Mouse_Click(577,1213, {Timeout: Delay_Medium+0}) ; Tap backspace
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Mouse_Click(577,1213, {Timeout: 5}) ; , {Timeout: Delay_Medium+0}) ; Tap backspace
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Enter_User_PIN := StrSplit(User_PIN)
 	Loop % Enter_User_PIN.MaxIndex()
 	{
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 		if Enter_User_PIN[A_Index] = "0"
-			Mouse_Click(340,1200) ; Tap 0
+			Mouse_Click(340,1200, {Timeout: 0}) ; Tap 0
 		if Enter_User_PIN[A_Index] = "1"
-			Mouse_Click(120,920) ; Tap 1
+			Mouse_Click(120,920, {Timeout: 0}) ; Tap 1
 		if Enter_User_PIN[A_Index] = "2"
-			Mouse_Click(340,920) ; Tap 2
+			Mouse_Click(340,920, {Timeout: 0}) ; Tap 2
 		if Enter_User_PIN[A_Index] = "3"
-			Mouse_Click(560,920) ; Tap 3
+			Mouse_Click(560,920, {Timeout: 0}) ; Tap 3
 		if Enter_User_PIN[A_Index] = "4"
-			Mouse_Click(120,1000) ; Tap 4
+			Mouse_Click(120,1000, {Timeout: 0}) ; Tap 4
 		if Enter_User_PIN[A_Index] = "5"
-			Mouse_Click(340,1000) ; Tap 5
+			Mouse_Click(340,1000, {Timeout: 0}) ; Tap 5
 		if Enter_User_PIN[A_Index] = "6"
-			Mouse_Click(560,1000) ; Tap 6
+			Mouse_Click(560,1000, {Timeout: 0}) ; Tap 6
 		if Enter_User_PIN[A_Index] = "7"
-			Mouse_Click(120,1100) ; Tap 7
+			Mouse_Click(120,1100, {Timeout: 0}) ; Tap 7
 		if Enter_User_PIN[A_Index] = "8"
-			Mouse_Click(340,1100) ; Tap 8
+			Mouse_Click(340,1100, {Timeout: 0}) ; Tap 8
 		if Enter_User_PIN[A_Index] = "9"
-			Mouse_Click(560,1100) ; Tap 9
+			Mouse_Click(560,1100, {Timeout: 0}) ; Tap 9
 	}
 	return
 }
 
-Peace_Shield:
+BruteForcePIN:
+{
+	; MsgBox, incorrect PIN: %User_PIN%
+	User_PIN_INIT := "110100"
+	loop, 1000000
+	{
+		User_PIN := (User_PIN_INIT + A_Index)
+		; MsgBox, PIN: %User_PIN%
+		
+		loop, 5		
+		if StrLen(User_PIN) < 6		
+			User_PIN := "0" . User_PIN
+			
+		if StrLen(User_PIN) > 6		
+			User_PIN := "0"	
+		
+		; MsgBox, sub:"%Subroutine_Running%" PIN:"%User_PIN%"
+		gosub Enter_Login_Password_PIN
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		
+		if (Mod(A_Index, 100) == 0)
+		{
+			Subroutine_Running := "User_PIN " . User_PIN
+			Capture_Screen_Text := OCR([220, 551, 121, 71], "eng")
+			If (RegExMatch(Capture_Screen_Text,"Incorrect")) || if (RegExMatch(Capture_Screen_Text,"orgot"))
+				goto NOT_Right_PIN
+			
+			Else
+			{
+				MsgBox, 3, , Did %User_PIN% work? OCR:"%Capture_Screen_Text%" (10 second Timeout & auto),10
+				vRet := MsgBoxGetResult()
+				if (vRet = "Yes") || if (vRet = "Timeout")
+					break
+			}
+		}
+		NOT_Right_PIN:
+	}
+	
+	
+	MsgBox, correct PIN: %User_PIN%
+	return
+}
+
+Peace_Shield_OLD:
 {
 	Subroutine_Running := "Peace_Shield"
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
@@ -1308,6 +1364,201 @@ Peace_Shield:
 	Mouse_Click(302,235) ; Tap on Peace shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
+	MsgBox, 4, , Pause script to place shield? (8 Second Timeout & skip), 8
+	vRet := MsgBoxGetResult()
+	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
+
+	Gosub Go_Back_To_Home_Screen
+
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	return
+}
+
+
+Peace_Shield:
+{
+	Subroutine_Running := "Peace_Shield"
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
+
+	Shield_Open_Base:
+	Shield_Found_3Day := False
+	Shield_Found_24hour := False
+	Shield_Found_8hour := False
+	; WinActivate, LEWZ001
+	; DllCall("Sleep","UInt",(rand_wait + 1*333+0))
+	Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	Loop, 2
+	{
+		Loop, 3
+		{
+			; Capture_Screen_Text := OCR([320, 510, 91, 20], "eng")
+			Capture_Screen_Text := OCR([362, 512, 44, 14], "eng")
+			; MsgBox, 0, , Found"%Capture_Screen_Text%"
+			If Capture_Screen_Text contains Buff
+			{
+				Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+				Goto, Shield_Search_Buttons
+			}
+		}
+		Gosub Go_Back_To_Home_Screen
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
+		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	}
+	goto Peace_Shield_END
+	
+
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+	Goto, Shield_Open_Base
+	Shield_Search_Buttons:
+	Loop, 10
+	{
+		Capture_Screen_Text := OCR([134, 160, 150, 21], "eng")
+		; MsgBox, 0, , Check first Box:"%Capture_Screen_Text%"
+		If Capture_Screen_Text contains Peace Shield
+		{
+			Click_X := 165
+			Click_Y := 216
+			; Mouse_Click(165,216) ;  Left, 1}  ; Click second box to enable shield
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
+			If Capture_Screen_Text contains Ends in
+			{
+				Goto, Shield_Already_Active
+			}
+			Else
+			{
+				Goto, Activate_Shield
+			}
+		}
+		Capture_Screen_Text := OCR([134, 312, 150, 20], "eng")
+		; MsgBox, 0, , Check Second Box:"%Capture_Screen_Text%"
+		If Capture_Screen_Text contains Peace Shield
+		{
+			Click_X := 200
+			Click_Y := 367
+			; Mouse_Click(226,367) ;  Left, 1}  ; Click second box to enable shield
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
+			If Capture_Screen_Text contains Ends in
+			{
+				Goto, Shield_Already_Active
+			}
+			Else
+			{
+				Goto, Activate_Shield
+			}
+		}
+	}
+	Shield_Not_Found:
+	MsgBox, 4, , Shield Button not found in:"%Capture_Screen_Text%"`, Try again?
+	IfMsgBox, Yes
+	{
+		Goto, Shield_Open_Base
+	}
+	Else
+		Goto, Peace_Shield_END
+
+	Shield_Already_Active:
+	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway?
+	IfMsgBox, Yes
+		Goto, Activate_Shield
+	Else
+		Goto, Peace_Shield_END
+		
+	; Goto, Peace_Shield_END
+
+	Activate_Shield:
+	; MsgBox, 0, , Click X and Y: (%Click_X%`,%Click_Y%)
+
+	SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Loop, 10
+	{
+		Capture_Screen_Text := OCR([128, 225, 211, 33], "eng")
+		If Capture_Screen_Text contains Peace Shield
+		{
+			Shield_Found_3Day := True
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
+			IfMsgBox, Yes
+			{
+				Mouse_Click(590,310) ;  Left, 1}  ; Tap Get & use 3-Day Peace Shield
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+				Goto, Shield_Purchase
+				/*
+			}
+			Else
+			{
+				Goto, Peace_Shield_END
+				*/
+			}
+		}
+		Capture_Screen_Text := OCR([129, 376, 229, 26], "eng")
+		If Capture_Screen_Text contains Peace Shield
+		{
+			Shield_Found_24hour := True
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
+			IfMsgBox, Yes
+			{
+				Mouse_Click(590,458) ;  Left, 1}  ; Tap Get & use 24-Hour Peace Shield
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+				Goto, Shield_Purchase
+				/*
+			}
+			Else
+			{
+				Goto, Peace_Shield_END
+				*/
+			}
+		}
+		Capture_Screen_Text := OCR([128, 526, 221, 25], "eng")
+		If Capture_Screen_Text contains Peace Shield
+		{
+			Shield_Found_8hour := True
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
+			IfMsgBox, Yes
+			{
+				Mouse_Click(590,610) ;  Left, 1}  ; Tap Get & use 8-Hour Peace Shield
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+				Goto, Shield_Purchase
+				/*
+			}
+			Else
+			{
+				Goto, Peace_Shield_END
+				*/
+			}
+		}
+		If (Shield_Found_3Day && Shield_Found_24hour && Shield_Found_8hour)
+		{
+			Break
+		}
+	}
+	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again?
+	IfMsgBox, Yes
+		Goto, Shield_Open_Base
+	Else
+		Goto, Peace_Shield_END
+
+	Shield_Purchase:
+	Capture_Screen_Text := OCR([139, 521, 411, 72], "eng")
+	If Capture_Screen_Text contains are you sure
+	{
+		Mouse_Click(336,781) ;  Left, 1}  ; Tap Get & Use button, to confirm buying shield
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Goto, Peace_Shield_END
+	}
+	If Capture_Screen_Text contains After usage
+	{
+		Mouse_Click(340,782) ;  Left, 1}  ; Tap "OK" button
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Goto, Peace_Shield_END
+	}
+	Peace_Shield_END:	
 	MsgBox, 4, , Pause script to place shield? (8 Second Timeout & skip), 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
@@ -1934,25 +2185,23 @@ Benefits_Center:
 	Claim_Buttons_Run := True
 	Warrior_Trial_Run := True
 
-	Mouse_Click(625,300) ; Tap Benefits Center
+	loop, 2
+		Mouse_Click(625,310) ; Tap Benefits Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait for Benefits Center to load
 
 	loop, 2
 	{
-		; Gosub Benefits_Center_Reload
 		Gosub Benefits_Check_Tabs
-		; Gosub Benefits_swipe_Check_Tabs
+		Gosub Benefits_Check_Tabs
 		Gosub Go_Back_To_Home_Screen
 	}
-	; return
-
 	; Goto Benefits_Center_END
 
 	; loop, 4
 	{
 		; Gosub Benefits_Center_Reload
 		Gosub Benefits_Check_Tabs
-		Loop, 4
+		Loop, 3
 			Gosub Benefits_swipe_Check_Tabs
 		Gosub Go_Back_To_Home_Screen
 	}
@@ -1973,7 +2222,7 @@ Benefits_Center:
 		Gosub Check_Window_Geometry
 		Gosub Go_Back_To_Home_Screen
 		loop, 2
-			Mouse_Click(625,300, {Timeout: Delay_Short}) ; Tap Benefits Center
+			Mouse_Click(625,310, {Timeout: Delay_Short}) ; Tap Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 	}
 	return
@@ -2877,6 +3126,9 @@ Reserve_Factory:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
+	; *******************************
+	; Collect Reserve supplies
+	; *******************************
 	Mouse_Click(610,1200) ; Tap Alliance Menu
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
@@ -2892,38 +3144,51 @@ Reserve_Factory:
 	Mouse_Click(110,340) ; Tap Reserve Factory Icon
 	DllCall("Sleep","UInt",(rand_wait + 6*Delay_Long+0))
 
-	loop, 3
+	loop, 4
 	{
 		Mouse_Click(344,590) ; Tap Reserve Factory On World Map
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
-	Mouse_Click(609,1186) ; Tap Alliance Menu
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-
-	Mouse_Click(383,835) ; Tap Alliance Help
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-
-	Mouse_Click(480,140) ; Tap Reserve Factory Help
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-
-	Mouse_Click(119,336) ; Tap Reserve Factory Icon
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Mouse_Click(240,613) ; Tap Info Menu On Reserve Factory On World Map
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	; Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
-	loop, 10
+	; *******************************
+	; Upgrade, Add Energy, Use, Etc, X Times
+	; *******************************
+	Loop, 3
 	{
-		Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Mouse_Click(609,1186) ; Tap Alliance Menu
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+
+		Mouse_Click(383,835) ; Tap Alliance Help
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+
+		Mouse_Click(480,140) ; Tap Reserve Factory Help
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+
+		Mouse_Click(119,336) ; Tap Reserve Factory Icon
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+		Mouse_Click(240,613) ; Tap Info Menu On Reserve Factory On World Map
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+		; Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
+		loop, 10
+		{
+			Mouse_Click(324,797) ; Tap Upgrade, Add Energy, Use, Etc, X Times
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		}
+		Mouse_Click(320,70) ; Tap top title bar
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Mouse_Click(320,70) ; Tap top title bar
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		
+		Mouse_Click(33,62) ; Tap back Button
+		; Text_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Text_To_Screen("{F5}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
+	
+	; *******************************
+	; Instant Help and Request Help
+	; *******************************
 	Mouse_Click(596,1196) ; Tap Alliance Menu
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
@@ -2933,9 +3198,11 @@ Reserve_Factory:
 	Mouse_Click(480,140) ; Tap Reserve Factory Help
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 
-	Mouse_Click(320,405) ; Tap Instant Help
-
-	Mouse_Click(510,415) ; Tap Request Help
+	loop, 2
+	{
+		Mouse_Click(320,405, {Timeout: 1*Delay_Medium+0}) ; Tap Instant Help
+		Mouse_Click(510,415, {Timeout: 1*Delay_Medium+0}) ; Tap Request Help
+	}
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
@@ -3052,11 +3319,11 @@ Donate_Tech:
 					loop, 15
 					{
 						Loop, 2
-							Mouse_Click(420,1000, {Timeout: 2*Delay_Micro+0}) ; Tap On Donation Box 3
+							Mouse_Click(420,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 3
 						Loop, 2
-							Mouse_Click(260,1000, {Timeout: 2*Delay_Micro+0}) ; Tap On Donation Box 2
+							Mouse_Click(260,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 2
 						Loop, 2
-							Mouse_Click(100,1000, {Timeout: 2*Delay_Micro+0}) ; Tap On Donation Box 1
+							Mouse_Click(100,1000, {Timeout: 1*Delay_Micro+0}) ; Tap On Donation Box 1
 						; DllCall("Sleep","UInt",(rand_wait + 5*Delay_Micro+0))
 					}
 				if Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
@@ -4864,15 +5131,73 @@ Golden_Chest:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
-	Mouse_Click(630,530) ; Tap Activity Center
-	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
-	Mouse_Click(333,666) ; Tap Golden Chest
-	DllCall("Sleep","UInt",(rand_wait + 4*Delay_Long+0))
-
+	loop, 2
+	{
+		Mouse_Click(630,530) ; Tap Activity Center
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+		loop, 5
+			if Search_Captured_Text_OCR(["Activity Center"], {Timeout: 0})
+				goto Golden_Chest_Next
+		Gosub Go_Back_To_Home_Screen
+	}
+	goto Golden_Chest_END
+					
+	Golden_Chest_Next:
+	Golden_Chest_Text := ["Golden"]
+	loop, 3
+	{
+		; Capture_Screen_Text := OCR([180, 596, 120, 33], "eng") ; Check Activity Center item 01
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 596], Size: [120, 33], Timeout: 0})
+		{
+			Mouse_Click(180, 596) ; Tap Activity Center item 01
+			goto Golden_Chest_Open_for_free_button
+		}
+		
+		; Capture_Screen_Text := OCR([180, 793, 120, 33], "eng") ; Check Activity Center item 02
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 793], Size: [120, 33], Timeout: 0})
+		{
+			Mouse_Click(180, 793) ; Tap Activity Center item 02
+			goto Golden_Chest_Open_for_free_button
+		}
+		
+		; Capture_Screen_Text := OCR([180, 989, 120, 33], "eng") ; Check Activity Center item 03
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 989], Size: [120, 33], Timeout: 0})
+		{
+			Mouse_Click(180, 989) ; Tap Activity Center item 03
+			goto Golden_Chest_Open_for_free_button
+		}
+		
+		; Capture_Screen_Text := OCR([180, 1182, 120, 33], "eng") ; Check Activity Center item 04
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 1182], Size: [120, 33], Timeout: 0})
+		{
+			Mouse_Click(180, 1182) ; Tap Activity Center item 04
+			goto Golden_Chest_Open_for_free_button
+		}
+	}
+	MsgBox, 0, Pause, Tap Golden Chest`, Press OK to resume (No Timeout)
+	
+	Golden_Chest_Open_for_free_button:
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+	loop, 2
+	{
+		loop, 3
+			if Search_Captured_Text_OCR(["Golden Chest"], {Timeout: 0})
+				goto Golden_Chest_Finish
+				
+		MsgBox, 0, Pause, Tap Golden Chest`, Press OK to resume (No Timeout)
+	}
+	goto Golden_Chest_END
+	
+	Golden_Chest_Finish:
+	; DllCall("Sleep","UInt",(rand_wait + 4*Delay_Long+0))
 	if Pause_Script
 		MsgBox, 0, Pause, Press OK to resume (No Timeout)
-
-	Mouse_Click(125,1200) ; Tap open for Free
+		
+	Golden_Chest_Text := ["free"]
+	
+	; Capture_Screen_Text := OCR([150, 1182, 85, 30], "eng") ; Check if "Open for free" button
+	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [85, 30], Timeout: 0})
+		Mouse_Click(125, 1200) ; Tap "Open for free" button
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
 		Mouse_Click(320,70) ; Tap top title bar
@@ -4880,12 +5205,18 @@ Golden_Chest:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(357,495) ; Tap Silver tab
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(119,1200) ; Tap open for Free
+	
+	
+	; Capture_Screen_Text := OCR([150, 1182, 85, 30], "eng") ; Check if "Open for free" button
+	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [85, 30], Timeout: 0})
+		Mouse_Click(125, 1200) ; Tap "Open for free" button
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
 		Mouse_Click(320,70) ; Tap top title bar
 		; Mouse_Click(585,250) ; Tap outside claim banner
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	
+	
 	Mouse_Click(633,600) ; Tap rankings
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(157,367) ; Tap Open box
@@ -4893,6 +5224,7 @@ Golden_Chest:
 	Mouse_Click(330,1000) ; Tap Collect Rewards
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
+	Golden_Chest_END:
 	Gosub Go_Back_To_Home_Screen
 
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
@@ -6016,7 +6348,7 @@ F3::
 	; Mouse_Click(382,774) ; Tap Use ; original
 
 	Mouse_Drag(115, 680, 360, 680, {EndMovement: F, SwipeTime: 500}) ; Client start: 115, 680, end: 360, 680
-	Mouse_Click(340,786) ; Tap Use ; 340, 786
+	Mouse_Click(380,786) ; Tap Use ; 340, 786
 
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 Return
