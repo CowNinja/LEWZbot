@@ -81,7 +81,7 @@ Move_MsgBox(P)
 		Process, Exist
 		DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 		if WinExist("ahk_class #32770 ahk_pid " ErrorLevel)
-			WinMove, 731, 1000
+			WinMove, MsgWinMove_X, MsgWinMove_Y	; WinMove, 731, 1000
 		DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 	}
 }
@@ -141,7 +141,7 @@ Move_MsgBox(P)
 	Global FoundAppProcess := ""
 	Global FoundAppID := ""
 	Global FoundAppPID := 0
-	Global NewTitle := "LEWZ00"
+	Global NewTitle := "LEWZ0"
 	Global FoundAppX := 0
 	; Global FoundAppX := 1200
 	; Global FoundAppX := 2400
@@ -160,7 +160,8 @@ Move_MsgBox(P)
 
 	; Define desired window position and size
 	Global App_Win_X := 0
-	Global App_Win_Y := 0
+	Global App_Win_Y := 0	
+	App_Win_X := InputBox2("App Y", "App Y location 0, 1200, 2400, 3600", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:App_Win_X})
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
 	Global MEmu_WinWidth := 730
@@ -168,6 +169,12 @@ Move_MsgBox(P)
 	Global MEmu_Operation_Recorder_X := App_Win_X
 	Global MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
 	Global Operation_Recorder_Window := "MEmu"
+	Global WinMove_X := 0 ; initialize location upper left X coord of app window
+	Global WinMove_Y := 0 ; initialize location upper left Y coord of app window
+	; WinMove, 731, 1000
+	; WinMove, MsgWinMove_X, MsgWinMove_Y
+	Global MsgWinMove_X := (App_Win_X + App_WinWidth + 1) ; initialize location upper left X coord of MSg Window
+	Global MsgWinMove_Y := (App_Win_Y + 1000) ; initialize location upper left Y coord of MSg Window
 
 	Global GameArea_X1 := App_Win_X
 	Global GameArea_Y1 := (App_Win_Y + 33)
@@ -233,9 +240,11 @@ stdout.WriteLine(A_Now " ****************************************** ")
 stdout.WriteLine(A_Now " ******** STARTUP & INITIALIZATION ******** ")
 stdout.WriteLine(A_Now " ****************************************** ")
 
+User_Logins := "LEWZ_User_Logins.ini"
+	User_Logins := InputBox2("User_Logins", "User_Logins file", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:User_Logins})
 ; load User Logins
 User_Logins := {}
-Loop, Read, LEWZ_User_Logins.ini
+Loop, Read, %User_Logins%
 {
 	row := StrSplit(A_LoopReadLine, ",")
 	user := row[1]
@@ -376,8 +385,10 @@ loop
 
 ; Select_App() {
 	; MsgBox, 1. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
-	global FoundAppControl := "Qt5QWindowIcon25"
-	LEWZApp := Win_WaitRegEX("LEWZ0")
+	global FoundAppClass := "Qt5QWindowIcon"
+	global FoundAppControl := "Qt5QWindowIcon19"
+	NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
+	LEWZApp := Win_WaitRegEX(NewTitle)
 	global FoundAppTitle := LEWZApp.title
 	global FoundAppClass := LEWZApp.Class
 	global FoundAppProcess := byref FoundAppControl ; LEWZApp.ID
