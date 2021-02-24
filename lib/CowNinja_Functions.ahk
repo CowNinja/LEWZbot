@@ -15,8 +15,8 @@
 ;	Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 ;	Mouse_Move(X1, Y1, X2, Y2, Options := "") {
 ;	Mouse_GetPos(Options := 3) {
-;	Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Screen", TargetType="Mouse") {
-;	Search_OCR(Search_OCR_Array, Options := "") {
+;	Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse") {
+;	Search_OCR(OCR_Array, Options := "") {
 ;	DropFiles(window, files*)
 ;	Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 ;	Search_Pixels(Search_Pixels_Array, Options := "") {
@@ -56,16 +56,54 @@
 ; MsgBox, 0, Win_GetInfo, % " Win_GetInfo.X " Win_GetInfo().X " Win_GetInfo.Y " Win_GetInfo().Y
 ; ****************************************************************************
 Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := ""){	; Win_GetInfo(Options := ""){
+; SetTitleMatchMode, RegEx
+	MsgBox, 1. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	
+	if (App_Title = FoundAppTitle)
+		Get_App_Title := FoundAppTitle
+	if (App_ID = FoundAppID)
+		Get_App_ID = FoundAppID
+	
+	MsgBox, 2. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+			
+	; Goal: to Get App ID
+	; Was an App ID passed to function? If So, use it
+	
+	if !Get_App_ID
+		if !Get_App_Title
+			if !App_ID
+				if !App_Title
+					Get_App_ID := DllCall("GetParent", UInt,WinExist("A")), Get_App_ID := !Get_App_ID ? WinExist("A") : Get_App_ID
+				Else
+					Get_App_ID := Win_WaitRegEX(App_Title).ID
+			Else
+				Get_App_ID := App_ID
+		Else
+			Get_App_ID := Win_WaitRegEX(Get_App_Title).ID
+
+	MsgBox, 3. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+	
+	if !Get_App_ID
+		Get_App_ID := DllCall("GetParent", UInt,WinExist("A")), Get_App_ID := !Get_App_ID ? WinExist("A") : Get_App_ID
+	
+	MsgBox, 4. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
+
+	/*
+	; old Openening
 	if App_Title
 		Get_App_ID := Win_WaitRegEX(App_Title).ID
 	else if App_ID
 		Get_App_ID := App_ID
 	else
 		Get_App_ID := DllCall("GetParent", UInt,WinExist("A")), Get_App_ID := !Get_App_ID ? WinExist("A") : Get_App_ID
-
+	*/
+	
+	Get_Details_NOW:
 	WinGetTitle, Get_App_Title, ahk_id %Get_App_ID%
 	WinGetClass, Get_App_Class, ahk_id %Get_App_ID%
 	WinGetPos, App_X, App_Y, App_W, App_H, %Get_App_ID%
+	
+	MsgBox, 5. App_Title:"%App_Title%" FoundAppTitle:"%FoundAppTitle%" Get_App_Title:"%Get_App_Title%`nApp_ID:"%App_ID%" FoundAppID:"%FoundAppID%" Get_App_ID:"%Get_App_ID%"
 
 	; if Get_App_Class, FoundAppClass := Get_App_Class
 	; if Get_App_Title, FoundAppTitle := Get_App_Title
@@ -175,7 +213,7 @@ OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", 
 ; allow users to use objects with the function and return the data they want.
 ; ****************************************************************************
 ; Examples:
-; AppX := Control_GetInfo("Qt5QWindowIcon19", FoundAppTitle)
+; AppX := Control_GetInfo("Qt5QWindowIcon25", FoundAppTitle)
 ; MsgBox, 0, AppX, % " AppX " AppX.Text " " AppX.Hwnd " " AppX.X " " AppX.Y
 ; or
 ; MsgBox, 0, AppX, % " AppX.X " AppX().X " AppX.Y " AppX().Y
@@ -219,8 +257,8 @@ Mouse_Click(X,Y, Options := "") {
 	; CoordMode Mouse, Screen ; Coordinates are relative to the desktop (entire screen).
 	; CoordMode Mouse, Relative ; Coordinates are relative to the active window.
 	; CoordMode Mouse, Window ; Synonymous with Relative and recommended for clarity.
-	CoordMode Mouse, Client ; Coordinates are relative to the active window's client area, which excludes the window's title bar, menu (if it has a standard one) and borders. Client coordinates are less dependent on OS version and theme.
-	; CoordMode, %CoordModeTargetType%, %CoordModeRelativeTo%
+	; CoordMode Mouse, Client ; Coordinates are relative to the active window's client area, which excludes the window's title bar, menu (if it has a standard one) and borders. Client coordinates are less dependent on OS version and theme.
+	CoordMode, %CoordModeTargetType%, %CoordModeRelativeTo%
 	; msgbox, CoordMode`, %CoordModeTargetType%`, %CoordModeRelativeTo%
 
 	; MsgBox, Timeout:"%Timeout%", Clicks:"%Clicks%"
@@ -230,7 +268,6 @@ Mouse_Click(X,Y, Options := "") {
 	; Y++
 	X_Pixel := (X + rand_pixel + X_Pixel_offset)
 	Y_Pixel := (Y + rand_pixel + Y_Pixel_offset)
-	; MsgBox, ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
 	; SendEvent {Click, %X_Pixel%, %Y_Pixel%} ; Where to click
 	; ControlClick, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText
 	; ControlClick, x%X_Pixel% y%Y_Pixel%, %FoundAppTitle%,,,, Pos NA
@@ -253,7 +290,7 @@ Mouse_Click(X,Y, Options := "") {
 	return
 
 	; MsgBox, 3. Mouse_Click input:(%X%:%Y%) incremented:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%)
-	MsgBox, ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
+	; MsgBox, ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
 	; MsgBox, Mouse_Click input:(%X%:%Y%) math:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%) Ctr:"%Win_Control%" or "%FoundAppControl%" Title:"%FoundAppTitle%" Button:"%Button%" Clicks:"%Clicks%" Timeout:"%Timeout%"
 	; stdout.WriteLine(A_Now " Found " image_name " at " FoundPictureX "," FoundPictureY)
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
@@ -440,7 +477,7 @@ Mouse_GetPos(Options := 3) {
 ; The hwnd of the control which was sent the mousemove message.
 ; Pass this to the Control parameter to simulate mouse capture.
 ; Based on AutoHotkey::script2.cpp::ControlClick()
-Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Screen", TargetType="Mouse") {
+Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse") {
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
 	CoordModeTargetType := (Options.HasKey("TargetType")) ? Options.TargetType : "Mouse"
 
@@ -501,7 +538,7 @@ Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", Exclude
 ; example: Search_OCR("Wages")
 ; example: Search_OCR("Wages", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
 ; example: Search_OCR(ArrayOfText, {X1: 115, Y1: 30, X2: 259, Y2: 60, Timeout: 1})
-Search_OCR(Search_OCR_Array, Options := "") {
+Search_OCR(OCR_Array, Options := "") {
 	X1 := (Options.HasKey("X1")) ? Options.X1 : "115"
 	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : "30"
 	W := (Options.HasKey("W")) ? Options.W : "560"
@@ -586,10 +623,12 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; ClipBoard_Restore()
 	
 	For index, value in Search_Text_Array
-		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
+	{
+		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:"%index%" value:"%value%" `nCapture_Screen_Text:"%Capture_Screen_Text%" Win_Control:"%Win_Control%" `nFoundAppControl:"%FoundAppControl%" FoundAppTitle:"%FoundAppTitle%"
 		if !( value == "" )
 			If (RegExMatch(Capture_Screen_Text,value))
 				return 1
+	}
 	Goto Search_Captured_Text_END
 	
 	/*
@@ -743,7 +782,7 @@ Search_Images(Search_Images_Array, Options := "") {
 
 Text_To_Screen(Text_To_Send, Options := "") {
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
-	Win_Control := (Options.HasKey("Control")) ? Options.Control : "ahk_parent"
+	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl	; "ahk_parent"
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
 	
 	ControlSend, %Win_Control%, %Text_To_Send%, %Win_Title%
@@ -766,7 +805,8 @@ Text_To_Screen(Text_To_Send, Options := "") {
 		; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
 	}
 	*/
-	DllCall("Sleep","UInt",Delay_Short+Timeout+1) ; Sleep, 500
+	Timeout += (StrLen(Text_To_Send) * 1+Delay_Micro)
+	DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
 	return
 }
 
