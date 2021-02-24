@@ -26,3 +26,18 @@ Loop, Read, LEWZ_User_Logins.ini
 	row.RemoveAt(1)
 	User_Logins[user] := row
 }
+
+Notes:
+Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text and figures out if a particular menu item has loaded or not and then it taps. I use the home screen as a point of reference, because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
+
+x and y coordinates are determined using ocr screen reader, when a found a text matches storex text strings in array, then tap coordinates are calculated.
+
+19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via ocr to text and responding accordingly. I haven't implemented multi threading yet, which will enable concurrently running multiple instances simultaneously.
+
+13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated and timed.. there are countermeasures in game code to detect messing with the proprietary game data.. so it's very touchy
+
+Goals:
+- Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
+
+Issues:
+- sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tapped accordingly..
