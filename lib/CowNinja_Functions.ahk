@@ -170,6 +170,8 @@ Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", Excl
 		if ErrorLevel
 			return 0
 	}
+	
+	Window_Save()
 
 	WinActivate, %Win_WaitRegEX_Title%, ; If not active, It activates it
 	WinWaitActive, %Win_WaitRegEX_Title% ; Waits until the specified window is active or not active.
@@ -185,6 +187,8 @@ Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", Excl
 		WinActivate, ahk_id %Win_WaitGetID%, ; If not active, It activates it
 		WinWaitActive, ahk_id %Win_WaitGetID% ; Waits until the specified window is active or not active.
 	}
+	
+	Window_Restore()
 
 	; MsgBox, 3. Finish, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
 	Return {Title: Win_WaitGetTitle, ID: Win_WaitGetID}
@@ -310,8 +314,7 @@ Key_Menu() {
 	; Gui, Keys:add,text,, F7 Reset_Posit = %Resetting_Posit% ; or (%Resetting_Posit% ? "True" : "False")
 	Gui, Keys:add,text,, % "F7 Reset_Posit = " (Resetting_Posit ? "Yes" : "No")
 	Gui, Keys:add,text,, % "Pause Script = " (A_IsPaused ? "Yes" : "No")
-	Gui, Status:show, x%MsgWinMove_X% y700 w150 h250
-	; Gui, Status:show, x731 y700 w150 h250
+	Gui, Keys:show, x731 y700 w150 h250
 
 	; ; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
@@ -326,9 +329,11 @@ GUI_Update() {
 		Gui, Status:new, , Status
 		Gui, Status:Margin, 0, 0
 		Gui, Status:add,text,, Account %User_Name%
-		Gui, Status:add,text,, Routine: %Routine_Running%
-		Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
-		; Gui, Status:show, x731 y0 w300 h500
+		if (Subroutine_Running = A_ThisLabel)
+			Gui, Status:add,text,, Routine: %Subroutine_Running%
+		Else
+			Gui, Status:add,text,, Routine: %Subroutine_Running%:%A_ThisLabel%
+		Gui, Status:show, x731 y0 w350 h500
 		GUI_Count := 0
 	}
 
@@ -344,10 +349,12 @@ GUI_Update() {
 
 		; Gui, Status:add,text,, Click %image_name%
 		; Gui, Status:add,text,, Click %X_Pixel%, %Y_Pixel%
-
-		Gui, Status:add,text,, %Subroutine_Running% Running (%X_Pixel%,%Y_Pixel%)
-		Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
-		; Gui, Status:show, x731 y0 w300 h500
+		
+		if (Subroutine_Running = A_ThisLabel)
+			Gui, Status:add,text,, Routine: %Subroutine_Running% (%X_Pixel%,%Y_Pixel%)
+		Else
+			Gui, Status:add,text,, Routine: %Subroutine_Running%:%A_ThisLabel% (%X_Pixel%,%Y_Pixel%)
+		Gui, Status:show, x731 y0 w350 h500
 	}
 	return
 }
@@ -570,7 +577,7 @@ DropFiles(window, files*)
 		DllCall("GlobalFree", "ptr", hGlobal)
 }
 
-; example: Search_Captured_Text_OCR("Wages", {Pos: [115, 30], Size: [560, 75], Timeout: 8})
+; example: Search_Captured_Text_OCR(["Wages"], {Pos: [115, 30], Size: [560, 75], Timeout: 8})
 Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	if (isEmptyOrEmptyStringsOnly(Search_Text_Array))
 	{
@@ -580,18 +587,13 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
-	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "115"
-	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "30"
-	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "450"	;  "560"
-	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "75"
+	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "125" ; "115"
+	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "35" ; "30"
+	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "370" ; "450"	;  "560"
+	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "70" ; "75"
 	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
 	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
-	
-	OCR_X1 += App_Win_X
-	OCR_Y1 += App_Win_Y
-	OCR_X2 += App_Win_X
-	OCR_Y2 += App_Win_Y
 
 	Search_Captured_Text_Begin:
 	; WinRestore, %FoundAppTitle%
@@ -635,10 +637,30 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:"%index%"`nSearch:"%value%" `nFound:"%Capture_Screen_Text%"`nWin_Control:"%Win_Control%" FoundAppControl:"%FoundAppControl%" FoundAppTitle:"%FoundAppTitle%"
 		if !( value == "" )
 			If (RegExMatch(Capture_Screen_Text,value))
-				return 1
+				Return {Found: True, Value: value, Text: Capture_Screen_Text} ; return 1
 	}
 	Goto Search_Captured_Text_END
+
+	Search_Captured_Text_END:
+
+	if (Timeout = 0)
+		Return {Found: False, Value: False, Text: Capture_Screen_Text} ; return 0
+		
+
+	Search_Captured_Text_MessageBox:
+	MsgBox, 4, , "%Search_Captured_Text%" not detected`, try again? (%Timeout% Second Timeout & skip), %Timeout%
+	vRet := MsgBoxGetResult()
+	if (vRet = "Timeout") || if (vRet = "No")
+		Return {Found: False, Value: False, Text: Capture_Screen_Text} ; return 0
+	if (vRet = "Yes")
+		goto Search_Captured_Text_Begin
+
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	Return {Found: False, Value: False, Text: Capture_Screen_Text} ; return 0
 	
+	
+	
+		
 	/*
 	; old Search captured text
 	For index, value in Search_Text_Array
@@ -718,23 +740,8 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 		return
 	}
 
-	Goto Search_Captured_Text_END
+	; Goto Search_Captured_Text_END
 
-	Search_Captured_Text_END:
-
-	if (Timeout = 0)
-		return 0
-
-	Search_Captured_Text_MessageBox:
-	MsgBox, 4, , %Search_Captured_Text% not detected`, try again? (%Timeout% Second Timeout & skip), %Timeout%
-	vRet := MsgBoxGetResult()
-	if (vRet = "Timeout") || if (vRet = "No")
-		return 0
-	if (vRet = "Yes")
-		goto Search_Captured_Text_Begin
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
-	return 0
 }
 
 ; example: Search_Pixels("OxFf4B2C", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
@@ -787,6 +794,34 @@ Search_Images(Search_Images_Array, Options := "") {
 ; example: Text_To_Log("UserName")
 ; example: Text_To_GUI("UserName")
 ; example: Text_To_Status("UserName")
+
+; Example: Text_To_Log([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
+
+Text_To_Log(ByRef Input_Array)
+{
+	Output1 := Output2 := A_Now ","
+	For VAR,Val in Input_Array
+	{
+		if Val
+			VAR_NAME := %Val%
+		if VAR_NAME
+			Output1 .= %VAR_NAME% . ","
+			
+			
+		Output1 .= VAR . "," . %VAR% . "," . Val . "," . %Val% . ","
+		Output2 .= &VAR . "," . &%VAR% . "," . &Val . "," . &%Val% . ","
+		
+		
+		VAR_Contents2 := Val[A_Index] ; Val%A_Index%
+		; Output1 .= VAR_NAME . ",""" . VAR_Contents1 . ""","
+		; Output2 .= VAL_NAME . ",""" . VAR_Contents2 . ""","
+		MsgBox, %A_Index%. VAR:Val"%VAR%:%Val%"`nVAR:Val"&%VAR%:&%Val%"`nNAME:"%VAR_NAME%"`nContents:"%VAR_Contents1%"`n1:%Output1%`n2:%Output2%
+	}
+	stdout.WriteLine("Output1," Output1)
+	stdout.WriteLine("Output2," Output2)
+	return
+}
+
 
 Text_To_Screen(Text_To_Send, Options := "") {
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
@@ -873,6 +908,53 @@ EnumChildFindPoint(aWnd, lParam) {
 	}
 	return true
 }
+
+/*
+Parameters:
+		Message		- This parameter sets the Message of the message box.
+			If Ommited 		- Can be blank to allow for a "pause" of the script by saying
+							"Press Ok to Continue." Which forces a sleep on the script until the user has clicked a button.
+
+		Title		- This parameter sets the Title of the message box.
+			If Ommited		- Will set the title of the message box to be the script's name, or A_ScriptName
+
+		Type			- This parameter sets the type of message box, 0 or just "Ok," 1 for "Ok" and "Cancel," so on and so forth
+			If Ommited		- Will default to be 0 or just one button, "Ok."
+
+		B1			- This parameter sets the first button's text in the message box.
+			If Ommited		- Will Default to: "Ok"
+
+		B2			- This parameter sets the second button text in the message box.
+			If Ommited		- Will Default to: "Cancel"
+
+		B3			- This parameter sets the third button text in the message box.
+			If Ommited		- Will Default to: "Close"
+
+		Time			- This parameter sets the timeout of the message box.
+						- Allowing the script to continue if the user doesn't respond in time.
+						- Returns ErrorLevel if the timeout reaches its time.
+Example: MsgBox("Need Help?", "THE Question", 3, "&Yes", "&Definitely", "&Absolutely", 3)
+Example: MsgBox("Would you like to place a shield? (Esc) to cancel", "Peace Shield", 3, "&3Day", "&24hour", "&8hour", 3)
+*/
+MsgBox(Message := "Press Ok to Continue.", Title := "", Type := 0, B1 := "", B2 := "", B3 := "", Time := "") {
+	If (Title = "")
+		Title := A_ScriptName
+	If (B1 != "") || (B2 != "") || (B3 != "")
+		SetTimer, ChangeButtonNames, 10
+	MsgBox, % Type, % Title, % Message, % Time
+	Return
+
+	ChangeButtonNames:
+		IfWinNotExist, %Title%
+			Return
+		SetTimer, ChangeButtonNames, off
+		WinActivate, % Title
+		ControlSetText, Button1, % (B1 = "") ? "Ok" : B1, % Title
+		Try ControlSetText, Button2, % (B2 = "") ? "Cancel" : B2, % Title
+		Try ControlSetText, Button3, % (B3 = "") ? "Close" : B3, % Title
+	Return
+}
+
 
 ; ****************************************************************************
 ; ****************************************************************************
@@ -997,6 +1079,32 @@ isEmptyOrEmptyStringsOnly(inputArray) {
 	}
 	return true ; all the values have passed the test or no values where inside the array
 }
+
+;commands as functions (AHK v2 functions for AHK v1) - AutoHotkey Community
+;https://autohotkey.com/boards/viewtopic.php?f=37&t=29689
+
+DateAdd(DateTime, Time, TimeUnits)
+{
+	EnvAdd, DateTime, % Time, % TimeUnits
+	return DateTime
+}
+DateDiff(DateTime1, DateTime2, TimeUnits)
+{
+	EnvSub, DateTime1, % DateTime2, % TimeUnits
+	return DateTime1
+}
+FormatTime(YYYYMMDDHH24MISS:="", Format:="")
+{
+	local OutputVar
+	FormatTime, OutputVar, % YYYYMMDDHH24MISS, % Format
+	return OutputVar
+}
+
+; Examples: 
+; ClipBoard_Save(), ClipBoard_Restore()
+; Mouse_Save(), Mouse_Restore()
+; Window_Save(), Window_Restore()
+; All_Save(), All_Restore()
 
 ClipBoard_Save() {
 	; Save clipboard contents:
