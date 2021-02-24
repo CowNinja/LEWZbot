@@ -91,12 +91,18 @@ while WinExist(FoundAppTitle)
 
 			; loop, 2
 				Gosub Go_Back_To_Home_Screen
-
+			
+			; ***************************************
+			; Main DEBUG and event Variables - START
+			; ***************************************
 			Pause_Script := False
-			CSB_Event := True ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			CSB_Event := False ; True ; True if CSB Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False
+			; ***************************************
+			; Main DEBUG and event Variables - END
+			; ***************************************
 
 			; MsgBox, 4, , Enable Pause? (8 Second Timeout & skip), 8
 			; vRet := MsgBoxGetResult()
@@ -160,7 +166,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Depot_Rewards
-				Gosub Peace_Shield
+				Gosub Active_Skill
 				; Gosub Speaker_Help
 				; Gosub Reserve_Factory
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
@@ -176,8 +182,8 @@ while WinExist(FoundAppTitle)
 
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
-				; if Peace_Shield_Needed
-				; 	Gosub Peace_Shield
+				if Peace_Shield_Needed
+					Gosub Peace_Shield
 				; Gosub Reset_Posit
 
 				; ** Position dependant **
@@ -957,7 +963,7 @@ Go_Back_To_Home_Screen:
 	OCR_H := 26 ; 40 ; 155
 	loop, 40
 	{
-		;loop, 2
+		loop, 2
 			if Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
 				return
 
@@ -976,7 +982,7 @@ Go_Back_To_Home_Screen:
 	OCR_H := 26 ; 40 ; 155
 	loop, 10
 	{
-		;loop, 2
+		loop, 2
 			if !Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
 				return
 
@@ -1421,20 +1427,13 @@ Peace_Shield_OLD:
 Peace_Shield:
 {
 	Subroutine_Running := "Peace_Shield"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 
 	Shield_Open_Base:
 	Shield_Found_3Day := False
 	Shield_Found_24hour := False
 	Shield_Found_8hour := False
-	; WinActivate, LEWZ001
-	; DllCall("Sleep","UInt",(rand_wait + 1*333+0))
 	Loop, 2
 	{
-		; Capture_Screen_Text := OCR([320, 510, 91, 20], "eng")
-		; Capture_Screen_Text := OCR([362, 512, 44, 14], "eng")
-		; MsgBox, 0, , Found"%Capture_Screen_Text%"
-		; If Capture_Screen_Text contains Buff
 		Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
@@ -1449,41 +1448,26 @@ Peace_Shield:
 			{
 				Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-				; Goto, Shield_Search_Buttons
 			}
 		}
 		Gosub Go_Back_To_Home_Screen
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		; Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
-		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	}
 	goto Peace_Shield_END
 
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Goto, Shield_Open_Base
 	Shield_Search_Buttons:
-	; Capture_Screen_Text := OCR([134, 160, 150, 21], "eng")
 	Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21], Timeout: 0})
-	; Capture_Screen_Text := OCR([134, 312, 150, 20], "eng")
 	Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21], Timeout: 0})
-	; Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
 	Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 242], Size: [200, 22], Timeout: 0})
-	; Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
 	Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 394], Size: [200, 22], Timeout: 0})
 		
 	Loop, 10
 	{
-		; MsgBox, 0, , Check first Box:"%Capture_Screen_Text%"
-		; If Capture_Screen_Text contains Peace Shield
 		if Shield_Pos01.Found
 		{
-			; MsgBox, % Shield_Pos01.Found """" Shield_Pos01.Value """ """ Shield_Pos01.Text """"
 			Click_X := 165
 			Click_Y := 216
-			; Mouse_Click(165,216) ;  Left, 1}  ; Click second box to enable shield
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			; Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
 			If Shield_Ends_Pos01.Found
 			{
 				Shield_Ends := (Shield_Ends_Pos01.Text)
@@ -1493,15 +1477,10 @@ Peace_Shield:
 				Goto, Activate_Shield
 		}
 		
-		; If Capture_Screen_Text contains Peace Shield
 		if Shield_Pos02.Found
 		{
-			; MsgBox, % Shield_Pos02.Found """" Shield_Pos02.Value """ """ Shield_Pos02.Text """"
 			Click_X := 200
 			Click_Y := 367
-			; Mouse_Click(226,367) ;  Left, 1}  ; Click second box to enable shield
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			; Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
 			If Shield_Ends_Pos02.Found
 			{
 				Shield_Ends := (Shield_Ends_Pos02.Text)
@@ -1511,29 +1490,23 @@ Peace_Shield:
 				Goto, Activate_Shield
 		}
 		
-		; MsgBox, % Shield_Pos01.Found """" Shield_Pos01.Value """ """ Shield_Pos01.Text """`n"	Shield_Ends_Pos01.Found """" Shield_Ends_Pos01.Value """ """ Shield_Ends_Pos01.Text """`n" Shield_Pos02.Found """" Shield_Pos02.Value """ """ Shield_Pos02.Text """`n" Shield_Ends_Pos02.Found """" Shield_Ends_Pos02.Value """ """ Shield_Ends_Pos02.Text """"
 	}
 	
-	Shield_Ends_Calc:
+	Shield_Not_Found:	
+	MsgBox, 4, , % "Shield Button not found in:""" Shield_Pos01.Text """ Or """ Shield_Pos02.Text """`, Try again? (10 second Timeout & skip)",10
+	vRet := MsgBoxGetResult()
+	if (vRet = "Yes")
+		goto Shield_Open_Base
+	else if (vRet = "No") || if (vRet = "Timeout")
+		goto Peace_Shield_END
+
+	Shield_Already_Active:
 	{
-		; initialize values:
 		Shield_DD := Shield_HH := Shield_MM := Shield_SS := 0
 		
-		; Calculate Day and hour
-		; Shield_Ends10 := StrReplace(Shield_Ends, "Ends in", "")
-		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[\r\n\h-]+")
-		; Shield_Ends11 := RegExReplace(Shield_Ends10,"[^\d\:d]+")
-		
-		; Shield_Ends20 := RegExReplace(Shield_Ends,"Ends\h*in")
-		; Shield_Ends21 := RegExReplace(Shield_Ends20,"[\r\n\h-]+")
-		; Shield_Ends21 := RegExReplace(Shield_Ends20,"[^\d\:d]+")
-		
-		; Extract shild days remaining
 		if RegExMatch(Shield_Ends,"\d+d",Shield_Days1)
 			RegExMatch(Shield_Days1,"\d+",Shield_DD)
 		
-		; Extract shild hours, minutes and seconds remaining
-		; Shield_Hours2 := RegExReplace(Shield_Ends,"\h*Ends\h*in\h*\d+d\h*")
 		if RegExMatch(Shield_Ends,"\d+\:\d+\:\d+",Shield_Hours1)
 		{
 			Shield_Hours2 := RegExReplace(Shield_Hours1,"[^\d]")
@@ -1543,14 +1516,6 @@ Peace_Shield:
 			Shield_SS := Shield_Hour_Array[3]
 		}
 		
-		; calculate shield ecxpiration date and time
-		; A_Now contains the current local time in YYYYMMDDHH24MISS format
-		; MM = Month 01
-		; DD = Day 01
-		; HH24 = Hour 00
-		; MI = Minute 00
-		; SS = Second 00
-		
 		Shield_Expires10 := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
 		Shield_Expires11 := FormatTime(A_Now, "YYYYMMDDHH24MISS")
 		EnvAdd, Shield_Expires12, Shield_DD, d
@@ -1558,42 +1523,6 @@ Peace_Shield:
 		EnvAdd, Shield_Expires12, Shield_MM, m
 		EnvAdd, Shield_Expires12, Shield_SS, s
 		Shield_Expires13 := FormatTime(Shield_Expires12)
-		
-		/*
-		Shield_Expires20 := "000000" . Shield_DD . Shield_HH . Shield_MM . Shield_SS		
-		Shield_Expires21 := FormatTime(A_Now, "YYYYMMDDHHMISS")		
-		EnvAdd, Shield_Expires22, Shield_DD, d
-		EnvAdd, Shield_Expires22, Shield_HH, h
-		EnvAdd, Shield_Expires22, Shield_MM, m
-		EnvAdd, Shield_Expires22, Shield_SS, s
-		Shield_Expires23 := FormatTime(Shield_Expires22)
-		
-		Shield_Expires11 := DateAdd(%A_Now%, Shield_DD, "Days")
-		Shield_Expires11 := DateAdd(%A_Now%, Shield_HH, "Hours")
-		Shield_Expires11 := DateAdd(%A_Now%, Shield_MM, "Minutes")
-		Shield_Expires11 := DateAdd(%A_Now%, Shield_SS, "Seconds")
-		Shield_Expires11 := FormatTime(Shield_Expires11, "YYYYMMDDHH24MISS")
-		
-		Shield_Expires21 := DateAdd(%A_Now%, Shield_DD, "Days")
-		Shield_Expires21 := DateAdd(%A_Now%, Shield_HH, "Hours")
-		Shield_Expires21 := DateAdd(%A_Now%, Shield_MM, "Minutes")
-		Shield_Expires21 := DateAdd(%A_Now%, Shield_SS, "Seconds")
-		Shield_Expires21 := FormatTime(Shield_Expires21, "YYYYMMDDHH24MISS")
-		Shield_Expires12 := (A_Now + Shield_Expires10)
-		Shield_Expires22 := (A_Now + Shield_Expires20)
-		*/
-		
-		; MsgBox % "1:""" FormatTime(Shield_Expires10) """`n2:""" FormatTime(Shield_Expires20) """`n3:""" FormatTime(Shield_Expires11) """`n4:""" FormatTime(Shield_Expires21) """`n5:""" FormatTime(Shield_Expires12) """`n6:""" FormatTime(Shield_Expires22) """"
-			
-		/*
-		Shield_Expires_Day := FormatTime(Shield_Expires21, "dddd")
-		Shield_Expires_Hour1 := FormatTime(Shield_Expires21, "HH")
-		Shield_Expires_Hour2 := FormatTime(Shield_Expires21, "H")
-		Shield_Expires_Hour3 := FormatTime(Shield_Expires21, "hh")
-		Shield_Expires_Hour4 := FormatTime(Shield_Expires21, "h")
-		
-		MsgBox, % "Shield_Ends:" Shield_Ends "`nDD:" Shield_DD " HH:" Shield_HH " MM:" Shield_MM " SS:" Shield_SS "`nExpires1:" Shield_Expires10 " Expires3:" Shield_Expires11 "`nExpires2:" Shield_Expires20 " Expires4:" Shield_Expires21 "`nExpires Day:" Shield_Expires_Day " Hour1:" Shield_Expires_Hour1 " Hour:2" Shield_Expires_Hour2 " Hour3:" Shield_Expires_Hour3 " Hour4:" Shield_Expires_Hour4
-		*/
 		
 		if At_War
 		{
@@ -1639,23 +1568,11 @@ Peace_Shield:
 		}
 		else
 		{
-			MsgBox, Shield expires on %Shield_Expires13%`, No shield needed. (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, No shield needed. (10 sec Timeout & auto),10
 			Goto, Peace_Shield_END
 		}
-		return
 	}
 	
-	Shield_Not_Found:
-	
-	MsgBox, 4, , % "Shield Button not found in:""" Shield_Pos01.Text """ Or """ Shield_Pos02.Text """`, Try again? (10 second Timeout & skip)",10
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes")
-		goto Shield_Open_Base
-	else if (vRet = "No") || if (vRet = "Timeout")
-		goto Peace_Shield_END
-
-	Shield_Already_Active:
-	gosub Shield_Ends_Calc
 	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (10 second Timeout & skip),10
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
@@ -1664,8 +1581,6 @@ Peace_Shield:
 		goto Peace_Shield_END
 
 	Activate_Shield:
-	; MsgBox, 0, , Click X and Y: (%Click_X%`,%Click_Y%)
-
 	Mouse_Click(Click_X,Click_Y) ; SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	
@@ -1681,68 +1596,29 @@ Peace_Shield:
 		goto Peace_Shield_END
 	
 	Shield_for_3Day:
-	; Capture_Screen_Text := OCR([128, 225, 211, 33], "eng")
-	; If Capture_Screen_Text contains Peace ; Shield
 	{
 		Shield_Found_3Day := True
-		; MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
-		; vRet := MsgBoxGetResult()
-		; if (vRet = "Yes")
-		; {
-			Mouse_Click(590,310) ;  Left, 1}  ; Tap Get & use 3-Day Peace Shield
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Goto, Shield_Purchase
-		/*
-		}
-		else if (vRet = "No") || if (vRet = "Timeout")
-		{
-			Goto, Peace_Shield_END
-		}
-		*/
+		Mouse_Click(590,310) ;  Left, 1}  ; Tap Get & use 3-Day Peace Shield
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
 	
 	Shield_for_24hour:
-	; Capture_Screen_Text := OCR([129, 376, 229, 26], "eng")
-	; If Capture_Screen_Text contains Peace ; Shield
 	{
 		Shield_Found_24hour := True
-		; MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
-		; vRet := MsgBoxGetResult()
-		; if (vRet = "Yes")
-		; {
-			Mouse_Click(590,458) ;  Left, 1}  ; Tap Get & use 24-Hour Peace Shield
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Goto, Shield_Purchase
-		/*
-		}
-		else if (vRet = "No") || if (vRet = "Timeout")
-		{
-			Goto, Peace_Shield_END
-		}
-		*/
+		Mouse_Click(590,458) ;  Left, 1}  ; Tap Get & use 24-Hour Peace Shield
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
 	
 	Shield_for_8hour:
-	; Capture_Screen_Text := OCR([128, 526, 221, 25], "eng")
-	; If Capture_Screen_Text contains Peace ; Shield
 	{
 		Shield_Found_8hour := True
-		; MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
-		; vRet := MsgBoxGetResult()
-		; if (vRet = "Yes")
-		; {
-			Mouse_Click(590,610) ;  Left, 1}  ; Tap Get & use 8-Hour Peace Shield
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Goto, Shield_Purchase
-		/*
-		}
-		else if (vRet = "No") || if (vRet = "Timeout")
-		{
-			Goto, Peace_Shield_END
-		}
-		*/
+		Mouse_Click(590,610) ;  Left, 1}  ; Tap Get & use 8-Hour Peace Shield
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
 	
@@ -1756,29 +1632,11 @@ Peace_Shield:
 
 	Shield_Purchase:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	; Capture_Screen_Text := OCR([139, 521, 411, 72], "eng")
 	Shield_Purchase := Search_Captured_Text_OCR(["are","you","sure","After","usage"], {Pos: [139, 521], Size: [411, 72], Timeout: 0})
 
 	loop, 5
 		If Shield_Purchase.Found
 			Mouse_Click(336,781) ;  Left, 1}  ; Tap Get & Use button, to confirm buying shield
-	
-	/*
-	{
-		Capture_Screen_Text contains sure ; are you sure
-		{
-			Mouse_Click(336,781) ;  Left, 1}  ; Tap Get & Use button, to confirm buying shield
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Goto, Peace_Shield_END
-		}
-		If Capture_Screen_Text contains After ;usage
-		{
-			Mouse_Click(340,782) ;  Left, 1}  ; Tap "OK" button
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Goto, Peace_Shield_END
-		}
-	}
-	*/
 	
 	Peace_Shield_END:	
 	MsgBox, 4, , Pause script to place shield? (8 Second Timeout & skip), 8
@@ -1788,7 +1646,6 @@ Peace_Shield:
 
 	Gosub Go_Back_To_Home_Screen
 
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -3242,16 +3099,16 @@ Active_Skill:
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	; set variables
 	Button_Max_X := 510 ; 480 ; 500 ; 480
-	Button_Max_Y := 815 ; 830 ; 815
-	Button_Min_X := 90 ; 70 ; 75 ; 70
-	Button_Min_Y := 610 ; 600 ; 610 ; 600
+	Button_Max_Y := 830 ; 815
+	Button_Min_X := 100 ; 90 ; 70 ; 75 ; 70
+	Button_Min_Y := 620 ; 610 ; 600 ; 610 ; 600
 
 	Button_OCR_X := Button_Max_X ; delta 71-276-481 = 205
 	Button_OCR_Y := Button_Max_Y ; delta 600-815 = 215
 	Button_OCR_W := 100 ; 130 ; 100 ; 130
 	Button_OCR_H := 50 ; 60 ; 40 ; 60
-	Button_OCR_X_Delta := 205 ; 203
-	Button_OCR_Y_Delta := 215 ; 217 ; original 215
+	Button_OCR_X_Delta := 205 ; 203 ; 100, 305 to 510 = 205
+	Button_OCR_Y_Delta := 210 ; 215 ; 217 ; 215 ; 620 to 830 = 210
 	Click_X_Delta := 60 ; 50 ; 60
 	Click_Y_Delta := 15 ; 15 ; 30
 	Click_X := (Button_OCR_X + Click_X_Delta)
@@ -3301,12 +3158,13 @@ Active_Skill:
 		}
 		else
 			Button_OCR_X -= Button_OCR_X_Delta
-			
+		/*	
 		if (Button_OCR_X <= 0)
 			Button_OCR_X := Button_Max_X			
 			
 		if (Button_OCR_Y <= 0)
 			Button_OCR_Y := Button_Max_Y
+		*/
 
 		Click_X := (Button_OCR_X + Click_X_Delta)
 		Click_Y := (Button_OCR_Y + Click_Y_Delta)
