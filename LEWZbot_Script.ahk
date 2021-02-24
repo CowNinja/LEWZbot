@@ -5137,7 +5137,7 @@ Get_Window_Geometry:
 	Subroutine_Running := "Get_Window_Geometry"
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
 
-	stdout.WriteLine(A_Now " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_Now " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 
 	LEWZGeo := Win_GetInfo(FoundAppTitle)
 	; FoundAppTitle := LEWZGeo.Title
@@ -5157,8 +5157,8 @@ Get_Window_Geometry:
 	LowerX := FoundAppWidth + UpperX ; compute lower right X coord of app window
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
-	stdout.WriteLine(A_Now "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
-	stdout.WriteLine(A_Now " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
+	; stdout.WriteLine(A_Now "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+	; stdout.WriteLine(A_Now " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
 	return
 }
 
@@ -5185,7 +5185,7 @@ Check_Window_Geometry:
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 
 	; WinGetPos, FoundAppX, FoundAppY, FoundAppWidth, FoundAppHeight, %FoundAppTitle%
-	stdout.WriteLine(A_Now "Sub:" Subroutine_Running " Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+	; stdout.WriteLine(A_Now "Sub:" Subroutine_Running " Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
 
 	if FoundAppX = App_Win_X
 		if FoundAppY = App_Win_Y
