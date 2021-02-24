@@ -866,6 +866,7 @@ Launch_Lewz:
 	return
 }
 
+; Force quit LEWZ APK
 Quit_LEWZ:
 {
 	Subroutine_Running := "Quit_LEWZ"
@@ -936,7 +937,7 @@ Game_Start_popups:
 	return
 }
 
-; reset position
+; reset position by going to world screen and back home
 Reset_Posit:
 {
 	Subroutine_Running := "Reset_Posit"
@@ -961,6 +962,7 @@ Reset_Posit:
 	return
 }
 
+; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
 Go_Back_To_Home_Screen:
 {
 	; Subroutine_Running := "Go_Back_To_Home_Screen"
@@ -1032,6 +1034,7 @@ Go_Back_To_Home_Screen:
 	return
 }
 
+; Login to account using stored credentials
 Switch_Account:
 {
 	Subroutine_Running := "Switch_Account"
@@ -1446,7 +1449,6 @@ Peace_Shield_OLD:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
-
 
 Peace_Shield:
 {
