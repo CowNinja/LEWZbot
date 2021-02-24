@@ -90,7 +90,7 @@ while WinExist(FoundAppTitle)
 				Gosub Go_Back_To_Home_Screen
 
 			Pause_Script := False
-			CSB_Event := False ; True ; True if CSB Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 
@@ -139,10 +139,10 @@ while WinExist(FoundAppTitle)
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
 				; Gosub Mail_Collection
-				Gosub Desert_Oasis
+				; Gosub Desert_Oasis
 				; Gosub VIP_Shop
 				; Gosub Activity_Center_Wonder
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 
 				; Gosub Game_Start_popups
@@ -157,7 +157,6 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
-				Gosub Activity_Center_Wonder
 				Gosub Speaker_Help
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -170,6 +169,7 @@ while WinExist(FoundAppTitle)
 				{
 					Gosub VIP_Shop
 					Gosub Benefits_Center
+					Gosub Speaker_Help
 					Gosub Alliance_Boss_Regular
 					Gosub Alliance_Boss_Oasis
 					Gosub Mail_Collection
@@ -180,7 +180,10 @@ while WinExist(FoundAppTitle)
 				if CSB_Event ; || if Desert_Event
 					Gosub Reserve_Factory
 				if Desert_Event
+				{
 					Gosub Desert_Oasis
+					Gosub Activity_Center_Wonder
+				}
 				; Gosub Gather_Resources
 				Gosub Speaker_Help
 				; Gosub Collect_Red_Envelopes
@@ -1130,7 +1133,7 @@ Switch_Account:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(455,738, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Click Use your email to log in
 
-	loop, 10
+	loop, 15
 	{
 		OCR_X := 320
 		OCR_Y := 720
@@ -1872,18 +1875,37 @@ Benefits_Center:
 	Battle_Honor_text := "BattleHonor"
 	Daily_Signin_text := "Sign"
 	Daily_Signin_text2 := "LOGIN"
-	Monthly_Package_text := "Monthly—Package"
+	Monthly_Package_text := "ackage" ; "MonthlyPackage" "Monthly PRackage", "Rackage", "Monthly Package"
 	Monthly_Signin_text := "MonthlySign"
 	Select_Reward_text := "SelectReward"
 	Selection_Chest_text := "SelectionChest"
 	Single_Cumulation_text := "Cumulation"
-	Warrior_Trial_text := "Warriortrial"
+	Warrior_Trial_text := "Warrior" ; "trial"
 	Claim_text := "Claim"
+	
+	; Select_Reward_text := OCR([15, 209, 133, 29], "eng")
+	; Selection_Chest_text := OCR([176, 210, 133, 25], "eng")
+	; Single_Cumulation_text := OCR([354, 211, 105, 49], "eng")
+	; Daily_Signin_text := OCR([531, 210, 72, 29], "eng")
+	; Monthly_Signin_text := OCR([8, 208, 136, 31], "eng")
+	; Battle_Honor_text := OCR([188, 207, 109, 30], "eng")
+	; Monthly_Package_text := OCR([399, 199, 92, 47], "eng")
 
 	; "ReactionFurnace"
 	; "Warriortrial"
 	; "WarZAccountbindrewards"
 	; "MonthlySign-In"
+	; Select Reward
+	; Selection Chest
+	; Cumulation Purchase
+	; Sign In
+	; Monthly Sign In
+	; Battle Honor
+	; Alliance Purchase
+	; Continuous purchase
+	; Limited Arms Supply
+	; Arms Supply
+	; Upgrade Base
 
 	; Set tabs = True (1) to completed or False (0) to be skipped.
 	Battle_Honor_Run := False
@@ -1899,7 +1921,7 @@ Benefits_Center:
 	Mouse_Click(625,280) ; Click Benefits Center x times
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0)) ; wait for Benefits Center to load
 
-	loop, 3
+	loop, 2
 	{
 		Gosub Benefits_Center_Reload
 		Gosub Benefits_Check_Four_Tabs
@@ -1964,7 +1986,7 @@ Benefits_Center:
 		Benefits_X_Min := 0 ; 15 ; 0
 		Benefits_X_Max := 480 ; 510 ; 408
 		Benefits_OCR_X := Benefits_X_Min
-		Benefits_OCR_Y := 180 ; 184
+		Benefits_OCR_Y := 200 ; 180 ; 184
 		Benefits_OCR_W := 160 ; 272
 		Benefits_OCR_H := 80 ; 72
 		Benefits_X_Delta := 160 ; 135 ; 165
@@ -2068,29 +2090,29 @@ Benefits_Center:
 				break
 		}
 
-		Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
+		Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h-_]+")
 
 		; MsgBox, Text Found:%Capture_Screen_Text%
 
 		If (RegExMatch(Capture_Screen_Text,Monthly_Signin_text))
 			Gosub Monthly_Signin
-		If (RegExMatch(Capture_Screen_Text,Select_Reward_text))
+		Else If (RegExMatch(Capture_Screen_Text,Select_Reward_text))
 			Gosub Select_Reward
-		If (RegExMatch(Capture_Screen_Text,Single_Cumulation_text))
+		Else If (RegExMatch(Capture_Screen_Text,Single_Cumulation_text))
 			Gosub Single_Cumulation
-		If (RegExMatch(Capture_Screen_Text,Warrior_Trial_text))
+		Else If (RegExMatch(Capture_Screen_Text,Warrior_Trial_text))
 			Gosub Warrior_Trial
-		If (RegExMatch(Capture_Screen_Text,Selection_Chest_text))
+		Else If (RegExMatch(Capture_Screen_Text,Selection_Chest_text))
 			Gosub Selection_Chest
-		If (RegExMatch(Capture_Screen_Text,Battle_Honor_text))
+		Else If (RegExMatch(Capture_Screen_Text,Battle_Honor_text))
 			Gosub Battle_Honor_Collect
-		If (RegExMatch(Capture_Screen_Text,Monthly_Package_text))
+		Else If (RegExMatch(Capture_Screen_Text,Monthly_Package_text))
 			Gosub Monthly_Package_Collect
-		If (RegExMatch(Capture_Screen_Text,Daily_Signin_text))
+		Else If (RegExMatch(Capture_Screen_Text,Daily_Signin_text))
 			Gosub Daily_Signin
-		If (RegExMatch(Capture_Screen_Text,Claim_text))
+		Else If (RegExMatch(Capture_Screen_Text,Claim_text))
 			Gosub Claim_Buttons
-		If (RegExMatch(Capture_Screen_Text,Daily_Signin_text2))
+		Else If (RegExMatch(Capture_Screen_Text,Daily_Signin_text2))
 			Gosub Daily_Signin
 
 		; else
@@ -2481,22 +2503,22 @@ Benefits_Center:
 
 		Battle_Honor_Click:
 		{
-			Mouse_Click(268,636, {Clicks: 2,Timeout: 0})
-			Mouse_Click(268,636, {Clicks: 2,Timeout: 0})
-			Mouse_Click(260,721, {Clicks: 2,Timeout: 0})
-			Mouse_Click(260,721, {Clicks: 2,Timeout: 0})
-			Mouse_Click(269,799, {Clicks: 2,Timeout: 0})
-			Mouse_Click(269,799, {Clicks: 2,Timeout: 0})
-			Mouse_Click(265,883, {Clicks: 2,Timeout: 0})
-			Mouse_Click(265,883, {Clicks: 2,Timeout: 0})
-			Mouse_Click(261,963, {Clicks: 2,Timeout: 0})
-			Mouse_Click(261,963, {Clicks: 2,Timeout: 0})
-			Mouse_Click(267,1050, {Clicks: 2,Timeout: 0})
-			Mouse_Click(267,1050, {Clicks: 2,Timeout: 0})
-			Mouse_Click(263,1126, {Clicks: 2,Timeout: 0})
-			Mouse_Click(263,1126, {Clicks: 2,Timeout: 0})
-			Mouse_Click(261,1202, {Clicks: 2,Timeout: 0})
-			Mouse_Click(261,1202, {Clicks: 2,Timeout: 0})
+			Mouse_Click(268,636, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(268,636, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(260,721, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(269,799, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(269,799, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(265,883, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(265,883, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(261,963, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(261,963, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(267,1050, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(267,1050, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(263,1126, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(263,1126, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(261,1202, {Clicks: 2,Timeout: Delay_Short})
+			Mouse_Click(261,1202, {Clicks: 2,Timeout: Delay_Short})
 
 			return
 		}
@@ -2869,6 +2891,7 @@ Reserve_Factory:
 		Mouse_Click(324,797)
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Text_To_Screen("{F5}")
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -4266,50 +4289,13 @@ Gather_Resources:
 Desert_Oasis:
 {
 	Subroutine_Running := "Desert_Oasis"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
-
-	Desert_Oasis_Enter_Coordinates:
-	Mouse_Click(73,1207) ; Click on World Button
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-	Mouse_Click(337,1001) ; Click on Enter Coordinates Button
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	
-	gosub Desert_Oasis_Enter_Coordinates_Button
-	goto END_Stealing
-
-	Desert_Oasis_Enter_Coordinates_Button:
-	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Button"
-	{
-		
-		loop, 2
-		{
-			Desert_Oasis_Coordinates_Text := ["Enter","coordinates"]
-			OCR_X := 237
-			OCR_Y := 303
-			OCR_W := 220
-			OCR_H := 40
-			loop, 2
-			{
-				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				{
-					gosub Desert_Oasis_Enter_Coordinates_Next
-					return
-				}
-
-				Gosub Check_Window_Geometry
-				Mouse_Click(337,1001) ; Click on Enter Coordinates Button
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-			}
-			Gosub Go_Back_To_Home_Screen
-			Mouse_Click(73,1207) ; Click on World Button
-			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-			; Goto Desert_Oasis_Enter_Coordinates
-		}
-		return
-	}
-
+	loop, 3
+		if Enter_Coordinates_From_Home()
+			gosub Desert_Oasis_Enter_Coordinates_Next
+	
+	return
+	
 	Desert_Oasis_Enter_Coordinates_Next:
 	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Next"
 	{
@@ -4436,11 +4422,11 @@ Desert_Oasis:
 		loop, 2
 		{
 			loop, 5
-			{
 				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 					Goto Desert_Oasis_Stealing_Found
-			}
-			return ; Goto Desert_Oasis_Enter_Coordinates_Button
+					
+			if !Enter_Coordinates_From_World()
+				return
 		}
 		return ; goto END_Stealing
 
@@ -4462,6 +4448,48 @@ Desert_Oasis:
 
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
+}
+
+Enter_Coordinates_From_Home()
+{
+	Subroutine_Running := "Enter_Coordinates_From_Home"
+	Mouse_Click(73,1207) ; Click on World Button
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+	
+	loop, 2
+		if Enter_Coordinates_From_World()
+			return 1
+	
+	Gosub Go_Back_To_Home_Screen
+	return 0
+}
+
+Enter_Coordinates_From_World()
+{
+	Subroutine_Running := "Enter_Coordinates_From_World"
+	Mouse_Click(337,1001) ; Click on Enter Coordinates Button
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	
+	loop, 2
+		if Enter_Coordinates_Open_Check()
+			return 1
+	
+	Gosub Check_Window_Geometry
+	return 0
+}
+
+Enter_Coordinates_Open_Check()
+{
+	Subroutine_Running := "Enter_Coordinates_Open_Check"
+	Coordinates_Box_Text := ["Enter","coordinates"]
+	OCR_X := 237
+	OCR_Y := 303
+	OCR_W := 220
+	OCR_H := 40
+	loop, 5
+		if Search_Captured_Text_OCR(Coordinates_Box_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+			return 1
+	return 0
 }
 
 Gather_On_Base_RSS:
