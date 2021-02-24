@@ -166,19 +166,9 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Depot_Rewards
-				Gosub Active_Skill
 				; Gosub Speaker_Help
-				; Gosub Reserve_Factory
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
-				; ******************************************
-				; Gosub Mail_Collection
-				; Activity_Center_Open()
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; Gosub Go_Back_To_Home_Screen
-				; Gosub Speaker_Help
 				; goto END_of_user_loop
-				; ******************************************
 
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
@@ -192,10 +182,20 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Equipment_Crafting
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
+				; ******************************************
+				Gosub Active_Skill
+				Gosub Desert_Oasis
+				Gosub Mail_Collection
+				; Activity_Center_Open()
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				Gosub Go_Back_To_Home_Screen
+				Gosub Speaker_Help
+				goto END_of_user_loop
+				; ******************************************
 				
 				Gosub Depot_Rewards
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-				Gosub Golden_Chest
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; Gosub Golden_Chest
 				Gosub Speaker_Help
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -204,7 +204,7 @@ while WinExist(FoundAppTitle)
 				if CSB_Event ; || if Desert_Event
 					if !(A_Hour = 19 && A_Min <= 30)
 						Gosub Reserve_Factory
-				Gosub Active_Skill
+				Gosub Active_Skill				
 				Gosub Donate_tech
 				
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
@@ -821,15 +821,15 @@ Launch_Lewz:
 
 	Launch_Lewz_Continue:
 	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
-
-	Search_Captured_Text := ["Enter","login","password"]
-	OCR_X := 190
-	OCR_Y := 250
-	OCR_W := 300
-	OCR_H := 50
+	
+	Search_Captured_Text := ["Enter"] ; ,"login","password"]
+	PIN_X := 199 ; 190
+	PIN_Y := 265 ; 250
+	PIN_W := 77 ; 300
+	PIN_H := 30 ; 50
 	loop, 10
 	{
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
 		{
 			Gosub Enter_Login_Password_PIN
 			break
@@ -867,7 +867,7 @@ Quit_LEWZ:
 			break
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Ledium+0))
 		Gosub Check_Window_Geometry
 	}
 
@@ -1198,7 +1198,7 @@ Switch_Account:
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	}
 
-	loop, 10 ; 15
+	loop, 5 ; 10 ; 15
 	{
 		OCR_X := 330 ; 320
 		OCR_Y := 675 ; 720
@@ -1228,11 +1228,11 @@ Switch_Account:
 		*/
 
 		Search_Captured_Text := ["Enter"] ; ,"login","password"]
-		OCR_X := 199 ; 190
-		OCR_Y := 265 ; 250
-		OCR_W := 77 ; 300
-		OCR_H := 30 ; 50
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		PIN_X := 199 ; 190
+		PIN_Y := 265 ; 250
+		PIN_W := 77 ; 300
+		PIN_H := 30 ; 50
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
 		{
 			Gosub Enter_Login_Password_PIN
 			break ; goto Switch_Account_PIN
@@ -1264,11 +1264,11 @@ Switch_Account:
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 
 		Search_Captured_Text := ["Enter","login","password"]
-		OCR_X := 190
-		OCR_Y := 250
-		OCR_W := 300
-		OCR_H := 50
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		PIN_X := 190
+		PIN_Y := 250
+		PIN_W := 300
+		PIN_H := 50
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
 			Break
 	}
 	*/
@@ -1296,22 +1296,22 @@ Enter_Login_Password_PIN:
 
 	Enter_Login_Password_PIN_Search:
 	Search_Captured_Text := ["Enter","login","password"]
-	OCR_X := 190
-	OCR_Y := 250
-	OCR_W := 300
-	OCR_H := 50
+	PIN_X := 190
+	PIN_Y := 250
+	PIN_W := 300
+	PIN_H := 50
 	loop, 6
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
 			Goto Enter_Login_Password_PIN_Dialog
 	return
 
 	Enter_Login_Password_PIN_Search_old:
-	OCR_X := (190 + X_Pixel_offset)
-	OCR_Y := (250 + Y_Pixel_offset)
-	OCR_W := 300
-	OCR_H := 50
+	PIN_X := (190 + X_Pixel_offset)
+	PIN_Y := (250 + Y_Pixel_offset)
+	PIN_W := 300
+	PIN_H := 50
 	{
-		Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
+		Capture_Screen_Text := OCR([PIN_X, PIN_Y, PIN_W, PIN_H], "eng")
 		Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
 
 		For index, value in Enter_Login_Password_PIN_Text_Array
@@ -3106,7 +3106,7 @@ Active_Skill:
 	Button_OCR_X := Button_Max_X ; delta 71-276-481 = 205
 	Button_OCR_Y := Button_Max_Y ; delta 600-815 = 215
 	Button_OCR_W := 100 ; 130 ; 100 ; 130
-	Button_OCR_H := 50 ; 60 ; 40 ; 60
+	Button_OCR_H := 40 ; 50 ; 60 ; 40 ; 60
 	Button_OCR_X_Delta := 205 ; 203 ; 100, 305 to 510 = 205
 	Button_OCR_Y_Delta := 210 ; 215 ; 217 ; 215 ; 620 to 830 = 210
 	Click_X_Delta := 60 ; 50 ; 60
@@ -3125,14 +3125,14 @@ Active_Skill:
 
 		Active_Skill_Click_Button_NOW:
 		Mouse_Click(Click_X,Click_Y) ; Tap Use button found
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 		; Looking for Skill titles that match list
 		Match_OCR_X := 180
 		Match_OCR_Y := 445
 		Match_OCR_W := 330
 		Match_OCR_H := 36
-		loop, 5
+		loop, 2
 		if Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [Match_OCR_X, Match_OCR_Y], Size: [Match_OCR_W, Match_OCR_H], Timeout: 0}).Found
 				goto Active_Skill_Skill_Opened
 
