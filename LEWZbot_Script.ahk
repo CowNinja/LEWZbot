@@ -160,8 +160,9 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Depot_Rewards
-				; Gosub Reserve_Factory
 				Gosub Peace_Shield
+				Gosub Speaker_Help
+				Gosub Reserve_Factory
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				goto END_of_user_loop
 				; ******************************************
@@ -175,8 +176,8 @@ while WinExist(FoundAppTitle)
 
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
-				if Peace_Shield_Needed
-					Gosub Peace_Shield
+				; if Peace_Shield_Needed
+				; 	Gosub Peace_Shield
 				; Gosub Reset_Posit
 
 				; ** Position dependant **
@@ -1427,97 +1428,108 @@ Peace_Shield:
 	Shield_Found_8hour := False
 	; WinActivate, LEWZ001
 	; DllCall("Sleep","UInt",(rand_wait + 1*333+0))
-	Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Loop, 2
 	{
-		Loop, 3
+		; Capture_Screen_Text := OCR([320, 510, 91, 20], "eng")
+		; Capture_Screen_Text := OCR([362, 512, 44, 14], "eng")
+		; MsgBox, 0, , Found"%Capture_Screen_Text%"
+		; If Capture_Screen_Text contains Buff
+		Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		
+		loop, 3
 		{
-			; Capture_Screen_Text := OCR([320, 510, 91, 20], "eng")
-			Capture_Screen_Text := OCR([362, 512, 44, 14], "eng")
-			; MsgBox, 0, , Found"%Capture_Screen_Text%"
-			If Capture_Screen_Text contains Buff
-			
+			if Search_Captured_Text_OCR(["City","Buff"], {Timeout: 0}).Found
+				Goto, Shield_Search_Buttons
+		
 			if Search_Captured_Text_OCR(["Buff"], {Pos: [362, 512], Size: [44, 14], Timeout: 0}).Found
 			{
 				Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-				Goto, Shield_Search_Buttons
+				; Goto, Shield_Search_Buttons
 			}
 		}
 		Gosub Go_Back_To_Home_Screen
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
+		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	}
 	goto Peace_Shield_END
-	
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Goto, Shield_Open_Base
 	Shield_Search_Buttons:
+	; Capture_Screen_Text := OCR([134, 160, 150, 21], "eng")
+	Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21], Timeout: 0})
+	; Capture_Screen_Text := OCR([134, 312, 150, 20], "eng")
+	Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21], Timeout: 0})
+	
+	; Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
+	Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [270, 242], Size: [200, 22], Timeout: 0})
+	
+	; Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
+	Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [270, 394], Size: [200, 22], Timeout: 0})
+		
 	Loop, 10
 	{
-		Capture_Screen_Text := OCR([134, 160, 150, 21], "eng")
 		; MsgBox, 0, , Check first Box:"%Capture_Screen_Text%"
-		If Capture_Screen_Text contains Peace Shield
+		; If Capture_Screen_Text contains Peace Shield
+		if Shield_Pos01.Found
 		{
+			; MsgBox, % Shield_Pos01.Found """" Shield_Pos01.Value """ """ Shield_Pos01.Text """"
 			Click_X := 165
 			Click_Y := 216
 			; Mouse_Click(165,216) ;  Left, 1}  ; Click second box to enable shield
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
-			If Capture_Screen_Text contains Ends in
-			{
+			; Capture_Screen_Text := OCR([270, 242, 200, 22], "eng")
+			If Shield_Ends_Pos01.Found
 				Goto, Shield_Already_Active
-			}
 			Else
-			{
 				Goto, Activate_Shield
-			}
 		}
-		Capture_Screen_Text := OCR([134, 312, 150, 20], "eng")
-		; MsgBox, 0, , Check Second Box:"%Capture_Screen_Text%"
-		If Capture_Screen_Text contains Peace Shield
+		
+		; If Capture_Screen_Text contains Peace Shield
+		if Shield_Pos02.Found
 		{
+			; MsgBox, % Shield_Pos02.Found """" Shield_Pos02.Value """ """ Shield_Pos02.Text """"
 			Click_X := 200
 			Click_Y := 367
 			; Mouse_Click(226,367) ;  Left, 1}  ; Click second box to enable shield
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
-			If Capture_Screen_Text contains Ends in
-			{
+			; Capture_Screen_Text := OCR([270, 394, 200, 22], "eng")
+			If Shield_Ends_Pos02.Found
 				Goto, Shield_Already_Active
-			}
 			Else
-			{
 				Goto, Activate_Shield
-			}
 		}
+		
+		; MsgBox, % Shield_Pos01.Found """" Shield_Pos01.Value """ """ Shield_Pos01.Text """`n"	Shield_Ends_Pos01.Found """" Shield_Ends_Pos01.Value """ """ Shield_Ends_Pos01.Text """`n" Shield_Pos02.Found """" Shield_Pos02.Value """ """ Shield_Pos02.Text """`n" Shield_Ends_Pos02.Found """" Shield_Ends_Pos02.Value """ """ Shield_Ends_Pos02.Text """"
 	}
+	
 	Shield_Not_Found:
-	MsgBox, 4, , Shield Button not found in:"%Capture_Screen_Text%"`, Try again?
-	IfMsgBox, Yes
-	{
-		Goto, Shield_Open_Base
-	}
-	Else
-		Goto, Peace_Shield_END
+	
+	MsgBox, 4, , Shield Button not found in:"%Capture_Screen_Text%"`, Try again? (10 second Timeout & skip),10
+	vRet := MsgBoxGetResult()
+	if (vRet = "Yes")
+		Gosub Shield_Open_Base
+	else if (vRet = "No") || if (vRet = "Timeout")
+		goto Peace_Shield_END
 
 	Shield_Already_Active:
-	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway?
-	IfMsgBox, Yes
-		Goto, Activate_Shield
-	Else
-		Goto, Peace_Shield_END
-		
-	; Goto, Peace_Shield_END
+	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (10 second Timeout & skip),10
+	vRet := MsgBoxGetResult()
+	if (vRet = "Yes")
+		Gosub Activate_Shield
+	else if (vRet = "No") || if (vRet = "Timeout")
+		goto Peace_Shield_END
 
 	Activate_Shield:
 	; MsgBox, 0, , Click X and Y: (%Click_X%`,%Click_Y%)
 
-	SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
+	Mouse_Click(Click_X,Click_Y) ; SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Loop, 10
 	{
@@ -1525,15 +1537,16 @@ Peace_Shield:
 		If Capture_Screen_Text contains Peace Shield
 		{
 			Shield_Found_3Day := True
-			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
-			IfMsgBox, Yes
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes")
 			{
 				Mouse_Click(590,310) ;  Left, 1}  ; Tap Get & use 3-Day Peace Shield
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 				Goto, Shield_Purchase
 				/*
 			}
-			Else
+			else if (vRet = "No") || if (vRet = "Timeout")
 			{
 				Goto, Peace_Shield_END
 				*/
@@ -1543,15 +1556,16 @@ Peace_Shield:
 		If Capture_Screen_Text contains Peace Shield
 		{
 			Shield_Found_24hour := True
-			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
-			IfMsgBox, Yes
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes")
 			{
 				Mouse_Click(590,458) ;  Left, 1}  ; Tap Get & use 24-Hour Peace Shield
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 				Goto, Shield_Purchase
 				/*
 			}
-			Else
+			else if (vRet = "No") || if (vRet = "Timeout")
 			{
 				Goto, Peace_Shield_END
 				*/
@@ -1561,15 +1575,16 @@ Peace_Shield:
 		If Capture_Screen_Text contains Peace Shield
 		{
 			Shield_Found_8hour := True
-			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%?
-			IfMsgBox, Yes
+			MsgBox, 4, , Would you like to Use a %Capture_Screen_Text%? (10 second Timeout & skip),10
+			vRet := MsgBoxGetResult()
+			if (vRet = "Yes")
 			{
 				Mouse_Click(590,610) ;  Left, 1}  ; Tap Get & use 8-Hour Peace Shield
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 				Goto, Shield_Purchase
 				/*
 			}
-			Else
+			else if (vRet = "No") || if (vRet = "Timeout")
 			{
 				Goto, Peace_Shield_END
 				*/
@@ -1580,10 +1595,11 @@ Peace_Shield:
 			Break
 		}
 	}
-	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again?
-	IfMsgBox, Yes
+	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again? (10 second Timeout & skip),10
+	vRet := MsgBoxGetResult()
+	if (vRet = "Yes")
 		Goto, Shield_Open_Base
-	Else
+	else if (vRet = "No") || if (vRet = "Timeout")
 		Goto, Peace_Shield_END
 
 	Shield_Purchase:
