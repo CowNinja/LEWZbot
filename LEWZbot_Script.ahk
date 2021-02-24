@@ -39,8 +39,8 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #include lib\CowNinja_Functions.ahk
 #include lib\LEWZ_SetDefaults.ahk
 ; #include lib\WindowListMenu_mod_004.ahk
-; #include lib\LEZ_Functions.ahk
-; #include lib\LEZ_Functions_1057_mod_002.ahk
+; #include lib\LEWZ_Functions.ahk
+; #include lib\LEWZ_Functions_1057_mod_002.ahk
 ; #include <Gdip_All>
 ; #include <SnapOCR>
 
@@ -4587,6 +4587,7 @@ Get_User_Location:
 	return
 }
 
+/*
 ; Search for bases in world map, NINJA style
 Base_Search_World_Map:
 {
@@ -4909,6 +4910,7 @@ Check_For_Zombie_Popup()
 	}
 	return
 }
+*/
 
 ; Elivate MEMU processes
 Elivate_program:
