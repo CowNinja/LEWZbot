@@ -1031,6 +1031,8 @@ Peace_Shield:
 		
 		Shield_Expires10 := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
 		Shield_Expires11 := FormatTime(A_Now, "YYYYMMDDHH24MISS")
+		
+		; add expiration date and time to present date and time
 		EnvAdd, Shield_Expires12, Shield_DD, d
 		EnvAdd, Shield_Expires12, Shield_HH, h
 		EnvAdd, Shield_Expires12, Shield_MM, m
@@ -1097,6 +1099,7 @@ Peace_Shield:
 	Mouse_Click(Click_X,Click_Y) ; SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	
+	; change button text: "Yes" to "3Day", "No" to "24hour", and "Cancel" to "8hour"
 	MsgBox("Would you like to place a shield?`n(Esc) to cancel`n(10 second Timeout & skip)`,10", "Peace Shield", 3, "&3Day", "&24hour", "&8hour", 5)
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; 3Day
