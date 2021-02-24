@@ -286,11 +286,8 @@ MsgBox, Unexpected exit
 Memu_Title_Bar:
 {
 	Subroutine_Running := "Memu_Title_Bar"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 
 	Mouse_Click(423,25) ; Tap Memu Title Bar
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -298,7 +295,6 @@ Memu_Title_Bar:
 Launch_Lewz:
 {
 	Subroutine_Running := "Launch_Lewz"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Launch_Lewz_Click_Icon:
@@ -348,8 +344,6 @@ Launch_Lewz:
 	}
 
 	; Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -357,7 +351,6 @@ Launch_Lewz:
 Quit_LEWZ:
 {
 	Subroutine_Running := "Quit_LEWZ"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Quit LEWZ
 	; Gosub Reset_Posit
@@ -395,8 +388,6 @@ Quit_LEWZ:
 	; SendEvent {Click, 283,5}
 	;	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	;}
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -404,7 +395,6 @@ Quit_LEWZ:
 Game_Start_popups:
 {
 	Subroutine_Running := "Game_Start_popups"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Clear first pop-up by pressing back
 	Text_To_Screen("{F5}")
@@ -419,8 +409,6 @@ Game_Start_popups:
 	; Mouse_Click(379,736) ; Collect Cafeteria
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -428,7 +416,6 @@ Game_Start_popups:
 Reset_Posit:
 {
 	Subroutine_Running := "Reset_Posit"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; go back x times
 
@@ -444,8 +431,6 @@ Reset_Posit:
 	}
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -516,8 +501,6 @@ Go_Back_To_Home_Screen:
 		goto Go_Back_To_Home_Screen_OCR_Quit
 		return
 	}
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -525,7 +508,6 @@ Go_Back_To_Home_Screen:
 Switch_Account:
 {
 	Subroutine_Running := "Switch_Account"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	Gui, Status:add,text,, ********************************
 	Gui, Status:add,text,, Switching to %User_Name%
 	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
@@ -618,52 +600,6 @@ Switch_Account:
 			goto Switch_Account_Next
 		}
 	}
-	
-	/*
-		
-			loop, 2
-			{
-				if !Email_Entered
-				{
-				OCR_X := 65
-				OCR_Y := 362
-				OCR_W := 535
-				OCR_H := 50
-				; Read contents of Email Box, default message: "Please enter your email address here..."
-				Search_Captured_Text := ["Please enter","your email","email address"]
-				OCR_Y := 362
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-					if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-						Gosub Switch_Account_User_Email
-					else
-						Email_Entered := True
-				Else
-					Email_Entered := True
-				}
-
-				if !Password_Entered
-				{
-				; Read contents of Password Box, default message: "Please enter your password here..."
-				Search_Captured_Text := ["Please enter","your password","password here"]
-				OCR_X := 65
-				OCR_Y := 505
-				OCR_W := 535
-				OCR_H := 50
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-					if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-						Gosub Switch_Account_User_Password
-					Else
-						Password_Entered := True
-				Else
-					Password_Entered := True
-				}
-			}
-
-		if (Email_Entered && Password_Entered)
-			goto Switch_Account_Next
-		; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
-	}
-	*/
 
 	Switch_Account_Try_Again:
 	; Mouse_Click(475,1150) ; Tap Other Account
@@ -797,8 +733,6 @@ Switch_Account:
 
 	Switch_Account_END:
 
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 	return
 }
 
@@ -835,7 +769,6 @@ Enter_Login_Password_PIN:
 	return
 
 	Enter_Login_Password_PIN_Dialog:
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 6
 		Mouse_Click(577,1213, {Timeout: 5}) ; , {Timeout: Delay_Medium+0}) ; Tap backspace
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -915,7 +848,6 @@ BruteForcePIN:
 Peace_Shield_OLD:
 {
 	Subroutine_Running := "Peace_Shield"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 
 	Mouse_Click(290,405) ; Tap on base
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -932,8 +864,6 @@ Peace_Shield_OLD:
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -1096,7 +1026,7 @@ Peace_Shield:
 		goto Peace_Shield_END
 
 	Activate_Shield:
-	Mouse_Click(Click_X,Click_Y) ; SendEvent, {Click, %Click_X%, %Click_Y% Left, 1}  ; Click first box to enable shield
+	Mouse_Click(Click_X,Click_Y) ; Click first box to enable shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	
 	; change button text: "Yes" to "3Day", "No" to "24hour", and "Cancel" to "8hour"
@@ -1169,7 +1099,6 @@ Peace_Shield:
 Collect_Collisions:
 {
 	Subroutine_Running := "Collect_Collisions"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1210,7 +1139,6 @@ Collect_Collisions:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -1218,7 +1146,6 @@ Collect_Collisions:
 Collect_Equipment_Crafting:
 {
 	Subroutine_Running := "Collect_Equipment_Crafting"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1259,7 +1186,6 @@ Collect_Equipment_Crafting:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -1267,7 +1193,6 @@ Collect_Equipment_Crafting:
 Collect_Recruits:
 {
 	Subroutine_Running := "Collect_Recruits"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1311,7 +1236,6 @@ Collect_Recruits:
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -1319,7 +1243,6 @@ Collect_Recruits:
 Collect_Runes:
 {
 	Subroutine_Running := "Collect_Runes"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1347,14 +1270,12 @@ Collect_Runes:
 
 	Collect_Runes_END:
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Collect_Red_Envelopes:
 {
 	Subroutine_Running := "Collect_Red_Envelopes"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	loop, 3
@@ -1384,8 +1305,6 @@ Collect_Red_Envelopes:
 
 		Gosub Go_Back_To_Home_Screen
 	}
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -1459,7 +1378,6 @@ Shield_Warrior_Trial_etc:
 		MsgBox, 0, Pause, Check location`, SVIP`, wonder rewards`, activate skills`, etc? Press OK to resume (No Timeout)
 
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 }
@@ -1467,22 +1385,6 @@ Shield_Warrior_Trial_etc:
 Activity_Center_Wonder_old:
 {
 	Mouse_Drag(109, 536, 262, 536, {EndMovement: T, SwipeTime: 500})
-	/*
-	Click, 109, 536 Left, Down ; drag home screen to right
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 130, 536, 0
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 139, 536, 0
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 150, 536, 0
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 159, 536, 0
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 262, 536, 0
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-	Click, 262, 536 Left, Up
-	*/
-
 	Mouse_Click(137,580) ; Tap activity center
 
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
@@ -1490,13 +1392,6 @@ Activity_Center_Wonder_old:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Mouse_Drag(330, 1194, 337, 849, {EndMovement: F, SwipeTime: 500})
-	/*
-	Click, 330, 1194 Left, Down ; drag activity center list up
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Click, 337, 849, 0
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-	Click, 337, 849 Left, Up
-	*/
 
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(297,1095) ; Tap on desert wonder
@@ -1648,7 +1543,6 @@ Activity_Center_Wonder:
 Benefits_Center_Monthly:
 {
 	Subroutine_Running := "Benefits_Center_Monthly"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -1665,7 +1559,6 @@ Benefits_Center_Monthly:
 	MsgBox, 0, Pause, Collect Warrior Trials and monthly package`, Press OK to resume (No Timeout)
 
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	; loop, through benefits tabs to clear any new ones
@@ -1699,23 +1592,6 @@ Benefits_Center_Monthly:
 	{
 		; Benefits Center Swipe Right One position
 		Mouse_Drag(630, 187, 353, 187, {EndMovement: T, SwipeTime: 500})
-		/*
-		Click, 630, 187 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 530, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 430, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 375, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 363, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 355, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 354, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 353, 187 Left, Up
-		*/
 	}
 	return
 
@@ -1724,7 +1600,6 @@ Benefits_Center_Monthly:
 Benefits_Center:
 {
 	Subroutine_Running := "Benefits_Center"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; Initialize text to search for
@@ -1818,8 +1693,6 @@ Benefits_Center:
 
 	Benefits_Center_END:
 	; Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	Benefits_swipe_Check_Tabs:
@@ -1872,59 +1745,6 @@ Benefits_Center:
 		Gosub Benefits_Center_Reload
 		return
 	}
-
-	/*
-
-	Capture_Screen_Text := OCR([
-		Benefits_OCR_X := 15
-		Benefits_OCR_Y := 185
-		Benefits_OCR_W := 135
-		Benefits_OCR_H := 70
-	Capture_Screen_Text := OCR([
-		Benefits_OCR_X := 180 ; 15 + 165
-		Benefits_OCR_Y := 185
-		Benefits_OCR_W := 135
-		Benefits_OCR_H := 70
-	Capture_Screen_Text := OCR([
-		Benefits_OCR_X := 350 ; 180 + 170
-		Benefits_OCR_Y := 185
-		Benefits_OCR_W := 135
-		Benefits_OCR_H := 70
-	Capture_Screen_Text := OCR([
-		Benefits_OCR_X := 512 ; 350 + 162
-		Benefits_OCR_Y := 185
-		Benefits_OCR_W := 135
-		Benefits_OCR_H := 70
-
-	Benefits_Check_Tabs_Old:
-	{
-		Benefits_OCR_X := 136
-		Benefits_Click_X := (Benefits_OCR_X + 136)
-		; Capture_Screen_Text := OCR([170, 184, 160, 72], "eng") ; benefit tab 2
-		Capture_Screen_Text := OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng") ; benefit tab 2
-		loop, 2
-			Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Tab 2 Benefits Center
-		Gosub Benefits_Selection_and_Run
-
-		Benefits_OCR_X := 272
-		Benefits_Click_X := (Benefits_OCR_X + 136)
-		; Capture_Screen_Text := OCR([342, 184, 160, 72], "eng") ; benefit tab 3
-		Capture_Screen_Text := OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng") ; benefit tab 3
-		loop, 2
-			Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Tab 3 Benefits Center
-		Gosub Benefits_Selection_and_Run
-
-		Benefits_OCR_X := 408
-		Benefits_Click_X := (Benefits_OCR_X + 136)
-		; Capture_Screen_Text := OCR([513, 184, 160, 72], "eng") ; benefit tab 4
-		Capture_Screen_Text := OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng") ; benefit tab 4
-		loop, 2
-			Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Tab 4 Benefits Center
-		Gosub Benefits_Selection_and_Run
-
-		return
-	}
-	*/
 
 	Benefits_Selection_and_Run:
 	{
@@ -1980,12 +1800,8 @@ Benefits_Center:
 		Benefits_Text_Found:
 		Capture_Screen_Text := ""
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait to read next tab
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 		return
 	}
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	; **************************
@@ -2017,23 +1833,6 @@ Benefits_Center:
 	{
 		; Benefits Center Swipe Right One position
 		Mouse_Drag(630, 187, 353, 187, {EndMovement: T, SwipeTime: 500})
-		/*
-		Click, 630, 187 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 530, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 430, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 375, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 363, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 353, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 353, 187, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 353, 187 Left, Up
-		*/
 	}
 	return
 
@@ -2066,8 +1865,6 @@ Benefits_Center:
 
 		Subroutine_Running := "Select_Reward"
 
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 		Mouse_Click(644,512) ; Select Reward - Drop Down Menu
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
@@ -2095,8 +1892,6 @@ Benefits_Center:
 
 		Subroutine_Running := "Monthly_Package_Collect"
 
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 		Mouse_Click(500,1200) ; Tap Claim
 
 		Monthly_Package_Collect_Run := False
@@ -2109,8 +1904,6 @@ Benefits_Center:
 			return
 
 		Subroutine_Running := "Warrior_Trial_Collect"
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		; Mouse_Click(500,1200) ; Tap Claim
 
 		Mouse_Click(560,1220) ; Select redeem steel
@@ -2138,8 +1931,6 @@ Benefits_Center:
 
 		Subroutine_Running := "Single_Cumulation"
 
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 		Mouse_Click(560,550) ; Tap Claim
 
 		Single_Cumulation_Run := False
@@ -2153,8 +1944,6 @@ Benefits_Center:
 
 		Subroutine_Running := "Claim_Buttons"
 		; Mouse_Click(180,1130, {Timeout: Delay_Short+0}) ; Tap Collide
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		if (OCR([530, 479, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #1
 			Mouse_Click(600,500, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 01
 		if (OCR([530, 633, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #2
@@ -2177,8 +1966,6 @@ Benefits_Center:
 			return
 
 		Subroutine_Running := "Daily_Signin"
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		Mouse_Click(103,553) ; Daily Sign-In Click Day 1
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
@@ -2264,8 +2051,6 @@ Benefits_Center:
 			return
 
 		Subroutine_Running := "Monthly_Signin"
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 		; Claim Monthly
 		loop, 2
 			Mouse_Click(342,1215) ; Tap collect Monthly Signin
@@ -2314,8 +2099,6 @@ Benefits_Center:
 
 		Subroutine_Running := "Selection_Chest"
 
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 		Mouse_Click(87,430) ; Tap Free Chest
 		DllCall("Sleep","UInt",(rand_wait + 8*Delay_Short+0))
 
@@ -2353,7 +2136,6 @@ Benefits_Center:
 
 	Battle_Honor_Collect:
 	Subroutine_Running := "Battle_Honor_Collect"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	{
 		if !Battle_Honor_Run
 			return
@@ -2393,46 +2175,12 @@ Benefits_Center:
 		Battle_Honor_Swipe:
 		{
 			Mouse_Drag(350, 1203, 360, 609, {EndMovement: T, SwipeTime: 500})
-			/*
-			Click, 350, 1203 Left, Down
-			Click, 350, 1190 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 356, 1135 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 365, 1040 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 369, 957 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 370, 820 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 366, 767 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 364, 716 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 362, 689 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 360, 660 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 360, 635 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 360, 614 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 360, 600 , 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 360, 609, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Click, 360, 609, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Click, 360, 609 Left, Up
-			*/
 			Return
 		}
 
 		Battle_Honor_END:
 
 		Battle_Honor_Run := False
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 		return
 	}
 
@@ -2442,7 +2190,6 @@ Benefits_Center:
 Speaker_Help:
 {
 	Subroutine_Running := "Speaker_Help"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -2468,15 +2215,12 @@ Speaker_Help:
 	}
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Drop_Zone:
 {
 	Subroutine_Running := "Drop_Zone"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(285,200) ; Tap On Drop Zone
@@ -2522,41 +2266,32 @@ Drop_Zone:
 	; }
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Adventure_Missions:
 {
 	Subroutine_Running := "Adventure_Missions"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Collect_Cafeteria:
 {
 	Subroutine_Running := "Collect_Cafeteria"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(379,736) ; Collect Cafeteria
 
 	; Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Active_Skill:
 {
 	Subroutine_Running := "Active_Skill"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(195,1195) ; Tap Activate Skills
@@ -2692,7 +2427,6 @@ Active_Skill:
 
 	Active_Skill_END:
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 }
@@ -2700,7 +2434,6 @@ Active_Skill:
 Collect_Chips_Underground:
 {
 	Subroutine_Running := "Collect_Chips_Underground"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; Tap underground
@@ -2712,8 +2445,6 @@ Collect_Chips_Underground:
 	; Hit F5 for back button
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -2721,7 +2452,6 @@ Collect_Chips_Underground:
 Reserve_Factory:
 {
 	Subroutine_Running := "Reserve_Factory"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -2808,8 +2538,6 @@ Reserve_Factory:
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -3044,8 +2772,6 @@ Depot_Rewards:
 
 	; set variables
 	Depot_Rewards_Button_Text_Array := ["Free","Reward","Request","Help"]
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	loop, 2
@@ -3082,7 +2808,6 @@ Depot_Rewards:
 
 	Depot_Rewards_END:
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	Depot_Click_Button:
@@ -3123,15 +2848,12 @@ Depot_Rewards:
 		Click_Y := (OCR_Y + Click_Y_Delta)
 	}
 	return
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 VIP_Shop:
 {
 	Subroutine_Running := "VIP_Shop"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(156,90) ; Tap VIP Shop
@@ -3160,7 +2882,6 @@ VIP_Shop:
 
 	VIP_Shop_END:
 	Gosub Go_Back_To_Home_Screen
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	VIP_Shop_Click_Button:
@@ -3202,14 +2923,12 @@ VIP_Shop:
 		Click_X := (OCR_X + 80)
 		Click_Y := (OCR_Y + 100)
 	}
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Mail_Collection:
 {
 	Subroutine_Running := "Mail_Collection"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 	
@@ -3279,8 +2998,6 @@ Mail_Collection:
 	Gosub Mark_All_As_Read
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	Mark_All_As_Read:
@@ -3337,7 +3054,6 @@ Mail_Collection:
 Alliance_Boss_Regular:
 {
 	Subroutine_Running := "Alliance_Boss"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -3347,15 +3063,7 @@ Alliance_Boss_Regular:
 	; Swipe up
 	loop, 2
 		Mouse_Drag(345, 1100, 409, 196, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		Click, 345, 1100 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 370, 1003, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 409, 196 Left, Up
-	}
-	*/
+
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Mouse_Click(273,540) ; Tap Alliance Boss regular play
@@ -3368,15 +3076,12 @@ Alliance_Boss_Regular:
 	Mouse_Click(340,780) ; Tap Confirm Feed Boss
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Alliance_Boss_Oasis:
 {
 	Subroutine_Running := "Alliance_Boss"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -3386,15 +3091,7 @@ Alliance_Boss_Oasis:
 	; Swipe up
 	loop, 2
 		Mouse_Drag(345, 1100, 409, 196, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		Click, 345, 1100 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 370, 1003, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 409, 196 Left, Up
-	}
-	*/
+
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	; Mouse_Click(273,540) ; Tap Alliance Boss regular play
@@ -3407,15 +3104,12 @@ Alliance_Boss_Oasis:
 	Mouse_Click(340,780) ; Tap Confirm Feed Boss
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
 Alliance_Wages:
 {
 	Subroutine_Running := "Alliance_Wages"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -3430,20 +3124,7 @@ Alliance_Wages:
 		; Swipe Down (linear)
 		loop, 2
 			Mouse_Drag(326, 405, 326, 957, {EndMovement: F, SwipeTime: 500})
-		/*
-		{
-			Click, 326, 405 Left, Down
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 474, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 543, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 680, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 326, 957 Left, Up
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		}
-		*/
+
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 		Loop, 2
@@ -3492,7 +3173,6 @@ Alliance_Wages:
 
 		Alliance_Wages_END:
 		Gosub Go_Back_To_Home_Screen
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 		return
 	}
 
@@ -3514,20 +3194,7 @@ Alliance_Wages:
 		; Swipe Right
 		loop, 5
 			Mouse_Drag(216, 647, 624, 647, {EndMovement: F, SwipeTime: 500})
-		/*
-		{
-			Click, 216, 647 Left, Down
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 275, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 324, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 424, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 624, 647 Left, Up
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		}
-		*/
+
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 		Gosub Click_Points_Boxes
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
@@ -3542,20 +3209,7 @@ Alliance_Wages:
 		; Swipe Left
 		loop, 5
 			Mouse_Drag(624, 647, 216, 647, {EndMovement: F, SwipeTime: 500})
-		/*
-		{
-			Click, 624, 647 Left, Down
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 424, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 324, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 275, 647, 0
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-			Click, 216, 647 Left, Up
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		}
-		*/
+
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 		Gosub Click_Points_Boxes
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
@@ -3723,7 +3377,6 @@ Alliance_Wages:
 Train_Daily_Requirement:
 {
 	Subroutine_Running := "Train_Daily_Requirement"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -3834,8 +3487,6 @@ Train_Daily_Requirement:
 	Mouse_Click(250,755) ; Mouse_Click(275,732)
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Gosub Training_Number
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	Training_Number:
@@ -3870,7 +3521,6 @@ Train_Daily_Requirement:
 Gather_Resources:
 {
 	Subroutine_Running := "Gather_Resources"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -3890,22 +3540,7 @@ Gather_Resources:
 	; Swipe right x times
 	loop, 2
 		Mouse_Drag(100, 990, 600, 990, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		; World search Swipe Right One position
 
-		Click, 100, 990 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 475, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 562, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 600, 990 Left, Up
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-	*/
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	MsgBox, 4, , Gather Oil Well? (8 Second Timeout & skip), 8
@@ -3941,21 +3576,7 @@ Gather_Resources:
 	; Swipe left x times
 	loop, 2
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		; World search Swipe Right One position
-		Click, 600, 990 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 562, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 475, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 100, 990 Left, Up
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-	*/
+
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	MsgBox, 4, , Gather Steel Mill? (8 Second Timeout & skip), 8
@@ -3972,21 +3593,7 @@ Gather_Resources:
 	; Swipe left x times
 	loop, 2
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		; World search Swipe Right One position
-		Click, 600, 990 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 562, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 475, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 990, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 100, 990 Left, Up
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-	*/
+
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	MsgBox, 4, , Gather Alloy Mine? (8 Second Timeout & skip), 8
 	vRet := MsgBoxGetResult()
@@ -4006,8 +3613,6 @@ Gather_Resources:
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	Search_And_Deploy_Resources:
@@ -4072,8 +3677,6 @@ Gather_Resources:
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 		}
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 		return
 	}
 }
@@ -4239,8 +3842,6 @@ Desert_Oasis:
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4291,7 +3892,6 @@ Enter_Coordinates_Open_Check()
 Gather_On_Base_RSS:
 {
 	Subroutine_Running := "Gather_On_Base_RSS"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 
@@ -4465,33 +4065,6 @@ Gather_On_Base_RSS:
 	Swipe_Right_RSS_02:
 	Mouse_Drag(147, 854, 330, 649, {EndMovement: T, SwipeTime: 500})
 	; Mouse_Drag(147, 854, 373, 649, {EndMovement: T, SwipeTime: 500})
-	/*
-	{
-		Click, 147, 854 Left, Down
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 263, 729, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 269, 726, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 270, 724, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 326, 697, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 346, 680, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 346, 676, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 676, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 674, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 350, 674, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 373, 649, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		Click, 373, 649 Left, Up
-	}
-	*/
 
 	loop, 2 {
 		Mouse_Click(530,1033) ; Tap next to speaker
@@ -4606,8 +4179,6 @@ Gather_On_Base_RSS:
 
 	END_Gather_Base_RSS:
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4615,24 +4186,11 @@ Gather_On_Base_RSS:
 Golden_Chest:
 {
 	Subroutine_Running := "Golden_Chest"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
 	
 	if !Activity_Center_Open()
 		goto Golden_Chest_END
-	/*
-	loop, 2
-	{
-		Mouse_Click(630,530) ; Tap Activity Center
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-		loop, 5
-			if Search_Captured_Text_OCR(["Activity Center"], {Timeout: 0}).Found
-				goto Golden_Chest_Next
-		Gosub Go_Back_To_Home_Screen
-	}
-	goto Golden_Chest_END
-	*/
 					
 	Golden_Chest_Next:
 	Golden_Chest_Text := ["Golden"]
@@ -4718,8 +4276,6 @@ Golden_Chest:
 
 	Golden_Chest_END:
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4727,7 +4283,6 @@ Golden_Chest:
 Send_Mail_To_Boss:
 {
 	Subroutine_Running := "Send_Mail_To_Boss"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; FormatTime, DateString,, yyyy-MM-dd
 	; FormatTime, TimeString,, HH:mm
 	FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
@@ -4784,8 +4339,6 @@ Send_Mail_To_Boss:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4793,7 +4346,6 @@ Send_Mail_To_Boss:
 Send_Message_In_Chat:
 {
 	Subroutine_Running := "Send_Message_In_Chat"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(316,1122) ; Tap on Chat Bar
@@ -4829,8 +4381,6 @@ Send_Message_In_Chat:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4838,7 +4388,6 @@ Send_Message_In_Chat:
 Get_Inventory:
 {
 	Subroutine_Running := "Get_Inventory"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(169,40) ; Tap Fuel on upper menu bar
@@ -4940,8 +4489,6 @@ Get_Inventory:
 	; MsgBox, %Message_To_The_Boss%
 
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -4949,7 +4496,6 @@ Get_Inventory:
 Get_User_Info:
 {
 	Subroutine_Running := "Get_User_Info"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(47,80) ; Tap commander info on upper menu bar
@@ -5005,16 +4551,6 @@ Get_User_Info:
 	. "`,VIP:`," . User_VIP
 	. "`,Power:`," . User_Power . "`,"
 	. "`,Diamonds:`," . User_Diamonds . "`,"
-
-	/*
-	Message_To_The_Boss .= User_Name_Captured
-	. ",Alliance:," . User_Found_Alliance
-	. ",State:," . User_Found_State
-	. ",VIP:," . User_VIP
-	. ",Power:," . User_Power . ","
-	*/
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5022,7 +4558,6 @@ Get_User_Info:
 Get_User_Location:
 {
 	Subroutine_Running := "Get_User_Location"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(76,1200) ; Tap World/home button
@@ -5049,8 +4584,6 @@ Get_User_Location:
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5058,7 +4591,6 @@ Get_User_Location:
 Base_Search_World_Map:
 {
 	Subroutine_Running := "Base_Search_World_Map"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Gosub Initialize_Variables
@@ -5102,8 +4634,6 @@ Base_Search_World_Map:
 		PixelSearch_Mode := "Fast"
 		Map_X := "{Raw}560"
 		Map_Y := "{Raw}578"
-
-		; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 		return
 	}
 
@@ -5149,34 +4679,6 @@ Base_Search_World_Map:
 
 	Swipe_LL_To_UR:
 		Mouse_Drag(112, 897, 497, 703, {EndMovement: F, SwipeTime: 500})
-	/*
-	{
-		SendEvent {Click 112, 897, Down}
-		SendEvent {Click 169, 870, 0}
-		SendEvent {Click 183, 860, 0}
-		SendEvent {Click 212, 847, 0}
-		SendEvent {Click 280, 813, 0}
-		SendEvent {Click 375, 764, 0}
-		SendEvent {Click 445, 730, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		SendEvent {Click 497, 703, Up}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		SendEvent {Click 497, 703, 0}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
-		SendEvent {Click 497, 703, 0}
-	}
-		*/
-
 		return
 
 	Search_Base_Pictures:
@@ -5359,8 +4861,6 @@ Base_Search_World_Map:
 
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5407,8 +4907,6 @@ Check_For_Zombie_Popup()
 		; MsgBox, Zombie or Rover return 1
 		return 1
 	}
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5416,7 +4914,6 @@ Check_For_Zombie_Popup()
 Elivate_program:
 {
 	Subroutine_Running := "Elivate_program"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; ([Subroutine_Running,A_ThisLabel])
 
 	; stdout.WriteLine(A_Now " Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
@@ -5629,8 +5126,6 @@ Elivate_program_old:
 
 	; MsgBox, ; WinActivate, %FoundAppTitle%
 	; WinActivate, %FoundAppTitle%
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5638,7 +5133,6 @@ Elivate_program_old:
 Get_Window_Geometry:
 {
 	Subroutine_Running := "Get_Window_Geometry"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
 
 	stdout.WriteLine(A_Now " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
@@ -5663,8 +5157,6 @@ Get_Window_Geometry:
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
 	stdout.WriteLine(A_Now "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
 	stdout.WriteLine(A_Now " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5672,7 +5164,6 @@ Get_Window_Geometry:
 Check_Window_Geometry:
 {
 	Subroutine_Running := "Check_Window_Geometry"
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; stdout.WriteLine(A_Now " Check_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
@@ -5708,8 +5199,6 @@ Check_Window_Geometry:
 	else
 		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window to the top left corner.
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
 	MEmu_Operation_Recorder_X := App_Win_X
@@ -5768,8 +5257,6 @@ Check_Window_Geometry:
 	}
 
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -5817,8 +5304,6 @@ Reload_Script:
 	DllCall("Sleep","UInt",(rand_wait + 8*Delay_Short+0)) ; If successful, the reload will close this instance during the Sleep, so the line below will never be reached.
 	MsgBox, 4,, The script could not be reloaded. Would you like to open it for editing?
 	IfMsgBox, Yes, Edit
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
