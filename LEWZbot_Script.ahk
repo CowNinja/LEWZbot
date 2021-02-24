@@ -157,9 +157,14 @@ while WinExist(FoundAppTitle)
 
 			; if (Routine = "New_Day") ; || if (Routine = "Fast") ; || if (Routine = "End_Of_Day")
 
+			; Default defined routine
 			Routine_Set_Routine:
 			{
 				Routine_Running := Routine
+				
+				; ******************************************
+				; DEBUG / Troubleshooting block - BEGIN
+				; ******************************************
 				; MsgBox, Hour: %A_Hour% %Routine%
 				; for testing routines
 				; MsgBox, 0, Pause, Press OK to start (No Timeout)
@@ -177,9 +182,12 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
-
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
+				; ******************************************
+				; DEBUG / Troubleshooting block - END
+				; ******************************************
+				
 				if Peace_Shield_Needed
 					Gosub Peace_Shield
 				; Gosub Reset_Posit
@@ -191,6 +199,8 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				; ******************************************
+				; DEBUG / Troubleshooting block - BEGIN
+				; ******************************************
 				; Gosub Speaker_Help
 				; Gosub Active_Skill
 				; Gosub Desert_Oasis
@@ -201,6 +211,8 @@ while WinExist(FoundAppTitle)
 				; Gosub Go_Back_To_Home_Screen
 				; Gosub Speaker_Help
 				; goto END_of_user_loop
+				; ******************************************
+				; DEBUG / Troubleshooting block - END
 				; ******************************************
 				
 				Gosub Depot_Rewards
@@ -795,6 +807,7 @@ Memu_Title_Bar:
 	return
 }
 
+; Launch LEWZ app from android main screen
 Launch_Lewz:
 {
 	Subroutine_Running := "Launch_Lewz"
