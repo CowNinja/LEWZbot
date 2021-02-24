@@ -138,11 +138,11 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
-				; Gosub Active_Skill
+				Gosub Mail_Collection
 				; Gosub Gather_On_Base_RSS
 				; Gosub VIP_Shop
 				; Gosub Activity_Center_Wonder
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 
 				; Gosub Game_Start_popups
@@ -2959,7 +2959,24 @@ Donate_Tech:
 			; loop, 2
 			{
 				; Check_If_Max_Donations:
-
+				
+				if Search_Captured_Text_OCR([RegExMatch(Capture_Screen_Text,"04\:\d\d\:\d\d")], {Pos: [292, 730], Size: [110, 32], Timeout: 0})
+					Goto, Outer_Loop_Donation_Break
+				
+				; if Search_Captured_Text_OCR(["04:04:","04:14:"], {Pos: [292, 730], Size: [110, 32], Timeout: 0})
+				;	Goto, Outer_Loop_Donation_Break
+				
+				if Search_Captured_Text_OCR(["immediately"], {Pos: [141, 642], Size: [168, 42], Timeout: 0})
+					Goto, Outer_Loop_Donation_Break
+				
+				if Search_Captured_Text_OCR(["Technology Locked"], {Pos: [100, 873], Size: [218, 40], Timeout: 0})
+					Goto, Inner_Loop_Donation_Break
+				
+				if Search_Captured_Text_OCR(["This Technology","R4 and R5"], {Pos: [111, 638], Size: [169, 30], Timeout: 0})
+					Goto, Inner_Loop_Donation_Break
+					
+				/*
+		
 				; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 				Capture_Screen_Text := OCR([295, 730, 105, 40], "eng")
 				Capture_Screen_Text .= OCR([160, 620, 200, 60], "eng")
@@ -2985,14 +3002,18 @@ Donate_Tech:
 						; Break Inner_Loop_Donation
 
 				; MsgBox, !BREAK Donate_Text_Combo: %Donate_Text_Combo%
+				*/
 
 				Donate_tech_Click:
-				loop, 31
+				loop, 22
 				{
-					Mouse_Click(420,1000, {Clicks: 2, Timeout: 3*Delay_Micro+0}) ; Click On Donation Box 3
-					Mouse_Click(260,1000, {Clicks: 2, Timeout: 3*Delay_Micro+0}) ; Click On Donation Box 2
-					Mouse_Click(100,1000, {Clicks: 2, Timeout: 3*Delay_Micro+0}) ; Click On Donation Box 1
-					DllCall("Sleep","UInt",(rand_wait + 5*Delay_Micro+0))
+					Loop, 2
+						Mouse_Click(420,1000, {Timeout: 1*Delay_Short+0}) ; Click On Donation Box 3
+					Loop, 2
+						Mouse_Click(260,1000, {Timeout: 1*Delay_Short+0}) ; Click On Donation Box 2
+					Loop, 2
+						Mouse_Click(100,1000, {Timeout: 1*Delay_Short+0}) ; Click On Donation Box 1
+					; DllCall("Sleep","UInt",(rand_wait + 5*Delay_Micro+0))
 				}
 
 				if Pause_Script
@@ -3351,6 +3372,92 @@ Mail_Collection:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Gosub Go_Back_To_Home_Screen
+	
+	Mail_Keyword_Array := ["Mail","Activities","Alliance","Last Empire","System"]
+	Mail_BACK2_Array := ["Alliance Arms","Cross-State","Desert Conflict","Other Event","Single Player","Arms Race"]
+	
+	Loop, 5
+	{
+		gosub Mail_Collection_Open
+		Gosub, Read_Mail_Open
+	}
+	return
+	
+	Mail_Collection_Open:
+	loop, 2
+	{
+		loop, 5
+		{
+			if Search_Captured_Text_OCR(Mail_Keyword_Array, {Pos: [308, 46], Size: [76, 49], Timeout: 0})
+				return ; Gosub, Read_Mail_Open
+
+			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24], Timeout: 0})
+			{
+				Mouse_Click(500,1200) ;  Left, 1  ; Tap Mail
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+				Goto, Mail_Collection_Open
+			}
+
+			Text_To_Screen("{F5}")
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		}
+		Gosub Go_Back_To_Home_Screen
+	}
+	return
+
+	Read_Mail_Open:
+	OCR_X_Min := 590
+	OCR_Y_Min := 145 ; 115
+	OCR_Y_Delta := 95
+	OCR_Y_Max := (OCR_Y_Min + 7*OCR_Y_Delta)
+	OCR_X1 := OCR_X_Min+0
+	OCR_Y1 := OCR_Y_Min+0
+	OCR_W := 50
+	OCR_H := 35 ; 80
+	OCR_X2 := (OCR_X1 + OCR_W)+0
+	OCR_Y2 := (OCR_Y1 + OCR_H)+0
+	Loop, 10
+	{
+		Mouse_Click(OCR_X1,OCR_Y1) ;  Left, 1  ; Tap Position
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		if Search_Captured_Text_OCR(["Mail"], {Pos: [308, 46], Size: [76, 49], Timeout: 0})
+		{
+			gosub Read_Mail_Open
+			Gosub Go_Back_To_Home_Screen
+			Gosub Mail_Collection_Open
+		}
+		gosub Read_Mail_Mark_Read
+		
+		If (OCR_Y1 >= OCR_Y_Max)
+			break
+		Else
+			OCR_Y1 += OCR_Y_Delta
+		
+		Gosub Mail_Collection_Open
+	}
+	Return
+	
+	Read_Mail_Mark_Read:
+	Loop, 2
+	{
+		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26], Timeout: 0}) ; Is the Mark as Read button displayed?
+		{
+			Mouse_Click(340,1200) ;  Left, 1  ; Tap "MARK AS READ" button
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		; }
+		
+		; if Search_Captured_Text_OCR(["CONFIRM"], {Pos: [136, 692], Size: [135, 36], Timeout: 0})  ; Is the "CONFIRM" button displayed?
+		; {
+			Mouse_Click(202,706) ;  Left, 1  ; Tap "CONFIRM" button
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			Mouse_Click(340,70) ;  Left, 1  ; Tap header to clear message
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_long+0))
+		}
+	}
+	Return
+	
+	
+	
 
 	Mouse_Click(474,1186) ; Click Mail
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
