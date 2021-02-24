@@ -140,10 +140,10 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Gosub Active_Skill
 				; Gosub Gather_On_Base_RSS
-				; Gosub Depot_Rewards
-				; Gosub Launch_Lewz
-				; Gosub Enter_Login_Password_PIN
+				; Gosub VIP_Shop
+				; Gosub Activity_Center_Wonder
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; goto END_of_user_loop
 
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
@@ -157,6 +157,7 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
+				Gosub Activity_Center_Wonder
 				Gosub Speaker_Help
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -1085,33 +1086,52 @@ Switch_Account:
 	goto Switch_Account_WarZ_Login
 
 	Switch_Account_User_Email:
-	loop, 2
-		Mouse_Click(219,382, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	{
+		loop, 2
+		{
+			Mouse_Click(219,382, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		}
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	Text_To_Screen(User_Email)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen("{Enter}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	return
+		Text_To_Screen(User_Email)
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		return
+	}
 
 	Switch_Account_User_Password:
-	loop, 2
-		Mouse_Click(208,527, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	{
+		loop, 2
+		{
+			Mouse_Click(208,527, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		}
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	Text_To_Screen(User_Pass)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen("{Enter}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	return
+		Text_To_Screen(User_Pass)
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		return
+	}
 
 	Switch_Account_Next:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(455,738, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Click Use your email to log in
 
-	loop, 5
+	loop, 10
 	{
+		OCR_X := 320
+		OCR_Y := 720
+		OCR_W := 50
+		OCR_H := 80
+	    ; Capture_Screen_Text := OCR([323, 732, 47, 77], "eng")
+		if Search_Captured_Text_OCR(["OK"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+			Mouse_Click(340,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click OK		
+		
+		/*
 		Search_Captured_Text := ["previous game","progress found","Are you sure","log in and"]	; ,"overwrite the","current game","progress?"]
 		OCR_X := 39
 		OCR_Y := 509
@@ -1119,6 +1139,7 @@ Switch_Account:
 		OCR_H := 42	; 118
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
 			Mouse_Click(336,779, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click OK to "Are you sure to log in and overwrite the current game progress?"
+		*/
 
 		Search_Captured_Text := ["Enter","login","password"]
 		OCR_X := 190
@@ -1578,68 +1599,160 @@ Shield_Warrior_Trial_etc:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 
-	Activity_Center_Wonder:
+}
+
+Activity_Center_Wonder_old:
+{
+	Mouse_Drag(108, 536, 262, 536, {EndMovement: T, SwipeTime: 500})
+	/*
+	Click, 108, 536 Left, Down  ; drag home screen to right
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 131, 536, 0
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 138, 536, 0
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 149, 536, 0
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 158, 536, 0
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 262, 536, 0
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
+	Click, 262, 536 Left, Up
+	*/
+
+	Mouse_Click(137,581) ; Click activity center
+
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+	Mouse_Click(170,140) ; Click on "in progress" tab
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+	Mouse_Drag(329, 1194, 337, 848, {EndMovement: F, SwipeTime: 500})
+	/*
+	Click, 329, 1194 Left, Down  ; drag activity center list up
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Click, 337, 848, 0
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
+	Click, 337, 848 Left, Up
+	*/
+
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	Mouse_Click(297,1095) ; Click on desert wonder
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	Mouse_Click(250,150) ; Click on second tab "wonder"
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	Mouse_Click(244,592) ; Click and open reward box number 1
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(339,987) ; Click Collect Button
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(250,150) ; Click Outside reward popup
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(438,593) ; Click and open reward box number 2
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(329,994) ; Click Collect Button
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(250,150) ; Click Outside reward popup
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(641,598) ; Click and open reward box number 3
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(340,1000) ; Click Collect Button
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
+	Mouse_Click(250,150) ; Click Outside reward popup
+
+	MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
+	Gosub Go_Back_To_Home_Screen
+
+	return
+}
+	
+Activity_Center_Wonder:
+{
+	loop, 3
 	{
-		Mouse_Drag(108, 536, 262, 536, {EndMovement: T, SwipeTime: 500})
-		/*
-		Click, 108, 536 Left, Down  ; drag home screen to right
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 131, 536, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 138, 536, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 149, 536, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 158, 536, 0
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 262, 536, 0
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-		Click, 262, 536 Left, Up
-		*/
+		loop, 3
+		{
+			Mouse_Drag(108, 536, 262, 536, {EndMovement: T, SwipeTime: 500})
+			Mouse_Click(137,581) ; Click activity center
+			
+			; Mouse_Drag(82, 536, 335, 536, {EndMovement: T, SwipeTime: 500})
+			; Mouse_Click(180,598) ; Click Activity Center
 
-		Mouse_Click(137,581) ; Click activity center
-
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-		Mouse_Click(170,140) ; Click on "in progress" tab
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		Mouse_Drag(329, 1194, 337, 848, {EndMovement: F, SwipeTime: 500})
-		/*
-		Click, 329, 1194 Left, Down  ; drag activity center list up
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Click, 337, 848, 0
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-		Click, 337, 848 Left, Up
-		*/
-
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(297,1095) ; Click on desert wonder
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-		Mouse_Click(250,150) ; Click on second tab "wonder"
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(244,592) ; Click and open reward box number 1
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(339,987) ; Click Collect Button
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(250,150) ; Click Outside reward popup
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(438,593) ; Click and open reward box number 2
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(329,994) ; Click Collect Button
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(250,150) ; Click Outside reward popup
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(641,598) ; Click and open reward box number 3
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(340,1000) ; Click Collect Button
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Mouse_Click(250,150) ; Click Outside reward popup
-
-		MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
-		Gosub Go_Back_To_Home_Screen
-
-		return
+			loop, 5
+				if Search_Captured_Text_OCR(["Activity Center"], {Timeout: 0})
+					goto Activity_Center_Continue
+		}
+		Gosub Reset_Posit
 	}
+
+	Activity_Center_Continue:
+	Loop, 10
+	{
+		Search_Captured_Text := ["Desert Wonder"]
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 588], Size: [300, 50], Timeout: 0})
+		{
+			Mouse_Click(282,611)  ; Tap activity 01
+			goto Activity_Center_Continue_Tab
+		}
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 778], Size: [300, 50], Timeout: 0})
+		{
+			Mouse_Click(256,803)  ; Tap activity 02
+			goto Activity_Center_Continue_Tab
+		}
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 976], Size: [300, 50], Timeout: 0})
+		{
+			Mouse_Click(242,1004)  ; Tap activity 03
+			goto Activity_Center_Continue_Tab
+		}
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 1174], Size: [300, 50], Timeout: 0})
+		{
+			Mouse_Click(211,1201)  ; Tap activity 04
+			goto Activity_Center_Continue_Tab
+		}
+	}
+	goto Activity_Center_END
+
+	Activity_Center_Continue_Tab:
+	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
+	
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	Loop, 5
+	{
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [233, 44], Size: [229, 52], Timeout: 0})
+		{
+			Mouse_Click(250,136)  ; Tap Wonder tab
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			goto Activity_Center_Continue_Claim
+		}
+	}
+	goto Activity_Center_END
+
+	Activity_Center_Continue_Claim:
+	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+
+	Mouse_Click(241,596)  ; Tap Wonder reward box 01
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,1000)  ; Tap Collect Reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,70)  ; Tap to clear reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(438,598)  ; Tap Wonder reward box 02
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,1000)  ; Tap Collect Reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,70)  ; Tap to clear reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(640,599)  ; Tap Wonder reward box 03
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,1000)  ; Tap Collect Reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(330,70)  ; Tap to clear reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	
+	Activity_Center_END:
+	; MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
+	Gosub Go_Back_To_Home_Screen
+
+	return
 }
 
 Benefits_Center_Monthly:
