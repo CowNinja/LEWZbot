@@ -183,9 +183,11 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				; ******************************************
+				Gosub Speaker_Help
 				Gosub Active_Skill
 				Gosub Desert_Oasis
 				Gosub Mail_Collection
+				Gosub Speaker_Help
 				; Activity_Center_Open()
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				Gosub Go_Back_To_Home_Screen
@@ -1654,53 +1656,46 @@ Collect_Collisions:
 {
 	Subroutine_Running := "Collect_Collisions"
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Mouse_Click(515,375) ; Tap Collision
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Particle"], {Timeout: 0}).Found
 				goto Collect_Collisions_Found
 		Gosub Go_Back_To_Home_Screen
 	}
 	goto Collect_Collisions_END
-
 	Collect_Collisions_Found:
 	{
 		Mouse_Click(180,1130) ; Tap Collide
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		goto Collect_Collisions_END
 		Loop, 3
 		{
 			Mouse_Click(450,1180) ; Tap "OK"
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+
 	Collect_Collisions_END:
 	Gosub Go_Back_To_Home_Screen
 	return
-
+	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	;loop, 2
-		Mouse_Click(412,255) ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(540,367) ; Tap Collide
-	; Mouse_Click(540,400) ; Tap Collide
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
+	Mouse_Click(540,367) ; Tap Collide ; Mouse_Click(540,400) ; Tap Collide
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	loop, 2
 		Mouse_Click(180,1130, {Timeout: Delay_Medium+0}) ; Tap Collide
-
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap "OK"
-
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
@@ -1710,52 +1705,46 @@ Collect_Equipment_Crafting:
 {
 	Subroutine_Running := "Collect_Equipment_Crafting"
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Mouse_Click(430,390) ; Tap Craft
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Giant"], {Timeout: 0}).Found
 					goto Collect_Equipment_Found
 		Gosub Go_Back_To_Home_Screen
 	}
 	goto Collect_Equipment_END
-
 	Collect_Equipment_Found:
 	{
-		Mouse_Click(183,1177) ; Tap Craft
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft or Recruit or Extract
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		goto Collect_Equipment_END
 		Loop, 3
 		{
 			Mouse_Click(450,1180) ; Tap "OK"
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+
 	Collect_Equipment_END:
 	Gosub Go_Back_To_Home_Screen
 	return
-
+	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	;loop, 2
-		Mouse_Click(412,255) ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
 	Mouse_Click(475,389) ; Tap craft
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	loop, 2
-		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft
-
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap "OK"
-
+		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft or Recruit or Extract
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
@@ -1765,57 +1754,49 @@ Collect_Recruits:
 {
 	Subroutine_Running := "Collect_Recruits"
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
-
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Mouse_Click(350,375) ; Tap Recruit
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Recruitment"], {Timeout: 0}).Found
 				goto Collect_Recruits_Found
 		Gosub Go_Back_To_Home_Screen
 	}
 	goto Collect_Recruits_END
-
 	Collect_Recruits_Found:
 	{
 		Mouse_Click(160,1180) ; Tap Recruit 1 times
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		goto Collect_Recruits_END
 		Loop, 3
 		{
 			Mouse_Click(450,1180) ; Tap "OK"
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+
 	Collect_Recruits_END:
 	Gosub Go_Back_To_Home_Screen
 	return
-
+	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	;loop, 2
-		Mouse_Click(412,255) ; Tap Command Center
+		Mouse_Click(430,280) ; Tap Command Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(366,395) ; Tap Recruit
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	; Mouse_Click(200,1160) ; Tap Recruit
+	Mouse_Click(430,280) ; Tap Recruit ; Mouse_Click(200,1160) ; Tap Recruit
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	loop, 3
-		Mouse_Click(180,1180, {Timeout: Delay_Long+0}) ; Tap Craft
-
+		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft or Recruit or Extract
 	; Mouse_Click(460,1180) ; Tap "OK"
 	loop, 3
-		Mouse_Click(460,1180, {Timeout: Delay_Long+0}) ; Tap "OK"
-
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(450,1190, {Timeout: Delay_Medium+0}) ; Tap "OK"
-
+		Mouse_Click(460,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	Gosub Go_Back_To_Home_Screen
-
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
@@ -1824,34 +1805,35 @@ Collect_Recruits:
 Collect_Runes:
 {
 	Subroutine_Running := "Collect_Runes"
-
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,Start time:`,%A_NOW%`r`n, %AppendCSVFile%
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Mouse_Click(570,340) ; Rune Extraction
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
 			if Search_Captured_Text_OCR(["Rune"], {Timeout: 0}).Found
 				goto Collect_Runes_Found
 		Gosub Go_Back_To_Home_Screen
 	}
 	goto Collect_Runes_END
-
 	Collect_Runes_Found:
 	{
-		Mouse_Click(180,1180) ; Tap Extract
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(180,1180) ; Tap Craft or Recruit or Extract
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		goto Collect_Runes_END
 		Loop, 3
 		{
 			Mouse_Click(450,1180) ; Tap "OK"
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
+
 	Collect_Runes_END:
 	Gosub Go_Back_To_Home_Screen
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -2955,13 +2937,15 @@ Speaker_Help:
 	OCR_Y := 565 ; 550
 	OCR_W := 75 ; 110
 	OCR_H := 30 ; 60
-	loop, 3
+	loop, 2
 	{
+		loop, 2
+		{
+			Mouse_Click(630,1033) ; Tap speaker/help
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		}
 
-		Mouse_Click(630,1033) ; Tap speaker/help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		loop, 3
+		loop, 2
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
 			{
 				Mouse_Click(357,570) ; Tap Claim
@@ -3813,9 +3797,11 @@ Mail_Collection:
 	{
 		loop, 5
 		{
+			; if mail loaded, return
 			if Search_Captured_Text_OCR(["Mail"], {Pos: [309, 46], Size: [76, 50], Timeout: 0}).Found
 				return ; Gosub, Read_Mail_Open
-
+				
+			; if mail not loaded, tap on mail icon
 			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24], Timeout: 0}).Found
 			{
 				Mouse_Click(500,1200) ; Tap Mail
@@ -3823,6 +3809,7 @@ Mail_Collection:
 				Goto, Mail_Collection_Open
 			}
 
+			; if mail not loaded and mail icon not available, go back
 			Mouse_Click(50,60) ; Tap Message back
 			Text_To_Screen("{F5}")
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -4681,22 +4668,22 @@ Desert_Oasis:
 			Mouse_Click(242,526) ; Tap inside X Coordinate Text box
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Text_To_Screen(Desert_Tower_X)
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 		loop, 2
 		{
 			Mouse_Click(484,530) ; Tap inside Y Coordinate Text box
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Text_To_Screen(Desert_Tower_Y)
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 		Mouse_Click(340,620) ; Tap Go to Coordinates
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
@@ -4741,6 +4728,7 @@ Desert_Oasis:
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
 	return
 }
+
 
 Enter_Coordinates_From_Home()
 {
