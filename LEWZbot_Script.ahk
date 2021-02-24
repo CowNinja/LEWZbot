@@ -254,7 +254,7 @@ while WinExist(FoundAppTitle)
 
 			; removed bulk of subroutines, to ease readability, no longer needed
 			Special_Routine:
-			New_Day_Game_Reset
+			New_Day_Game_Reset:
 			Fast_Routine:
 			End_Of_Day_Routine:
 			FULL_Q_and_A_Routine:
