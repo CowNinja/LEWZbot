@@ -91,7 +91,7 @@ while WinExist(FoundAppTitle)
 
 			Pause_Script := False
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 
 			; MsgBox, 4, , Enable Pause? (8 Second Timeout & skip), 8
@@ -139,10 +139,10 @@ while WinExist(FoundAppTitle)
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
 				; Gosub Mail_Collection
-				; Gosub Gather_On_Base_RSS
+				Gosub Desert_Oasis
 				; Gosub VIP_Shop
 				; Gosub Activity_Center_Wonder
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 
 				; Gosub Game_Start_popups
@@ -4273,174 +4273,191 @@ Desert_Oasis:
 	Desert_Oasis_Enter_Coordinates:
 	Mouse_Click(73,1207) ; Click on World Button
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-
-	Desert_Oasis_Enter_Coordinates_Button:
 	Mouse_Click(337,1001) ; Click on Enter Coordinates Button
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	
+	gosub Desert_Oasis_Enter_Coordinates_Button
+	goto END_Stealing
 
-	Desert_Oasis_Coordinates_Text := ["Enter","coordinates"]
-	OCR_X := 237
-	OCR_Y := 303
-	OCR_W := 220
-	OCR_H := 40
-	loop, 10
+	Desert_Oasis_Enter_Coordinates_Button:
+	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Button"
 	{
-		if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-			Goto Desert_Oasis_Enter_Coordinates_Next
+		
+		loop, 2
+		{
+			Desert_Oasis_Coordinates_Text := ["Enter","coordinates"]
+			OCR_X := 237
+			OCR_Y := 303
+			OCR_W := 220
+			OCR_H := 40
+			loop, 2
+			{
+				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+				{
+					gosub Desert_Oasis_Enter_Coordinates_Next
+					return
+				}
 
-		Gosub Check_Window_Geometry
-		Mouse_Click(337,1001) ; Click on Enter Coordinates Button
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+				Gosub Check_Window_Geometry
+				Mouse_Click(337,1001) ; Click on Enter Coordinates Button
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			}
+			Gosub Go_Back_To_Home_Screen
+			Mouse_Click(73,1207) ; Click on World Button
+			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+			; Goto Desert_Oasis_Enter_Coordinates
+		}
+		return
 	}
-	Gosub Go_Back_To_Home_Screen
-	; Goto Desert_Oasis_Enter_Coordinates
-
-	return
 
 	Desert_Oasis_Enter_Coordinates_Next:
-	; Mouse_Click(242,526) ; Click inside X Coordinate Text box
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Next"
+	{
+		; Mouse_Click(242,526) ; Click inside X Coordinate Text box
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-	; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
-	; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
-	; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
-	; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 679
+		; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
+		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
+		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
+		; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 679
 
-	; if none selected, auto steel from:
-	; goto NW_Tower
-	; goto NE_Tower
-	; goto SW_Tower
-	goto SE_Tower
-	; goto END_Stealing
-
-	MsgBox, 4, , Steal from NW_Tower (595:599)? (8 Second Timeout & skip), 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes")
-		goto NW_Tower
-
-	MsgBox, 4, , Steal from NE_Tower(599:595)? (8 Second Timeout & skip), 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes")
-		goto NE_Tower
-
-	MsgBox, 4, , Steal from SW_Tower(600:604)? (8 Second Timeout & skip), 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes")
+		; if none selected, auto steel from:
+		; goto NW_Tower
+		; goto NE_Tower
+		; goto SW_Tower
 		goto SE_Tower
+		; goto END_Stealing
 
-	MsgBox, 4, , Steal from SE_Tower(604:599)? (8 Second Timeout & skip), 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes")
+		MsgBox, 4, , Steal from NW_Tower (595:599)? (8 Second Timeout & skip), 8
+		vRet := MsgBoxGetResult()
+		if (vRet = "Yes")
+			goto NW_Tower
+
+		MsgBox, 4, , Steal from NE_Tower(599:595)? (8 Second Timeout & skip), 8
+		vRet := MsgBoxGetResult()
+		if (vRet = "Yes")
+			goto NE_Tower
+
+		MsgBox, 4, , Steal from SW_Tower(600:604)? (8 Second Timeout & skip), 8
+		vRet := MsgBoxGetResult()
+		if (vRet = "Yes")
+			goto SE_Tower
+
+		MsgBox, 4, , Steal from SE_Tower(604:599)? (8 Second Timeout & skip), 8
+		vRet := MsgBoxGetResult()
+		if (vRet = "Yes")
+			goto SE_Tower
+
+		; if none selected, auto steel from:
+		; goto NW_Tower
+		; goto NE_Tower
+		; goto SW_Tower
 		goto SE_Tower
+		return ; goto END_Stealing
 
-	; if none selected, auto steel from:
-	; goto NW_Tower
-	; goto NE_Tower
-	; goto SW_Tower
-	goto SE_Tower
-	goto END_Stealing
-
-	NW_Tower:
-	{
-		Desert_Tower_X := "{Raw}595"
-		Desert_Tower_Y := "{Raw}599"
-		goto Desert_Oasis_Tower
-	}
-
-	NE_Tower:
-	{
-		Desert_Tower_X := "{Raw}599"
-		Desert_Tower_Y := "{Raw}595"
-		goto Desert_Oasis_Tower
-	}
-
-	SW_Tower:
-	{
-		Desert_Tower_X := "{Raw}599"
-		Desert_Tower_Y := "{Raw}604"
-		goto Desert_Oasis_Tower
-	}
-
-	SE_Tower:
-	{
-		Desert_Tower_X := "{Raw}604"
-		Desert_Tower_Y := "{Raw}599"
-		goto Desert_Oasis_Tower
-	}
-
-	; if none selected, auto go to
-	{
-		Desert_Tower_X := "{Raw}599"
-		Desert_Tower_Y := "{Raw}595"
-		goto Desert_Oasis_Tower
-	}
-
-	goto END_Stealing
-
-	Desert_Oasis_Tower:
-	Subroutine_Running := "Desert_Oasis_Tower"
-	; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
-	; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
-	; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
-	; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 679
-	; MsgBox, 4, Coordinates, Are Desert_Tower_X`,Y %Desert_Tower_X% %Desert_Tower_X% Correct? (8 Second Timeout & auto),8
-
-	loop, 2
-	{
-		Mouse_Click(242,526) ; Click inside X Coordinate Text box
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen(Desert_Tower_X)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen("{Enter}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	loop, 2
-	{
-		Mouse_Click(484,530) ; Click inside Y Coordinate Text box
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen(Desert_Tower_Y)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Text_To_Screen("{Enter}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(340,620) ; Click Go to Coordinates
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-	Mouse_Click(340,680) ; Click on Holy Tower
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-	Mouse_Click(440,680) ; Click Holy Tower Steal button
-
-	Desert_Oasis_Coordinates_Text := ["Steal"]
-	OCR_X := 315
-	OCR_Y := 1190
-	OCR_W := 55
-	OCR_H := 30
-	loop, 2
-	{
-		loop, 10
+		NW_Tower:
 		{
-			if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-				Goto Desert_Oasis_Stealing_Found
+			Desert_Tower_X := "{Raw}595"
+			Desert_Tower_Y := "{Raw}599"
+			goto Desert_Oasis_Tower
 		}
-		Goto Desert_Oasis_Enter_Coordinates_Button
+
+		NE_Tower:
+		{
+			Desert_Tower_X := "{Raw}599"
+			Desert_Tower_Y := "{Raw}595"
+			goto Desert_Oasis_Tower
+		}
+
+		SW_Tower:
+		{
+			Desert_Tower_X := "{Raw}599"
+			Desert_Tower_Y := "{Raw}604"
+			goto Desert_Oasis_Tower
+		}
+
+		SE_Tower:
+		{
+			Desert_Tower_X := "{Raw}604"
+			Desert_Tower_Y := "{Raw}599"
+			goto Desert_Oasis_Tower
+		}
+
+		; if none selected, auto go to
+		{
+			Desert_Tower_X := "{Raw}599"
+			Desert_Tower_Y := "{Raw}595"
+			goto Desert_Oasis_Tower
+		}
+
+		return ; goto END_Stealing
+
+		Desert_Oasis_Tower:
+		Subroutine_Running := "Desert_Oasis_Tower"
+		; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
+		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
+		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
+		; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 679
+		; MsgBox, 4, Coordinates, Are Desert_Tower_X`,Y %Desert_Tower_X% %Desert_Tower_X% Correct? (8 Second Timeout & auto),8
+
+		loop, 2
+		{
+			Mouse_Click(242,526) ; Click inside X Coordinate Text box
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		}
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen(Desert_Tower_X)
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+
+		loop, 2
+		{
+			Mouse_Click(484,530) ; Click inside Y Coordinate Text box
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		}
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen(Desert_Tower_Y)
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Text_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+
+		Mouse_Click(340,620) ; Click Go to Coordinates
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+		Mouse_Click(340,680) ; Click on Holy Tower
+		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+		Mouse_Click(440,680) ; Click Holy Tower Steal button
+
+		Desert_Oasis_Coordinates_Text := ["Steal"]
+		OCR_X := 315
+		OCR_Y := 1190
+		OCR_W := 55
+		OCR_H := 30
+		loop, 2
+		{
+			loop, 5
+			{
+				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+					Goto Desert_Oasis_Stealing_Found
+			}
+			return ; Goto Desert_Oasis_Enter_Coordinates_Button
+		}
+		return ; goto END_Stealing
+
+		Desert_Oasis_Stealing_Found:
+
+		DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+		Mouse_Click(342,1200) ; Click Steal
+		DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+		return ; goto END_Stealing
 	}
-	goto END_Stealing
-
-	Desert_Oasis_Stealing_Found:
-
-	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
-	Mouse_Click(342,1200) ; Click Steal
-	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
 
 	END_Stealing:
 
 	if Pause_Script
 		MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
-	Go_Back_Home_Delay_Long := True
+	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
 
 	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
