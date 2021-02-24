@@ -75,11 +75,13 @@ while WinExist(FoundAppTitle)
 			
 			; ([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
 
+			; Populate account variables from next keyed array item
 			global User_Name := User
 			global User_Email := Val[1]
 			global User_Pass := Val[2]
 			global User_PIN := Val[3]
 
+			; Generate and combine text for account selection pop-up box
 			Output := "User: " User " has: "
 			Output .= "Email: " Val[1] " "
 			; Output .= "Password: " Val[2] " "
@@ -101,7 +103,7 @@ while WinExist(FoundAppTitle)
 			CSB_Event := False ; True ; True if CSB Event is going on
 			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
-			At_War := False
+			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
 			; Main DEBUG and event Variables - END
 			; ***************************************
@@ -114,6 +116,7 @@ while WinExist(FoundAppTitle)
 			; if Pause_Script
 			; MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
+			; Jump to specific predefined routines
 			; goto Special_Routine
 			; goto New_Day_Game_Reset
 			; goto Fast_Routine
@@ -132,6 +135,8 @@ while WinExist(FoundAppTitle)
 				goto Fast_Routine
 			*/
 
+			; Figure out the day and time to determine if shield is needed
+			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
 			FormatTime, today,, dddd
 			if (today = "Thursday" && A_Hour >= 19)
 				Peace_Shield_Needed := True
@@ -142,6 +147,7 @@ while WinExist(FoundAppTitle)
 			if At_War
 				Peace_Shield_Needed := True
 
+			; Figure out time of day for which subroutines will run
 			if (A_Hour >= 12 && A_Hour < 19)
 				Routine := "End_Of_Day"
 			else if (A_Hour >= 19 || A_Hour <= 05)
