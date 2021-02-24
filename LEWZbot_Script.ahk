@@ -116,25 +116,6 @@ while WinExist(FoundAppTitle)
 			; if Pause_Script
 			; MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
-			; Jump to specific predefined routines
-			; goto Special_Routine
-			; goto New_Day_Game_Reset
-			; goto Fast_Routine
-			; goto End_Of_Day_Routine
-			; goto FULL_Q_and_A_Routine
-			; goto END_of_user_loop
-
-			; if (A_Now >= startTime && A_Now <= endTime)
-
-			/*
-			if (A_Hour >= 12 && A_Hour < 19)
-				goto End_Of_Day_Routine
-			else if (A_Hour >= 19 || A_Hour <= 05)
-				goto New_Day_Game_Reset
-			else
-				goto Fast_Routine
-			*/
-
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
 			FormatTime, today,, dddd
@@ -164,6 +145,7 @@ while WinExist(FoundAppTitle)
 				
 				; ******************************************
 				; DEBUG / Troubleshooting block - BEGIN
+				; add/remove or uncomment routines to check them
 				; ******************************************
 				; MsgBox, Hour: %A_Hour% %Routine%
 				; for testing routines
@@ -187,12 +169,13 @@ while WinExist(FoundAppTitle)
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
-				
+
+				; ****************************
+				; ** Position dependant **
+				; ****************************
 				if Peace_Shield_Needed
 					Gosub Peace_Shield
 				; Gosub Reset_Posit
-
-				; ** Position dependant **
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
 				Gosub Collect_Equipment_Crafting
@@ -222,7 +205,9 @@ while WinExist(FoundAppTitle)
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
 
+				; ****************************
 				; ** Not position dependant **
+				; ****************************
 				if CSB_Event ; || if Desert_Event
 					if !(A_Hour = 19 && A_Min <= 30)
 						Gosub Reserve_Factory
@@ -242,7 +227,6 @@ while WinExist(FoundAppTitle)
 				}
 				if !Desert_Event
 					Gosub Gather_On_Base_RSS
-
 				if Desert_Event
 				{
 					Gosub Desert_Oasis
