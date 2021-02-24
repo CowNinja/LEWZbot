@@ -6358,6 +6358,8 @@ Key_Menu()
 ; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 Return
 
+; Shortcut for claiming max items in inventory
+; slides bar from left to right and presses OK
 F3::
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Drag Slide Right to select all
