@@ -13,7 +13,7 @@ Settings:
 
 ; CowNinja_Functions.ahk
 Check_Window_Geometry:
-		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
+	WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 
 2. Account details are retrieved from LEWZ_User_Logins.ini in AHK directory and loaded into an array:
 ; LEWZ_SetDefaults.ahk
