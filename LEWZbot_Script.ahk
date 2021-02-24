@@ -3227,6 +3227,7 @@ Collect_Chips_Underground:
 	return
 }
 
+; upgrade and ask for factory help during csb
 Reserve_Factory:
 {
 	Subroutine_Running := "Reserve_Factory"
@@ -3322,7 +3323,7 @@ Reserve_Factory:
 	return
 }
 
-
+; open alliance technology menu and tap donate until time > 4 hours
 Donate_Tech:
 {
 	Subroutine_Running := "Donate_tech"
@@ -4753,7 +4754,7 @@ Desert_Oasis:
 	return
 }
 
-
+; Functions to handle opening coordinates panel
 Enter_Coordinates_From_Home()
 {
 	Subroutine_Running := "Enter_Coordinates_From_Home"
@@ -4796,6 +4797,7 @@ Enter_Coordinates_Open_Check()
 	return 0
 }
 
+; Gather available Fuel, Food, Steel and alloy RSS from base farms
 Gather_On_Base_RSS:
 {
 	Subroutine_Running := "Gather_On_Base_RSS"
@@ -5119,6 +5121,7 @@ Gather_On_Base_RSS:
 	return
 }
 
+; Claim Golden_Chest items
 Golden_Chest:
 {
 	Subroutine_Running := "Golden_Chest"
@@ -5230,6 +5233,7 @@ Golden_Chest:
 	return
 }
 
+; Send in-game message to "BOSS" with retrieved info
 Send_Mail_To_Boss:
 {
 	Subroutine_Running := "Send_Mail_To_Boss"
@@ -5295,6 +5299,7 @@ Send_Mail_To_Boss:
 	return
 }
 
+; Send message via in-game chat interface
 Send_Message_In_Chat:
 {
 	Subroutine_Running := "Send_Message_In_Chat"
@@ -5339,6 +5344,7 @@ Send_Message_In_Chat:
 	return
 }
 
+; OCR capture available and stored RSS levels
 Get_Inventory:
 {
 	Subroutine_Running := "Get_Inventory"
@@ -5449,6 +5455,7 @@ Get_Inventory:
 	return
 }
 
+; OCR capture User info like VIP level, combat power, alliance and state
 Get_User_Info:
 {
 	Subroutine_Running := "Get_User_Info"
@@ -5521,6 +5528,7 @@ Get_User_Info:
 	return
 }
 
+; OCR capture Map coordinates of base
 Get_User_Location:
 {
 	Subroutine_Running := "Get_User_Location"
@@ -5556,6 +5564,7 @@ Get_User_Location:
 	return
 }
 
+; Search for bases in world map, NINJA style
 Base_Search_World_Map:
 {
 	Subroutine_Running := "Base_Search_World_Map"
@@ -5865,6 +5874,7 @@ Base_Search_World_Map:
 	return
 }
 
+; Function to clear zombie pop-up messages
 Check_For_Zombie_Popup()
 {
 	Gosub Check_Window_Geometry
@@ -5912,6 +5922,7 @@ Check_For_Zombie_Popup()
 	return
 }
 
+; Elivate MEMU processes
 Elivate_program:
 {
 	Subroutine_Running := "Elivate_program"
@@ -5984,6 +5995,7 @@ Elivate_program:
 	return
 }
 
+; Elivate MEMU processes
 Elivate_program_old:
 {
 	/*
@@ -6132,6 +6144,7 @@ Elivate_program_old:
 	return
 }
 
+; Find out size of app window
 Get_Window_Geometry:
 {
 	Subroutine_Running := "Get_Window_Geometry"
@@ -6165,7 +6178,7 @@ Get_Window_Geometry:
 	return
 }
 
-; collapse sidebar menu and Reposition window
+; check and Reposition window according to predefined settings
 Check_Window_Geometry:
 {
 	Subroutine_Running := "Check_Window_Geometry"
@@ -6277,6 +6290,7 @@ Click_Middle_Screen:
 	Mouse_Click((LowerX-UpperX)/2+UpperX,(LowerY-UpperY)/2+(UpperY-100)) ; Tap in the middle of the screen
 }
 
+; Close and reopen log file for troubleshooting
 Refresh_LogFiles:
 {
 	stdout.Close()
