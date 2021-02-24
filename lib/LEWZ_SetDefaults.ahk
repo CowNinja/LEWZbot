@@ -218,14 +218,14 @@ Move_MsgBox(P)
 	; CoordMode Pixel, Client ; Coordinates are relative to the active window's client area, which excludes the window's title bar, menu (if it has a standard one) and borders. Client coordinates are less dependent on OS version and theme.
 
 	; room and battle time out
-	Global Room_Wait_Count := 0 ; COUNTS UP, wait time in room
-	Global Timeout_Count := 100 ; SET, loop wait count, set value
-	Global View_click := False ; IF False, reset viewpoint in battle
-	Global Resetting_Posit := False ; Set default reset view to false
-	Global Go_Back_Home_Delay_Long := False ; set default delay to false, or NOT LONG
+	; Global Room_Wait_Count := 0 ; COUNTS UP, wait time in room
+	; Global Timeout_Count := 100 ; SET, loop wait count, set value
+	; Global View_click := False ; IF False, reset viewpoint in battle
+	; Global Resetting_Posit := False ; Set default reset view to false
+	; Global Go_Back_Home_Delay_Long := False ; set default delay to false, or NOT LONG
 
 	; counter resets every successful battle
-	Global Battle_counter := 0 ; COUNTS UP, how many battles
+	; Global Battle_counter := 0 ; COUNTS UP, how many battles
 
 	; counter resets every successful program restart
 	Global Main_Loop_Counter := 0 ; COUNTS UP, how many loops
