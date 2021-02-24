@@ -138,11 +138,11 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
-				Gosub Mail_Collection
+				; Gosub Mail_Collection
 				; Gosub Gather_On_Base_RSS
 				; Gosub VIP_Shop
 				; Gosub Activity_Center_Wonder
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 
 				; Gosub Game_Start_popups
@@ -165,9 +165,9 @@ while WinExist(FoundAppTitle)
 
 				; ** Not position dependant **
 				Gosub Active_Skill
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				Gosub Donate_tech
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				{
-					Gosub Donate_tech
 					Gosub VIP_Shop
 					Gosub Benefits_Center
 					Gosub Alliance_Boss_Regular
@@ -897,7 +897,7 @@ Go_Back_To_Home_Screen:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Go back
 	loop, 10
-		Text_To_Screen("{F5}")	; , DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Text_To_Screen("{F5}"), DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 	Gosub Go_Back_To_Home_Screen_OCR_Quit
 	Gosub Go_Back_To_Home_Screen_OCR_NOT_Quit
@@ -995,6 +995,15 @@ Switch_Account:
 		Mouse_Click(100,300, {Clicks: 2,Timeout: (3*Delay_Short+0)}) ; Click Account
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
+	OCR_X := 315
+	OCR_Y := 860
+	OCR_W := 60
+	OCR_H := 35
+	; Capture_Screen_Text := OCR([315, 860, 60, 35], "eng") ; "Yes"
+	loop, 3
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click Yes	
+			
 	Search_Captured_Text := ["Account"]
 	loop, 2
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0})
@@ -1087,12 +1096,12 @@ Switch_Account:
 
 	Switch_Account_User_Email:
 	{
-		loop, 2
+		loop, 3
 		{
-			Mouse_Click(219,382, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
+			Mouse_Click(219,382) ;, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 		Text_To_Screen(User_Email)
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -1103,12 +1112,12 @@ Switch_Account:
 
 	Switch_Account_User_Password:
 	{
-		loop, 2
+		loop, 3
 		{
-			Mouse_Click(208,527, {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
+			Mouse_Click(208,527) ; , {Clicks: 2}) ; , Timeout: (1*Delay_Short+0)}) ; Click inside Email Text Box
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 		Text_To_Screen(User_Pass)
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -1129,8 +1138,16 @@ Switch_Account:
 		OCR_H := 80
 	    ; Capture_Screen_Text := OCR([323, 732, 47, 77], "eng")
 		if Search_Captured_Text_OCR(["OK"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-			Mouse_Click(340,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click OK		
-		
+			Mouse_Click(340,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click OK	
+			
+		OCR_X := 315
+		OCR_Y := 860
+		OCR_W := 60
+		OCR_H := 35
+		; Capture_Screen_Text := OCR([315, 860, 60, 35], "eng") ; "Yes"
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Click Yes	
+			
 		/*
 		Search_Captured_Text := ["previous game","progress found","Are you sure","log in and"]	; ,"overwrite the","current game","progress?"]
 		OCR_X := 39
@@ -1746,6 +1763,20 @@ Activity_Center_Wonder:
 	Mouse_Click(330,1000)  ; Tap Collect Reward
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	Mouse_Click(330,70)  ; Tap to clear reward
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	
+	
+	Mouse_Click(600,802)  ; Tap "Receive Rewards" 1
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(600,968)  ; Tap "Receive Rewards" 2
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(600,1129) ; Tap "Receive Rewards" 3
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	Mouse_Click(350, 70)  ; Tap To clear popup rewards message
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	
 	Activity_Center_END:
@@ -3376,19 +3407,103 @@ Mail_Collection:
 	Mail_Keyword_Array := ["Mail","Activities","Alliance","Last Empire","System"]
 	Mail_BACK2_Array := ["Alliance Arms","Cross-State","Desert Conflict","Other Event","Single Player","Arms Race"]
 	
-	Loop, 5
+	Gosub Mail_Collection_Open
+
+	Mouse_Click(200,272) ; Click Alliance
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,547) ; Click Last Empire - War Z Studios
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,633) ; Click System
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,760) ; Click reports 01 - RSS gathering 
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,860) ; Click reports 02 - Zombies
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,960) ; Click reports 03 - Missile attack
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,1060) ; Click reports 04 - Transport
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,1160) ; Click reports 05 - Other
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Mouse_Click(200,446) ; Click Activities
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+
+	Subroutine_Running := "Single Player Arms Race"
+	Mouse_Click(200,171) ; Click Activities - SPAR (Single Player Arms Race)
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Subroutine_Running := "Alliance Arms Race"
+	Mouse_Click(200,257) ; Click Activities - AAR (Alliance Arms Race)
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Subroutine_Running := "Cross-State Battle"
+	Mouse_Click(200,361) ; Click Activities - CSB (Cross-State Battle)
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Subroutine_Running := "Desert Conflict"
+	Mouse_Click(200,442) ; Click Activities - Desert Conflict
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Subroutine_Running := "Other Event Mail"
+	Mouse_Click(200,543) ; Click Activities - Other Event Mail
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	Gosub Mark_All_As_Read
+
+	Gosub Go_Back_To_Home_Screen
+
+	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	return
+
+	Mark_All_As_Read:
+	Subroutine_Running := "Mark_All_As_Read"
+	Loop, 2
 	{
-		gosub Mail_Collection_Open
-		Gosub, Read_Mail_Open
+		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26], Timeout: 0}) ; Is the Mark as Read button displayed?
+		{
+			Mouse_Click(340,1200) ;  Left, 1  ; Tap "MARK AS READ" button
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			Mouse_Click(202,706) ;  Left, 1  ; Tap "CONFIRM" button
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			Mouse_Click(340,70) ;  Left, 1  ; Tap header to clear message
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		}
 	}
+	; Click Message back
+	; loop, 2
+	; {
+	; 	Mouse_Click(51,63)
+	; 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	; }
+	gosub Mail_Collection_Open
 	return
 	
 	Mail_Collection_Open:
+	Subroutine_Running := "Mail_Collection_Open"
 	loop, 2
 	{
 		loop, 5
 		{
-			if Search_Captured_Text_OCR(Mail_Keyword_Array, {Pos: [308, 46], Size: [76, 49], Timeout: 0})
+			if Search_Captured_Text_OCR(["Mail"], {Pos: [308, 46], Size: [76, 49], Timeout: 0})
 				return ; Gosub, Read_Mail_Open
 
 			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24], Timeout: 0})
@@ -3398,157 +3513,13 @@ Mail_Collection:
 				Goto, Mail_Collection_Open
 			}
 
+			Mouse_Click(51,63) ; Click Message back
 			Text_To_Screen("{F5}")
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
 		Gosub Go_Back_To_Home_Screen
 	}
 	return
-
-	Read_Mail_Open:
-	OCR_X_Min := 590
-	OCR_Y_Min := 145 ; 115
-	OCR_Y_Delta := 95
-	OCR_Y_Max := (OCR_Y_Min + 7*OCR_Y_Delta)
-	OCR_X1 := OCR_X_Min+0
-	OCR_Y1 := OCR_Y_Min+0
-	OCR_W := 50
-	OCR_H := 35 ; 80
-	OCR_X2 := (OCR_X1 + OCR_W)+0
-	OCR_Y2 := (OCR_Y1 + OCR_H)+0
-	Loop, 10
-	{
-		Mouse_Click(OCR_X1,OCR_Y1) ;  Left, 1  ; Tap Position
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		if Search_Captured_Text_OCR(["Mail"], {Pos: [308, 46], Size: [76, 49], Timeout: 0})
-		{
-			gosub Read_Mail_Open
-			Gosub Go_Back_To_Home_Screen
-			Gosub Mail_Collection_Open
-		}
-		gosub Read_Mail_Mark_Read
-		
-		If (OCR_Y1 >= OCR_Y_Max)
-			break
-		Else
-			OCR_Y1 += OCR_Y_Delta
-		
-		Gosub Mail_Collection_Open
-	}
-	Return
-	
-	Read_Mail_Mark_Read:
-	Loop, 2
-	{
-		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26], Timeout: 0}) ; Is the Mark as Read button displayed?
-		{
-			Mouse_Click(340,1200) ;  Left, 1  ; Tap "MARK AS READ" button
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		; }
-		
-		; if Search_Captured_Text_OCR(["CONFIRM"], {Pos: [136, 692], Size: [135, 36], Timeout: 0})  ; Is the "CONFIRM" button displayed?
-		; {
-			Mouse_Click(202,706) ;  Left, 1  ; Tap "CONFIRM" button
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Mouse_Click(340,70) ;  Left, 1  ; Tap header to clear message
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_long+0))
-		}
-	}
-	Return
-	
-	
-	
-
-	Mouse_Click(474,1186) ; Click Mail
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(194,272) ; Click Alliance
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(186,547) ; Click Last Empire - War Z Studios
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(181,633) ; Click System
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(188,446) ; Click Activities
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(259,171) ; Click Activities - SPAR (Single Player Arms Race)
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(188,446) ; Click Activities
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(242,257) ; Click Activities - AAR (Alliance Arms Race)
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(188,446) ; Click Activities
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(206,361) ; Click Activities - CSB (Cross-State Battle)
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(188,446) ; Click Activities
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(186,442) ; Click Activities - Desert Conflict
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Mouse_Click(188,446) ; Click Activities
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-	Mouse_Click(174,543) ; Click Activities - Other Event Mail
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	Gosub Mark_All_As_Read
-
-	Gosub Go_Back_To_Home_Screen
-
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
-	return
-
-	Mark_All_As_Read:
-	{
-
-		Mouse_Click(334,1190) ; Click Mark All As Read
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		Mouse_Click(194,695) ; Click Confirm Marking All As Read
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		Mouse_Click(334,1190) ; Click Mark All As Read
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		; Mouse_Click(631,75) ; Click Message back
-		loop, 2
-		{
-			Mouse_Click(51,63)
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-		}
-
-		Gosub Go_Back_To_Home_Screen
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		Mouse_Click(474,1186) ; Click Mail
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		Mouse_Click(474,1186) ; Click Mail
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		; Gosub Go_Back_To_Home_Screen
-
-		return
-	}
 }
 
 Alliance_Boss_Regular:
