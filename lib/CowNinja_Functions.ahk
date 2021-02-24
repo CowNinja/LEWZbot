@@ -585,7 +585,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; ClipBoard_Restore()
 	
 	For index, value in Search_Text_Array
-		; MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
+		MsgBox, %Subroutine_Running% (%OCR_X1%,%OCR_Y1%,%OCR_W%,%OCR_H%) index:%index% value:%value% Capture_Screen_Text:%Capture_Screen_Text%
 		if !( value == "" )
 			If (RegExMatch(Capture_Screen_Text,value))
 				return 1
