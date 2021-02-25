@@ -372,15 +372,15 @@ Quit_LEWZ:
 			break
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Gosub Check_Window_Geometry
 	}
 
 	Mouse_Click(327,770) ; Tap "OK"
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 
 	Text_To_Screen("{F8}") ; Home screen button
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 
 	; loop, 5
 	; {
