@@ -72,6 +72,20 @@ do
   tesseract $FILE stdout >> output.txt
 done
 ```
+   - example of running ADB over Network using python and solving Sudoku puzzles by [haideralipunjabi](https://github.com/haideralipunjabi)/[sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
+```
+if __name__ == "__main__":
+    # Connect the device using ADB
+    device = adb.connect_device()
+    # Take Screenshot of the screen and save it in screen.png
+    adb.take_screenshot(device)
+    image = Image.open('screen.png')
+    image = process_image(image)        # Process the image for OCR
+    org_grid = get_grid_from_image(image)      # Convert the Image to 2D list using OCR / Pytesseract
+    solved_grid = deepcopy(org_grid)        # Deepcopy is used to prevent the function from modifying the original sudoku game
+    solve_sudoku(solved_grid)
+    automate_game(org_grid, solved_grid)        # Input the solved game into your device
+```
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
@@ -81,4 +95,4 @@ done
 2. Great AutoHotkey technical source with example code[renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
 3. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
 4. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/)
-   - GitHub repository: [haideralipunjabi](https://github.com/haideralipunjabi)/[sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
+   - GitHub repository: 
