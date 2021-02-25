@@ -38,6 +38,13 @@ x and y coordinates are determined using ocr screen reader, when a found a text 
 
 Goals:
 - Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
+1. On computer, start adb in tcpip mode:
+Command: adb tcpip <port>
+Example: adb tcpip 5555 
+
+2. Connect to your android device over network:
+Command: adb connect <ip address of android phone>:<port> 
+Example: adb connect 10.0.0.212:5555 
 
 Issues:
 - sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tapped accordingly..
