@@ -40,12 +40,10 @@ Goals:
 1. Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
 A. On computer, start adb in tcpip mode:
 Command: adb tcpip <port>
-Example: adb tcpip 5555 
-
+Example: adb tcpip 5555
 B. Connect to your android device over network:
 Command: adb connect <ip address of android phone>:<port> 
 Example: adb connect 10.0.0.212:5555
-
 2. Use adb to swipe and take screenshots. Then use tesseract to OCR the images:
 https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27
 
