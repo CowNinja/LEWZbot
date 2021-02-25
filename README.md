@@ -15,6 +15,11 @@ Global App_Win_X := 0
 Global App_Win_Y := 0
 Global App_WinWidth := 730
 Global App_WinHeight := 1249
+
+; actual Game Area within MEMUplay:
+; ClassNN: Qt5QWindowIcon19
+; Text: RenderWindowWindow
+; Client: x: 1 y: 32 w: 689 h: 1216
 ```
    - formatting the size and location of the window is implemented in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
 ```
