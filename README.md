@@ -37,14 +37,17 @@ x and y coordinates are determined using ocr screen reader, when a found a text 
 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated and timed.. there are countermeasures in game code to detect messing with the proprietary game data.. so it's very touchy
 
 Goals:
-- Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
-1. On computer, start adb in tcpip mode:
+1. Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
+A. On computer, start adb in tcpip mode:
 Command: adb tcpip <port>
 Example: adb tcpip 5555 
 
-2. Connect to your android device over network:
+B. Connect to your android device over network:
 Command: adb connect <ip address of android phone>:<port> 
-Example: adb connect 10.0.0.212:5555 
+Example: adb connect 10.0.0.212:5555
+
+2. Use adb to swipe and take screenshots. Then use tesseract to OCR the images:
+https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27
 
 Issues:
 - sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tapped accordingly..
