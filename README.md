@@ -1,8 +1,10 @@
 ## Tools Used:
 1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
-2. AutoHotKey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
+2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
 3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
 4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
+5. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
+   - [Notepad++ for AutoHotkey](https://github.com/jNizM/ahk_notepad-plus-plus) formats AHK files in Notepad++.
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
@@ -40,7 +42,7 @@ Loop, Read, LEWZ_User_Logins.ini
 4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated and timed.. there are countermeasures in game code to detect messing with the proprietary game data.. so it's very touchy
 
 ## Goals:
-1. Ability to run and control multiple Android virtual machines concurrently via ADB over network.
+ [ ] Ability to run and control multiple Android virtual machines concurrently via ADB over network.
    - Connect to Android virtual machine via ADB over Network:
 On computer, start adb in tcpip mode: 
 Command: `adb tcpip <port>`
@@ -50,7 +52,7 @@ Example: `adb tcpip 5555`
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
-2. Remotely control virtual machines running Android and push ADB shell commands via IP:
+ [ ] Remotely control virtual machines running Android and push ADB shell commands via IP:
    - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 ```
 #!/usr/bin/env bash
@@ -72,7 +74,7 @@ do
   tesseract $FILE stdout >> output.txt
 done
 ```
-   - example of running ADB over Network using python and solving Sudoku puzzles by [haideralipunjabi](https://github.com/haideralipunjabi)/[sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
+   - example by [haideralipunjabi](https://github.com/haideralipunjabi) of running ADB over Network using python and solving Sudoku puzzles: [sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
 ```
 if __name__ == "__main__":
     # Connect the device using ADB
@@ -86,13 +88,80 @@ if __name__ == "__main__":
     solve_sudoku(solved_grid)
     automate_game(org_grid, solved_grid)        # Input the solved game into your device
 ```
+## Roadmap:
+1. parse out tap coordinates and turn them into variable arrays.
+```
+; existing code
+Mouse_Click(290,405) ; Tap on base
+Mouse_Click(359,487) ; Tap On City Buffs
+Mouse_Click(302,235) ; Tap on Peace shield
+
+; resulting changes
+Set_Tap_Coordinats:
+{
+   Tap_base := ["290","405"]
+   Tap_CityBuffs := ["359","487"]
+   Tap_Peace_Shield := ["302","235"]
+}
+
+Open_Peace_Shield:
+{
+   Mouse_Click(Tap_base)
+   Mouse_Click(Tap_CityBuffs)
+   Mouse_Click(Tap_Peace_Shield)
+}
+```
+2. Detect RenderWindow control dimensions inside MEMUplay. 
+   - Partially imlemented using 'Win_WaitRegEX()' function contained in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
+```
+	global FoundAppClass := "Qt5QWindowIcon"
+	global FoundAppControl := "Qt5QWindowIcon19" ; static set of which control is RenderWindow
+	LEWZApp := Win_WaitRegEX(NewTitle)
+	global FoundAppTitle := LEWZApp.title
+	global FoundAppClass := LEWZApp.Class
+	global FoundAppProcess := byref FoundAppControl
+	global FoundAppID := LEWZApp.ID
+	
+	NewTitle := RegExReplace(FoundAppTitle,"[^A-Za-z0-9]+")
+	WinSetTitle, %NewTitle%
+```
+   - Would like to implement using 'Control_GetInfo()' function as 'Control' and 'ClassNN' can change based on configuration of MEMUplay:
+```
+; AppX := Control_GetInfo("Qt5QWindowIcon", FoundAppTitle)
+MsgBox, 0, AppX, % " AppX " AppX.Text " " AppX.Hwnd " " AppX.X " " AppX.Y
+; or
+MsgBox, 0, AppX, % " AppX.X " AppX().X " AppX.Y " AppX().Y
+```
+
+
+5. Bilinear Interpolation For Data On A Rectangular Grid for stored coordinates to correspond to detected resolution changes, for example:
+```
+; Tap coordinates based on fixed resolution
+StoredApp_Width
+StoredApp_Height
+StoredTap_X
+StoredTap_Y
+
+; Get App_Window Hight and Width
+CurrentApp_Width
+CurrentApp_Height
+CurrentTap_X
+CurrentTap_Y
+
+; Calculate coordinate interpolation based on actual Screen resolution
+CurrentTap_X := ((StoredTap_X / CurrentApp_Width) * StoredApp_Width)
+CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * StoredApp_Height)
+```
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
 
 ## More info:
+### AutoHotKey
+1. Great AutoHotkey technical source with example code [renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
+2. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
+3. [AutoHotkey Expression Examples: "" %% () and all that](https://daviddeley.com/autohotkey/xprxmp/autohotkey_expression_examples.htm), because I can never get them right, so I made this. These are all working examples.
+
+### Code Examples:
 1. [Connecting to Android Device with ADB over WiFi made (a little) easy](https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
-2. Great AutoHotkey technical source with example code[renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
-3. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
-4. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/)
-   - GitHub repository: 
+2. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/)
