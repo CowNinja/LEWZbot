@@ -6,7 +6,7 @@
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
-   - the size of the app window is defined in `LEWZ_SetDefaults.ahk`
+   - the size of the app window is defined in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
 ```
 ; Define desired window position and size    
 Global App_Win_X := 0
@@ -14,22 +14,22 @@ Global App_Win_Y := 0
 Global App_WinWidth := 730
 Global App_WinHeight := 1249
 ```
-   - formatting the size and location of the window is executed in `CowNinja_Functions.ahk`
+   - formatting the size and location of the window is executed in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
 ```
 Check_Window_Geometry:
 WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 ```
 2. Account details are retrieved from LEWZ_User_Logins.ini in AHK directory and loaded into an array:
-   - account credentials are loaded from file in `LEWZ_SetDefaults.ahk`
+   - all account credentials are loaded from file in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
 ```
 ; load User Logins
 User_Logins := {}
 Loop, Read, LEWZ_User_Logins.ini
 {
-row := StrSplit(A_LoopReadLine, ",")
-user := row[1]
-row.RemoveAt(1)
-User_Logins[user] := row
+    row := StrSplit(A_LoopReadLine, ",")
+    user := row[1]
+    row.RemoveAt(1)
+    User_Logins[user] := row
 }
 ```
 
@@ -58,6 +58,6 @@ Example: `adb connect 10.0.0.212:5555`
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
 
 ## Links:
-2. Connecting  to Android Device with ADB over WiFi made (a little) easy:  https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b
+2. Connecting to Android Device with ADB over WiFi made (a little) easy:  https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b
 
 
