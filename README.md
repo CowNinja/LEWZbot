@@ -1,8 +1,8 @@
-## Prerequisites:
-1. I use [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
-2. This AutoHotKey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
-3. adb (Android debug bridge) can be obtained by downloading [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
-4. Simple OCR using Tesseract is accomplished using [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
+## Tools Used:
+1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
+2. AutoHotKey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
+3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
+4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
