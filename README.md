@@ -1,7 +1,8 @@
 ## Prerequisites:
-1. This AutoHotKey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
-2. adb (Android debug bridge) can be obtained by downloading [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
-3. I use [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
+1. I use [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
+2. This AutoHotKey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
+3. adb (Android debug bridge) can be obtained by downloading [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
+4. Simple OCR using Tesseract is accomplished using [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
@@ -13,7 +14,7 @@ Global App_Win_Y := 0
 Global App_WinWidth := 730
 Global App_WinHeight := 1249
 ```
-   - formatting the size and location of the window is executed in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
+   - formatting the size and location of the window is implemented in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
 ```
 Check_Window_Geometry:
 WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
@@ -79,5 +80,5 @@ done
 1. [Connecting to Android Device with ADB over WiFi made (a little) easy](https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
 2. Great AutoHotkey technical source with example code[renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
 3. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
-
-
+4. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/) GitHub repository: [haideralipunjabi](https://github.com/haideralipunjabi)/sudoku_automate
+(https://github.com/haideralipunjabi/sudoku_automate)
