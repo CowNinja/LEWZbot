@@ -1,8 +1,7 @@
 ## Prerequisites:
-1. You must be running MEMUplay android client:
-   - https://www.memuplay.com/download.html
-2. SDK Platform Tools (for adb functions)
-   - https://developer.android.com/studio/releases/platform-tools
+1. This Auto hotkey script interacts with (MEMUplay android client) [https://www.memuplay.com/download.html]:
+2. adb (Android debug bridge) can be obtained by downloading (Android SDK Platform Tools) [https://developer.android.com/studio/releases/platform-tools]
+   - 
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
@@ -51,8 +50,7 @@ Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
 2. Remotely control virtual machines running Android and push ADB shell commands via IP:
-   - Use adb to swipe and take screenshots. Then use tesseract to OCR the images:
-     - https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27 
+   - example by (james2doyle) [https://gist.github.com/james2doyle]: Use adb to swipe and take screenshots. Then use tesseract to OCR the images  (abd-screen-ocr.sh) [https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27]
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
