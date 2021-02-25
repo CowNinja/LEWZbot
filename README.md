@@ -1,6 +1,6 @@
 ## Prerequisites:
-1. This Auto hotkey script interacts with [MEMUplay android client] (https://www.memuplay.com/download.html).
-2. adb (Android debug bridge) can be obtained by downloading [Android SDK Platform Tools] (https://developer.android.com/studio/releases/platform-tools).
+1. This Auto hotkey script interacts with [MEMUplay android client](https://www.memuplay.com/download.html).
+2. adb (Android debug bridge) can be obtained by downloading [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
@@ -49,12 +49,12 @@ Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
 2. Remotely control virtual machines running Android and push ADB shell commands via IP:
-   - example by [james2doyle] (https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images  (abd-screen-ocr.sh) [https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27]
+   - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
 
 ## Links:
-2. [Connecting to Android Device with ADB over WiFi made (a little) easy] (https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
+2. [Connecting to Android Device with ADB over WiFi made (a little) easy](https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
 
 
