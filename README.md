@@ -38,12 +38,13 @@ x and y coordinates are determined using ocr screen reader, when a found a text 
 
 Goals:
 1. Eventually I want to remotely control multiple virtual machines running Android and push ADB shell commands via IP.
-A. On computer, start adb in tcpip mode: 
+
+1.A On computer, start adb in tcpip mode: 
 
 Command: adb tcpip <port> 
 Example: adb tcpip 5555 
 
-B. Connect to your android device over network: 
+1.B. Connect to your android device over network: 
 
 Command: adb connect <ip address of android phone>:<port> 
 
