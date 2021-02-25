@@ -51,6 +51,26 @@ Example: `adb connect 10.0.0.212:5555`
 
 2. Remotely control virtual machines running Android and push ADB shell commands via IP:
    - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
+```
+#!/usr/bin/env bash
+
+# make sure to start your screen at the top
+# 21 was the number of swipes to get to the bottom of my page
+for i in `seq 1 21`;
+do
+  adb exec-out screencap -p > "screen$i.png"
+  sleep 1
+  # scroll "1300" each time
+  adb shell input swipe 0 1300 300 300
+  sleep 1
+done
+
+# then, OCR those images
+for FILE in *.png
+do
+  tesseract $FILE stdout >> output.txt
+done
+```
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
