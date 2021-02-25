@@ -80,5 +80,5 @@ done
 1. [Connecting to Android Device with ADB over WiFi made (a little) easy](https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
 2. Great AutoHotkey technical source with example code[renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
 3. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
-4. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/) GitHub repository: [haideralipunjabi](https://github.com/haideralipunjabi)/sudoku_automate
-(https://github.com/haideralipunjabi/sudoku_automate)
+4. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/)
+   - GitHub repository: [haideralipunjabi](https://github.com/haideralipunjabi)/[sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
