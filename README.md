@@ -1,12 +1,12 @@
 ## Prerequisites:
 1. You must be running MEMUplay android client:
- - https://www.memuplay.com/download.html
+   - https://www.memuplay.com/download.html
 2. SDK Platform Tools (for adb functions)
- - https://developer.android.com/studio/releases/platform-tools
+   - https://developer.android.com/studio/releases/platform-tools
 
 ## Settings:
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
- - In LEWZ_SetDefaults.ahk
+   - the size of the app window is defined in `LEWZ_SetDefaults.ahk`
 ```
 ; Define desired window position and size    
 Global App_Win_X := 0
@@ -14,13 +14,13 @@ Global App_Win_Y := 0
 Global App_WinWidth := 730
 Global App_WinHeight := 1249
 ```
- - In CowNinja_Functions.ahk
+   - formatting the size and location of the window is executed in `CowNinja_Functions.ahk`
 ```
 Check_Window_Geometry:
 WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 ```
 2. Account details are retrieved from LEWZ_User_Logins.ini in AHK directory and loaded into an array:
- - LEWZ_SetDefaults.ahk
+   - account credentials are loaded from file in `LEWZ_SetDefaults.ahk`
 ```
 ; load User Logins
 User_Logins := {}
@@ -41,18 +41,18 @@ User_Logins[user] := row
 
 ## Goals:
 1. Ability to run and control multiple Android virtual machines concurrently via ADB over network.
- - Connect to Android virtual machine via ADB over Network:
+   - Connect to Android virtual machine via ADB over Network:
 On computer, start adb in tcpip mode: 
 Command: `adb tcpip <port>`
 Example: `adb tcpip 5555`
 
- - Connect to your android device over network: 
+   - Connect to your android device over network: 
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
 2. Remotely control virtual machines running Android and push ADB shell commands via IP:
- - Use adb to swipe and take screenshots. Then use tesseract to OCR the images:
- - https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27 
+   - Use adb to swipe and take screenshots. Then use tesseract to OCR the images:
+     - https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27 
 
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
