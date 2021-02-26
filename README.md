@@ -57,7 +57,39 @@ For User,Val in User_Logins
 4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
 
 ## Goals:
- [ ] Ability to run and control multiple Android virtual machines concurrently via ADB over network.
+ [ ] Ability to run and control multiple Android virtual machines concurrently via ADB over network. Here's basic pseudo code outlining the idea in broad strokes:
+```
+; load list of account credentials into accounts_array
+; load list of Android VM (Virtual Machine) ip and ports into VM_Array
+
+for account in accounts_array ; loop through account
+{
+  credentials := {name:account[0], username:account[1], password:account[2], PIN:account[3]}
+  Use_Available_VM(credentials)
+}
+
+Use_Available_VM(credentials)
+{
+  for VM in VM_Array : loop through VM_Array and find one that's not being used
+    if (VM[0] = False) or if (VM.In_Use = False)
+    {
+      VM_Details := {In_Use:VM[0], name:VM[1], ip:VM[2], port:VM[3]}
+      break loop
+    }
+  ; launch separate program thread using VM_Details and credentials
+  run Threaded_Routine_Execution.ahk VM_Details credentials
+  VM.In_Use = True ; Mark selected VM as in-use
+  return VM_Details ; IP and port number of used virtual machine
+}
+
+Threaded_Routine_Execution.ahk
+{
+  log into retrieved account using available VM_Details
+  Execute routines
+  ; when finished notify main process that VM is available for another account
+  VM_Details.In_Use = False
+}
+```
    - Connect to Android virtual machine via ADB over Network:
 On the computer, start adb in tcpip mode: 
 Command: `adb tcpip <port>`
