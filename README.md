@@ -1,5 +1,5 @@
 ## Tools Used:
-1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as: form fillers, auto-clicking, macros, etc.
+1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
 2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
 3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
 4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
@@ -38,7 +38,7 @@ Loop, Read, LEWZ_User_Logins.ini
     User_Logins[user] := row
 }
 ```
-   - [LEWZbot_Script.ahk](LEWZbot_Script.ahk) loads each set of account credentials and assignes corresponding values to global variables before moving to subroutines execution as follows:  
+   - [LEWZbot_Script.ahk](LEWZbot_Script.ahk) loads each set of account credentials and assigns corresponding values to global variables before moving to subroutines execution as follows:  
 ```
 ; Switch User
 For User,Val in User_Logins
@@ -51,15 +51,15 @@ For User,Val in User_Logins
 ```
 
 ## Notes:
-1. Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text and figures out if a particular menu item has loaded or not and then it taps. I use the home screen as a point of reference, because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
-2. x and y coordinates are determined using ocr screen reader, when a found a text matches storex text strings in array, then tap coordinates are calculated.
-3. 19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via ocr to text and responding accordingly. I haven't implemented multi threading yet, which will enable concurrently running multiple instances simultaneously.
-4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated and timed.. there are countermeasures in game code to detect messing with the proprietary game data.. so it's very touchy
+1. Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text, and figures out if a particular menu item has loaded or not, and then it taps. I use the home screen as a point of reference because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
+2. x and y coordinates are determined using OCR screen reader, when a found a text matches stored text strings in an array, then tap coordinates are calculated.
+3. 19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via OCR to text, and responding accordingly. I haven't implemented multi-threading yet, which will enable concurrently running multiple instances simultaneously.
+4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
 
 ## Goals:
  [ ] Ability to run and control multiple Android virtual machines concurrently via ADB over network.
    - Connect to Android virtual machine via ADB over Network:
-On computer, start adb in tcpip mode: 
+On the computer, start adb in tcpip mode: 
 Command: `adb tcpip <port>`
 Example: `adb tcpip 5555`
 
@@ -111,7 +111,7 @@ Mouse_Click(290,405) ; Tap on base
 Mouse_Click(359,487) ; Tap On City Buffs
 Mouse_Click(302,235) ; Tap on Peace shield
 
-; resulting changes
+; resulting in changes
 Set_Tap_Coordinats:
 {
    Tap_base := ["290","405"]
@@ -150,13 +150,13 @@ MsgBox, 0, AppX, % " AppX.X " AppX().X " AppX.Y " AppX().Y
 
 5. Bilinear Interpolation For Data On A Rectangular Grid for stored coordinates to correspond to detected resolution changes, for example:
 ```
-; Tap coordinates based on fixed resolution
+; Tap coordinates based on a fixed resolution
 StoredApp_Width
 StoredApp_Height
 StoredTap_X
 StoredTap_Y
 
-; Get App_Window Hight and Width
+; Get App_Window Height and Width
 CurrentApp_Width
 CurrentApp_Height
 CurrentTap_X
@@ -179,4 +179,4 @@ CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * CurrentApp_Height)
 
 ### Code Examples:
 1. [Connecting to Android Device with ADB over WiFi made (a little) easy](https://medium.com/@amanshuraikwar.in/connecting-to-android-device-with-adb-over-wifi-made-a-little-easy-39439d69b86b)
-2. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku | by Haider Ali Punjabi | Level Up Coding](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/)
+2. Article and step by step instructions for Python implementation of automatic Sudoku solving program: [Automating Android Games with Python & Pytesseract: Sudoku](https://blog.haideralipunjabi.com/posts/automating-android-game-with-python-pytesseract-sudoku/), by Haider Ali Punjabi, Level Up Coding.
