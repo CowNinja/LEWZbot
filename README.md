@@ -26,8 +26,7 @@ Global App_WinHeight := 1249
 Check_Window_Geometry:
 WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 ```
-2. Account details are retrieved from LEWZ_User_Logins.ini in AHK directory and loaded into an array:
-   - all account credentials are loaded from file in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
+2. Account Credentials (Title,email,password,PIN are stored in seperated by commas) are retrieved from [LEWZ_User_Logins.ini](LEWZ_User_Logins.ini.example) in AHK directory and all account credentials are loaded into an array during execution of [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk).  :
 ```
 ; load User Logins
 User_Logins := {}
@@ -38,6 +37,17 @@ Loop, Read, LEWZ_User_Logins.ini
     row.RemoveAt(1)
     User_Logins[user] := row
 }
+```
+   - [LEWZbot_Script.ahk](LEWZbot_Script.ahk) loads each set of account credentials and assignes corresponding values to global variables before moving to subroutines execution as follows:  
+```
+; Switch User
+For User,Val in User_Logins
+{
+	; Populate account variables from next keyed array item
+	global User_Name := User
+	global User_Email := Val[1]
+	global User_Pass := Val[2]
+	global User_PIN := Val[3]
 ```
 
 ## Notes:
@@ -138,7 +148,6 @@ MsgBox, 0, AppX, % " AppX " AppX.Text " " AppX.Hwnd " " AppX.X " " AppX.Y
 MsgBox, 0, AppX, % " AppX.X " AppX().X " AppX.Y " AppX().Y
 ```
 
-
 5. Bilinear Interpolation For Data On A Rectangular Grid for stored coordinates to correspond to detected resolution changes, for example:
 ```
 ; Tap coordinates based on fixed resolution
@@ -153,9 +162,17 @@ CurrentApp_Height
 CurrentTap_X
 CurrentTap_Y
 
-; Calculate coordinate interpolation based on actual Screen resolution
-CurrentTap_X := ((StoredTap_X / CurrentApp_Width) * StoredApp_Width)
-CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * StoredApp_Height)
+; Calculate coordinate interpolation based on the new cursor position '(CurrentTap_X,CurrentTap_Y)', the stored position '(StoredTap_X,StoredTap_Y)',
+; old window size '(StoredApp_Width,StoredApp_Height)', and the new window size '(CurrentApp_Width,CurrentApp_Height)'.
+CurrentTap_X := ((StoredTap_X / StoredApp_Width) * CurrentApp_Width)
+CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * CurrentApp_Height)
+
+; find the new cursor position based on the old position, old window size,
+; and the new window size.
+WinGetPos, w2x, w2y, w2width, w2height, %targetwindow%
+x2 := ((x1 / w1width) * w2width)
+y2 := ((y1 / w1height) * w2height)
+
 ```
 
 ## Issues:
