@@ -163,6 +163,10 @@ Move_MsgBox(P)
 	Global App_Win_Y := 0
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
+	; actual Game Area within MEMUplay:
+	; ClassNN: Qt5QWindowIcon19
+	; Text: RenderWindowWindow
+	; Client: x: 1 y: 32 w: 689 h: 1216
 	Global MEmu_Operation_Recorder_X := App_Win_X
 	Global MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
 	Global Operation_Recorder_Window := "MEmu"
