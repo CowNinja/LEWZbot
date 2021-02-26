@@ -57,7 +57,7 @@ For User,Val in User_Logins
 4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
 
 ## Goals:
-- Ability to run and control multiple Android virtual machines concurrently via ADB over network. Here's basic pseudo code outlining the idea in broad strokes:
+- Ability to run and control multiple Android virtual machines concurrently via ADB over network.
   - Flowchart of idea for main program:
 ![FlowChart of Main program](Diagrams/LEWZbot_Main_001.jpeg)
   - pseudo code outlining the idea in broad strokes:
