@@ -58,6 +58,7 @@ For User,Val in User_Logins
 
 ## Goals:
  [ ] Ability to run and control multiple Android virtual machines concurrently via ADB over network. Here's basic pseudo code outlining the idea in broad strokes:
+ ![FlowChart of Main program](Diagrams/LEWZbot_Main_001.jpeg)
 ```
 ; load list of account credentials into accounts_array
 ; load list of Android VM (Virtual Machine) ip and ports into VM_Array
