@@ -1,61 +1,3 @@
-## Tools Used:
-1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
-2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
-3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
-4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
-5. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
-   - [Notepad++ for AutoHotkey](https://github.com/jNizM/ahk_notepad-plus-plus) formats AHK files in Notepad++.
-
-## Settings:
-1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
-   - the size of the app window is defined in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
-```
-; Define desired window position and size    
-Global App_Win_X := 0
-Global App_Win_Y := 0
-Global App_WinWidth := 730
-Global App_WinHeight := 1249
-
-; actual Game Area within MEMUplay:
-; ClassNN: Qt5QWindowIcon19
-; Text: RenderWindowWindow
-; Client: x: 1 y: 32 w: 689 h: 1216
-```
-   - formatting the size and location of the window is implemented in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
-```
-Check_Window_Geometry:
-WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
-```
-2. Account Credentials (Title,email,password,PIN are stored in seperated by commas) are retrieved from [LEWZ_User_Logins.ini](LEWZ_User_Logins.ini.example) in AHK directory and all account credentials are loaded into an array during execution of [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk).  :
-```
-; load User Logins
-User_Logins := {}
-Loop, Read, LEWZ_User_Logins.ini
-{
-    row := StrSplit(A_LoopReadLine, ",")
-    user := row[1]
-    row.RemoveAt(1)
-    User_Logins[user] := row
-}
-```
-   - [LEWZbot_Script.ahk](LEWZbot_Script.ahk) loads each set of account credentials and assigns corresponding values to global variables before moving to subroutines execution as follows:  
-```
-; Switch User
-For User,Val in User_Logins
-{
-	; Populate account variables from next keyed array item
-	global User_Name := User
-	global User_Email := Val[1]
-	global User_Pass := Val[2]
-	global User_PIN := Val[3]
-```
-
-## Notes:
-1. Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text, and figures out if a particular menu item has loaded or not, and then it taps. I use the home screen as a point of reference because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
-2. x and y coordinates are determined using OCR screen reader, when a found a text matches stored text strings in an array, then tap coordinates are calculated.
-3. 19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via OCR to text, and responding accordingly. I haven't implemented multi-threading yet, which will enable concurrently running multiple instances simultaneously.
-4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
-
 ## Goals:
 - Ability to run and control multiple Android virtual machines concurrently via ADB over network.
   - Flowchart of idea for main program:
@@ -95,10 +37,10 @@ Threaded_Routine_Execution.ahk
 ```
 - Actual adb Commands:
   - Connect to Android virtual machine via ADB over Network:
-On the computer, start adb in tcpip mode: 
+On the computer, start adb in tcpip mode:
 Command: `adb tcpip <port>`
 Example: `adb tcpip 5555`
-  - Connect to your android device over network: 
+  - Connect to your android device over network:
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
@@ -138,8 +80,9 @@ if __name__ == "__main__":
     solve_sudoku(solved_grid)
     automate_game(org_grid, solved_grid)        # Input the solved game into your device
 ```
-## Roadmap:
-1. parse out tap coordinates and turn them into variable arrays.
+
+## CheckList:
+ [ ] parse out tap coordinates and turn them into variable arrays.
 ```
 ; existing code
 Mouse_Click(290,405) ; Tap on base
@@ -161,7 +104,7 @@ Open_Peace_Shield:
    Mouse_Click(Tap_Peace_Shield)
 }
 ```
-2. Detect RenderWindow control dimensions inside MEMUplay. 
+ [ ] Detect RenderWindow control dimensions inside MEMUplay.
    - Partially imlemented using 'Win_WaitRegEX()' function contained in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
 ```
 	global FoundAppClass := "Qt5QWindowIcon"
@@ -171,7 +114,7 @@ Open_Peace_Shield:
 	global FoundAppClass := LEWZApp.Class
 	global FoundAppProcess := byref FoundAppControl
 	global FoundAppID := LEWZApp.ID
-	
+
 	NewTitle := RegExReplace(FoundAppTitle,"[^A-Za-z0-9]+")
 	WinSetTitle, %NewTitle%
 ```
@@ -203,10 +146,69 @@ CurrentTap_X := ((StoredTap_X / StoredApp_Width) * CurrentApp_Width)
 CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * CurrentApp_Height)
 ```
 
+## Current Settings:
+1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
+   - the size of the app window is defined in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
+```
+; Define desired window position and size
+Global App_Win_X := 0
+Global App_Win_Y := 0
+Global App_WinWidth := 730
+Global App_WinHeight := 1249
+
+; actual Game Area within MEMUplay:
+; ClassNN: Qt5QWindowIcon19
+; Text: RenderWindowWindow
+; Client: x: 1 y: 32 w: 689 h: 1216
+```
+   - formatting the size and location of the window is implemented in [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
+```
+Check_Window_Geometry:
+WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
+```
+2. Account Credentials (Title,email,password,PIN are stored in seperated by commas) are retrieved from [LEWZ_User_Logins.ini](LEWZ_User_Logins.ini.example) in AHK directory and all account credentials are loaded into an array during execution of [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk).  :
+```
+; load User Logins
+User_Logins := {}
+Loop, Read, LEWZ_User_Logins.ini
+{
+    row := StrSplit(A_LoopReadLine, ",")
+    user := row[1]
+    row.RemoveAt(1)
+    User_Logins[user] := row
+}
+```
+   - [LEWZbot_Script.ahk](LEWZbot_Script.ahk) loads each set of account credentials and assigns corresponding values to global variables before moving to subroutines execution as follows:
+```
+; Switch User
+For User,Val in User_Logins
+{
+	; Populate account variables from next keyed array item
+	global User_Name := User
+	global User_Email := Val[1]
+	global User_Pass := Val[2]
+	global User_PIN := Val[3]
+```
+
+## Notes:
+1. Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text, and figures out if a particular menu item has loaded or not, and then it taps. I use the home screen as a point of reference because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
+2. x and y coordinates are determined using OCR screen reader, when a found a text matches stored text strings in an array, then tap coordinates are calculated.
+3. 19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via OCR to text, and responding accordingly. I haven't implemented multi-threading yet, which will enable concurrently running multiple instances simultaneously.
+4. 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
+
 ## Issues:
 1. sometimes clicking on underground will result in the "welcome to level 20 underground area" dialog.. so I just have to develop the script to recognize the text on the screen and tap accordingly..
 
 ## More info:
+
+## Tools Used:
+1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
+2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
+3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
+4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
+5. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
+   - [Notepad++ for AutoHotkey](https://github.com/jNizM/ahk_notepad-plus-plus) formats AHK files in Notepad++.
+
 ### AutoHotKey
 1. Great AutoHotkey technical source with example code [renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
 2. Learn more about AutoHotkey: [The Magic of AutoHotkey, The Sharat's](https://sharats.me/posts/the-magic-of-autohotkey/)
