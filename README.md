@@ -1,8 +1,8 @@
-- The current version of this code interacts with MEMUplay Android emulator running on a Windows PC. It reads in-game text using tesseract OCR to decide whether or not certain items have been loaded, and taps buttons it accordingly.
-- I would like to rewrite the code such that with each set of account credentials, the main program initiates separate child processes to connect to separate remote virtual machines, and each child process spawned would specifically execute the desired subroutines for each account. That's why I want to use many Android virtual machines running LEWZ simultaneously to rewrite the app to effectively manage an infinite number of accounts. The only limit will be the amount at any given time of Android virtual devices running.
+- The current version of this code interacts with [MEMUplay android emulator](https://www.memuplay.com/download.html) running on a Windows PC. It reads in-game text using [Vis2](https://github.com/iseahound/Vis2) tesseract OCR to decide whether or not certain items have been loaded, and taps buttons it accordingly.
+- I would like to rewrite the code such that with each set of account credentials, the main program initiates separate child processes to connect to separate remote VM (Virtual Machines) using [adb Platform Tools](https://developer.android.com/studio/releases/platform-tools) commands, and each child process spawned would specifically execute the desired subroutines for each account. That's why I want to use many Android VM (Virtual Machines) running LEWZ simultaneously to rewrite the app to effectively manage an infinite number of accounts. The only limit will be the amount at any given time of Android virtual devices running.
 
 ## Goals (for proposed multithread idea):
-- Ability to run and control multiple Android virtual machines concurrently via adb (Android debug bridge) over network.
+- Ability to run and control multiple Android VM (Virtual Machines) concurrently via adb (Android debug bridge) over network.
   - Flowchart of idea for main program:
 ![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Main_001.jpeg)
   - Flowchart idea for Child processes:
@@ -49,7 +49,7 @@ Example: `adb tcpip 5555`
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
-- Remotely control virtual machines running Android and push ADB shell commands via IP:
+- Remotely control VM (Virtual Machines) running Android and push ADB shell commands via IP:
   - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 ```
 #!/usr/bin/env bash
@@ -209,7 +209,7 @@ For User,Val in User_Logins
 1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
    - [Vis2](https://github.com/iseahound/Vis2) Simple OCR using Tesseract by [iseahound](https://github.com/iseahound)
 2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
-3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
+3. adb (Android debug bridge) will be utilized to remotely control Android VM (Virtual Machines) and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
 4. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
    - [Notepad++ for AutoHotkey](https://github.com/jNizM/ahk_notepad-plus-plus) formats AHK files in Notepad++.
 5. [DrawExpress](https://drawexpress.com/) is a fast gesture-recognition diagram application. With DrawExpress, you can draw diagrams and flowcharts in a simple and intuitive way. 
