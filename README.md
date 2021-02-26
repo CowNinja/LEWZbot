@@ -93,17 +93,17 @@ Threaded_Routine_Execution.ahk
   VM_Details.In_Use = False
 }
 ```
-   - Connect to Android virtual machine via ADB over Network:
+- Actual adb Commands:
+  - Connect to Android virtual machine via ADB over Network:
 On the computer, start adb in tcpip mode: 
 Command: `adb tcpip <port>`
 Example: `adb tcpip 5555`
-
-   - Connect to your android device over network: 
+  - Connect to your android device over network: 
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
- [ ] Remotely control virtual machines running Android and push ADB shell commands via IP:
-   - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
+- Remotely control virtual machines running Android and push ADB shell commands via IP:
+  - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 ```
 #!/usr/bin/env bash
 
