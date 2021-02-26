@@ -1,4 +1,4 @@
-- The current version of this code interacts with MEMUplay Android emulator running on a Windows PC. It reads text using tesseract OCR to decide whether or not certain items have been loaded, and taps it accordingly.
+- The current version of this code interacts with MEMUplay Android emulator running on a Windows PC. It reads in-game text using tesseract OCR to decide whether or not certain items have been loaded, and taps buttons it accordingly.
 - I would like to rewrite the code such that with each set of account credentials, the main program initiates separate child processes to connect to separate remote virtual machines, and each child process spawned would specifically execute the desired subroutines for each account. That's why I want to use many Android virtual machines running LEWZ simultaneously to rewrite the app to effectively manage an infinite number of accounts. The only limit will be the amount at any given time of Android virtual devices running.
 
 ## Goals (for proposed multithread idea):
