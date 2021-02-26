@@ -1031,7 +1031,7 @@ Peace_Shield:
 	; change button text: "Yes" to "3Day", "No" to "24hour", and "Cancel" to "8hour"
 	MsgBox("Would you like to place a shield?`n(Esc) to cancel`n(10 second Timeout & skip)`,10", "Peace Shield", 3, "&3Day", "&24hour", "&8hour", 5)
 	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; 3Day
+	if (vRet = "Yes") || if (vRet = "Timeout") ; 3Day
 		goto Shield_for_3Day
 	else if (vRet = "No") ; 24hour
 		goto Shield_for_24hour
