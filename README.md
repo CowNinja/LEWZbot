@@ -1,5 +1,8 @@
-## Goals:
-- Ability to run and control multiple Android virtual machines concurrently via ADB over network.
+- The current version of this code interacts with MEMUplay Android emulator running on a Windows PC. It reads text using tesseract OCR to decide whether or not certain items have been loaded, and taps it accordingly.
+- I would like to rewrite the code such that with each set of account credentials, the main program initiates separate child processes to connect to separate remote virtual machines, and each child process spawned would specifically execute the desired subroutines for each account. That's why I want to use many Android virtual machines running LEWZ simultaneously to rewrite the app to effectively manage an infinite number of accounts. The only limit will be the amount at any given time of Android virtual devices running.
+
+## Goals (for proposed multithread idea):
+- Ability to run and control multiple Android virtual machines concurrently via adb (Android debug bridge) over network.
   - Flowchart of idea for main program:
 ![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Main_001.jpeg)
   - Flowchart idea for Child processes:
@@ -37,7 +40,7 @@ Threaded_Routine_Execution.ahk
   VM_Details.In_Use = False
 }
 ```
-- Actual adb Commands:
+- example of adb Commands used to connect to android device over network:
   - Connect to Android virtual machine via ADB over Network:
 On the computer, start adb in tcpip mode:
 Command: `adb tcpip <port>`
@@ -83,7 +86,7 @@ if __name__ == "__main__":
     automate_game(org_grid, solved_grid)        # Input the solved game into your device
 ```
 
-## CheckList:
+## Current program checkList (current Windows version):
  [ ] parse out tap coordinates and turn them into variable arrays.
 ```
 ; existing code
@@ -148,7 +151,7 @@ CurrentTap_X := ((StoredTap_X / StoredApp_Width) * CurrentApp_Width)
 CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * CurrentApp_Height)
 ```
 
-## Current Settings:
+## Current Settings (current Windows version):
 1. I've constrained the Android Client MEMUplay to run at a set resolution for now:
    - the size of the app window is defined in [LEWZ_SetDefaults.ahk](lib/LEWZ_SetDefaults.ahk):
 ```
@@ -193,8 +196,6 @@ For User,Val in User_Logins
 ```
 
 ## Notes:
-- 26FEB21 - My concept is to adjust the main program to initiate separate child processes using separate virtual machines for each set of account credentials, and each child process will directly run the desired subroutines for each account. That's why I want to rewrite the software to use several Android virtual machines running LEWZ concurrently to potentially control an unlimited number of accounts. The only limit would be the number of Android virtual devices I operate at any given time.
-- Since I run the Android inside an emulator, I have to use tesseract OCR screen recognition which reads the screen, extrapolates the text, and figures out if a particular menu item has loaded or not, and then it taps. I use the home screen as a point of reference because you can hit back a million times and as soon as quit dialogue is displayed, it terminates the go back to home screen routine.
 - x and y coordinates are determined using OCR screen reader, when a found a text matches stored text strings in an array, then tap coordinates are calculated.
 - 19FEB21 - Finally took the time to reprogram and fix my shielding routine, which calculates and auto shields Thursday 1900 through Sunday 1900.. the delays are due to reading the screen, converting via OCR to text, and responding accordingly. I haven't implemented multi-threading yet, which will enable concurrently running multiple instances simultaneously.
 - 13FEB21 - my routines rely on specific sequences of events that I've figured out, calculated, and timed.. there are countermeasures in-game code to detect messing with the proprietary game data.. so it's very touchy
@@ -204,7 +205,7 @@ For User,Val in User_Logins
 
 ## More info:
 
-## Tools Used:
+### Tools Used:
 1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
    - [Vis2](https://github.com/iseahound/Vis2) Simple OCR using Tesseract by [iseahound](https://github.com/iseahound)
 2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
