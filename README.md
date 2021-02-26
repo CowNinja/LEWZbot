@@ -206,12 +206,12 @@ For User,Val in User_Logins
 
 ## Tools Used:
 1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
+   - [Vis2](https://github.com/iseahound/Vis2) Simple OCR using Tesseract by [iseahound](https://github.com/iseahound)
 2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
 3. adb (Android debug bridge) will be utilized to remotely control Android virtual machines and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
-4. Simple OCR using Tesseract [iseahound](https://github.com/iseahound)/[Vis2](https://github.com/iseahound/Vis2)
-5. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
+4. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
    - [Notepad++ for AutoHotkey](https://github.com/jNizM/ahk_notepad-plus-plus) formats AHK files in Notepad++.
-6. [DrawExpress](https://drawexpress.com/) is a fast gesture-recognition diagram application. With DrawExpress, you can draw diagrams and flowcharts in a simple and intuitive way. 
+5. [DrawExpress](https://drawexpress.com/) is a fast gesture-recognition diagram application. With DrawExpress, you can draw diagrams and flowcharts in a simple and intuitive way. 
 
 ### AutoHotKey
 1. Great AutoHotkey technical source with example code [renenyffenegger AutoHotKey notes](https://renenyffenegger.ch/notes/tools/autohotkey/index)
