@@ -166,13 +166,6 @@ CurrentTap_Y
 ; old window size '(StoredApp_Width,StoredApp_Height)', and the new window size '(CurrentApp_Width,CurrentApp_Height)'.
 CurrentTap_X := ((StoredTap_X / StoredApp_Width) * CurrentApp_Width)
 CurrentTap_Y := ((StoredTap_Y / StoredApp_Height) * CurrentApp_Height)
-
-; find the new cursor position based on the old position, old window size,
-; and the new window size.
-WinGetPos, w2x, w2y, w2width, w2height, %targetwindow%
-x2 := ((x1 / w1width) * w2width)
-y2 := ((y1 / w1height) * w2height)
-
 ```
 
 ## Issues:
