@@ -100,7 +100,7 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			Pause_Script := False
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -159,10 +159,10 @@ while WinExist(FoundAppTitle)
 				; Gosub BruteForcePIN
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
-				; Gosub Depot_Rewards
-				; Gosub Speaker_Help
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				Gosub Reserve_Factory
+				Gosub Speaker_Help
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
 				; ******************************************
@@ -2457,15 +2457,9 @@ Reserve_Factory:
 	; *******************************
 	; Collect Reserve supplies
 	; *******************************
-	Mouse_Click(610,1200) ; Tap Alliance Menu
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	Mouse_Click(355,825) ; Tap Alliance Help
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Mouse_Click(480,140) ; Tap Reserve Factory Help
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
+	
+	Gosub Alliance_Help_Open
+	
 	if Pause_Script
 		MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
@@ -2484,14 +2478,7 @@ Reserve_Factory:
 	; *******************************
 	Loop, 2
 	{
-		Mouse_Click(609,1186) ; Tap Alliance Menu
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-		Mouse_Click(383,835) ; Tap Alliance Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		Mouse_Click(480,140) ; Tap Reserve Factory Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Gosub Alliance_Help_Open
 
 		Mouse_Click(119,336) ; Tap Reserve Factory Icon
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -2518,14 +2505,8 @@ Reserve_Factory:
 	; *******************************
 	; Instant Help and Request Help
 	; *******************************
-	Mouse_Click(596,1196) ; Tap Alliance Menu
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Mouse_Click(440,817) ; Tap Alliance Help
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Mouse_Click(480,140) ; Tap Reserve Factory Help
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	
+	Gosub Alliance_Help_Open
 
 	loop, 2
 	{
@@ -2538,6 +2519,56 @@ Reserve_Factory:
 	; Go_Back_Home_Delay_Long := True
 	Gosub Go_Back_To_Home_Screen
 	return
+	
+		Alliance_Help_Open:
+	{
+		Mouse_Click(610,1200) ; Tap Alliance Menu
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		loop, 3
+			if Search_Captured_Text_OCR(["Alliance"]).Found
+				break
+
+
+		; Alliance_Menu_01 := OCR([150, 480, 216, 33], "eng")
+		; Alliance_Menu_02 := OCR([150, 590, 216, 33], "eng")
+		; Alliance_Menu_03 := OCR([150, 705, 216, 33], "eng")
+		; Alliance_Menu_04 := OCR([150, 815, 216, 33], "eng")
+		; Alliance_Menu_05 := OCR([150, 925, 216, 33], "eng")
+		; Alliance_Menu_06 := OCR([150, 1040, 216, 33], "eng")
+
+		Min_Y := 480
+		Max_Y := 1040
+		Min_X := Max_X := OCR_X := Click_X := 150
+		OCR_Y := Min_Y
+		OCR_W := 216
+		OCR_H := 33
+		OCR_Y_Delta := 110
+		; Search_Captured_Text := ["Alliance Help"]
+		
+		loop, 6
+		{
+			Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+			; Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
+			; MsgBox, %index%. "%Capture_Screen_Text%"
+			if Alliance_Menu.Found
+			{
+				; MsgBox, % "(" OCR_X "," OCR_Y ") " Alliance_Menu.Text
+				Mouse_Click(OCR_X,OCR_Y) ; Tap To open Alliance Help
+				break
+			}
+			OCR_Y += OCR_Y_Delta
+		}
+		; MsgBox, 0, Pause, Loop done. Press OK to resume (No Timeout)
+
+		; Mouse_Click(355,825) ; Tap Alliance Help
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+
+		Mouse_Click(480,140) ; Tap Reserve Factory Help
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		
+		return
+	}
+
 }
 
 ; open alliance technology menu and tap donate until time > 4 hours
