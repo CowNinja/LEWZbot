@@ -24,7 +24,7 @@ Process, Priority, , H
 SetBatchLines, -1
 SetKeyDelay, -1, 20 ; -1 ; default
 SetMouseDelay, -1 ; -1 ; default
-SetDefaultMouseSpeed, 3 ; 0 ; Move the mouse SPEED.
+SetDefaultMouseSpeed, 0 ; 3 ; 0 ; Move the mouse SPEED.
 SetWinDelay, -1 ; -1 ; default
 SetControlDelay, -1 ; -1 ; default
 SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
@@ -99,7 +99,7 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			Pause_Script := False
-			CSB_Event := False ; True ; True if CSB Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
@@ -160,7 +160,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				Gosub Reserve_Factory
-				Gosub Speaker_Help
+				; Gosub Speaker_Help
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				goto END_of_user_loop
 				; Gosub Game_Start_popups
@@ -516,94 +516,33 @@ Switch_Account:
 		GUI_Count++
 
 	Switch_Account_START:
-	loop, 5
-	{
-		Gosub Go_Back_To_Home_Screen
-		Mouse_Click(50,70, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap Commander Info
+	Gosub Go_Back_To_Home_Screen
+	Mouse_Click(50,70, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap Commander Info
+		
+	Mouse_Click(600,1200, {Clicks: 2,Timeout: (1*Delay_Long+0+0)}) ; Tap Settings
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0+0))
 
-		Search_Captured_Text := ["Commander"]
-		loop, 3
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
-				goto Switch_Account_Commander
-	}
+	Mouse_Click(100,300, {Clicks: 2,Timeout: (1*Delay_Long+0)}) ; Tap Account
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	Switch_Account_Commander:
-	; loop, 2
-		Mouse_Click(600,1200, {Clicks: 2,Timeout: (3*Delay_Short+0)}) ; Tap Settings
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-
-	Search_Captured_Text := ["Settings"]
-	loop, 2
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
-			break
-
-	; loop, 2
-		Mouse_Click(100,300, {Clicks: 2,Timeout: (3*Delay_Short+0)}) ; Tap Account
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
-
-	OCR_X := 315
-	OCR_Y := 860
-	OCR_W := 60
-	OCR_H := 35
+	Account_Yes := Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35], Timeout: 0})
 	; Capture_Screen_Text := OCR([315, 860, 60, 35], "eng") ; "Yes"
+	
 	loop, 3
-		if Search_Captured_Text_OCR(["Yes"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Account_Yes.Found
 			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap Yes	
-			
-	Search_Captured_Text := ["Account"]
-	loop, 2
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
-			break
 
 	loop, 2
-		Mouse_Click(350,875, {Clicks: 2,Timeout: (3*Delay_Short+0)}) ; Tap "Switch Account"
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
+		Mouse_Click(350,875) ; Tap "Switch Account"
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	Switch_Account_WarZ_Login:
-	Subroutine_Running := "Switch_Account_WarZ_Login"
-	Email_Entered := False
-	Password_Entered := False
-	loop, 5
-	{
-		; Search_Captured_Text := OCR([300, 690, 100, 40], "eng") ; "WarZ Account" button
-		Subroutine_Running := "WarZ Account"
-		Search_Captured_Text := ["WarZ"] ; 306, 693
-		OCR_X := 302 ; 287
-		OCR_Y := 692 ; 676
-		OCR_W := 70 ; 200
-		OCR_H := 25 ; 55
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found ; 602, 550
-			Mouse_Click(350,700, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap WarZ Account ; goto Switch_Account_WarZ_Account_Button
-
-		; Search_Captured_Text := OCR([422, 1145, 50, 25], "eng") ; "Other Account" button
-		Subroutine_Running := "Other Account"
-		Search_Captured_Text := ["Other","Account"]
-		OCR_X := 422 ; 420
-		OCR_Y := 1145 ; 1140
-		OCR_W := 50 ; 130
-		OCR_H := 25 ; 37
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found ; 602, 550
-			Mouse_Click(475,1150, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap Other Account
-			; goto Switch_Account_Other_Account
-
-		; Search_Captured_Text := OCR([378, 720, 100, 32], "eng") ; "Use your email" button
-		Subroutine_Running := "Use your email"
-		Search_Captured_Text := ["Use your"]
-		Use_Email_OCR_X := 378 ; 374
-		Use_Email_OCR_Y := 722 ; 719
-		Use_Email_OCR_W := 92 ; 160
-		Use_Email_OCR_H := 30 ; 40
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [Use_Email_OCR_X, Use_Email_OCR_Y], Size: [Use_Email_OCR_W, Use_Email_OCR_H], Timeout: 0}).Found
-		{			
-			Gosub Switch_Account_User_Email
-			Gosub Switch_Account_User_Password
-			goto Switch_Account_Next
-		}
-	}
-
-	Switch_Account_Try_Again:
-	; Mouse_Click(475,1150) ; Tap Other Account
-	goto Switch_Account_WarZ_Login
+	Mouse_Click(350,700, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap WarZ Account
+	
+	Mouse_Click(475,1150, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap Other Account
+	
+	Gosub Switch_Account_User_Email
+	Gosub Switch_Account_User_Password
+	goto Switch_Account_Next
 
 	Switch_Account_User_Email:
 	{
@@ -648,7 +587,7 @@ Switch_Account:
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	}
 
-	loop, 5 ; 10 ; 15
+	loop, 10 ; 15
 	{
 		OCR_X := 330 ; 320
 		OCR_Y := 675 ; 720
@@ -2520,46 +2459,54 @@ Reserve_Factory:
 	Gosub Go_Back_To_Home_Screen
 	return
 	
-		Alliance_Help_Open:
+	Alliance_Help_Open:
 	{
-		Mouse_Click(610,1200) ; Tap Alliance Menu
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		loop, 3
-			if Search_Captured_Text_OCR(["Alliance"]).Found
-				break
-
-
-		; Alliance_Menu_01 := OCR([150, 480, 216, 33], "eng")
-		; Alliance_Menu_02 := OCR([150, 590, 216, 33], "eng")
-		; Alliance_Menu_03 := OCR([150, 705, 216, 33], "eng")
-		; Alliance_Menu_04 := OCR([150, 815, 216, 33], "eng")
-		; Alliance_Menu_05 := OCR([150, 925, 216, 33], "eng")
-		; Alliance_Menu_06 := OCR([150, 1040, 216, 33], "eng")
-
-		Min_Y := 480
-		Max_Y := 1040
-		Min_X := Max_X := OCR_X := Click_X := 150
-		OCR_Y := Min_Y
-		OCR_W := 216
-		OCR_H := 33
-		OCR_Y_Delta := 110
-		; Search_Captured_Text := ["Alliance Help"]
-		
-		loop, 6
+		loop, 2
 		{
-			Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
-			; Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
-			; MsgBox, %index%. "%Capture_Screen_Text%"
-			if Alliance_Menu.Found
-			{
-				; MsgBox, % "(" OCR_X "," OCR_Y ") " Alliance_Menu.Text
-				Mouse_Click(OCR_X,OCR_Y) ; Tap To open Alliance Help
-				break
-			}
-			OCR_Y += OCR_Y_Delta
-		}
-		; MsgBox, 0, Pause, Loop done. Press OK to resume (No Timeout)
+			Mouse_Click(610,1200) ; Tap Alliance Menu
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			loop, 4
+				if Search_Captured_Text_OCR(["Alliance"]).Found
+					break
 
+
+			; Alliance_Menu_01 := OCR([150, 480, 216, 33], "eng")
+			; Alliance_Menu_02 := OCR([150, 590, 216, 33], "eng")
+			; Alliance_Menu_03 := OCR([150, 705, 216, 33], "eng")
+			; Alliance_Menu_04 := OCR([150, 815, 216, 33], "eng")
+			; Alliance_Menu_05 := OCR([150, 925, 216, 33], "eng")
+			; Alliance_Menu_06 := OCR([150, 1040, 216, 33], "eng")
+
+			Min_Y := 480
+			Max_Y := 1040
+			Min_X := Max_X := OCR_X := Click_X := 150
+			OCR_Y := Min_Y
+			OCR_W := 216
+			OCR_H := 33
+			OCR_Y_Delta := 110
+			; Search_Captured_Text := ["Alliance Help"]
+			
+			loop, 6
+			{
+				Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+				; Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
+				; MsgBox, % A_Index ". (" OCR_X "," OCR_Y ") " Alliance_Menu.Text
+				if Alliance_Menu.Found
+				{
+					; MsgBox, % A_Index ". (" OCR_X "," OCR_Y ") " Alliance_Menu.Text
+					Mouse_Click(OCR_X,OCR_Y) ; Tap To open Alliance Help
+					goto Alliance_Help_Continue ; break
+				}
+				OCR_Y += OCR_Y_Delta
+				if (OCR_Y > Max_Y)
+					OCR_Y := Min_Y
+			}
+			Gosub Go_Back_To_Home_Screen
+		}
+		return
+		; MsgBox, 0, Pause, Loop done. Press OK to resume (No Timeout)
+		
+		Alliance_Help_Continue:
 		; Mouse_Click(355,825) ; Tap Alliance Help
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
