@@ -159,10 +159,10 @@ while WinExist(FoundAppTitle)
 				; Gosub BruteForcePIN
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
-				Gosub Reserve_Factory
+				; Gosub Reserve_Factory
 				; Gosub Speaker_Help
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				goto END_of_user_loop
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; goto END_of_user_loop
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
 				; ******************************************
