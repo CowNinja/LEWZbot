@@ -4,7 +4,7 @@
 ## Goals (for proposed multithread idea):
 - Ability to run and control multiple Android VM (Virtual Machines) concurrently via adb (Android debug bridge) over network.
   - Flowchart of ideas (DRAFT):
-![LEWZbot Main program FlowChart](Diagrams/Threaded child process LEWZ 002.svg)
+![LEWZbot Main program FlowChart](Diagrams/LEWZ_Overview_002.svg)
   - pseudo code outlining the idea in broad strokes:
 ```
 ; load list of account credentials into accounts_array
