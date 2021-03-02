@@ -329,19 +329,8 @@ Launch_Lewz:
 	Launch_Lewz_Continue:
 	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
 	
-	Search_Captured_Text := ["Enter"] ; ,"login","password"]
-	PIN_X := 199 ; 190
-	PIN_Y := 265 ; 250
-	PIN_W := 77 ; 300
-	PIN_H := 30 ; 50
-	loop, 10
-	{
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
-		{
-			Gosub Enter_Login_Password_PIN
-			break
-		}
-	}
+	loop, 5
+		Gosub Enter_Login_Password_PIN
 
 	; Gosub Go_Back_To_Home_Screen
 	return
@@ -616,16 +605,7 @@ Switch_Account:
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 		*/
 
-		Search_Captured_Text := ["Enter"] ; ,"login","password"]
-		PIN_X := 199 ; 190
-		PIN_Y := 265 ; 250
-		PIN_W := 77 ; 300
-		PIN_H := 30 ; 50
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
-		{
-			Gosub Enter_Login_Password_PIN
-			break ; goto Switch_Account_PIN
-		}
+		Gosub Enter_Login_Password_PIN
 	}
 	
 	; gosub BruteForcePIN
@@ -641,7 +621,7 @@ Switch_Account:
 		OCR_H := 40
 		; "Previous game progress found:"
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-			Mouse_Click(336,780, {Clicks: 1, Timeout: (5*Delay_Short+0)}) ; Tap "OK"
+			Mouse_Click(336,780, {Clicks: 1, Timeout: (1*Delay_Long+0)}) ; Tap "OK"
 
 		Search_Captured_Text := ["Are you sure to","log in and","overwrite the","current game","progress?"]
 		OCR_X := 140
@@ -650,15 +630,9 @@ Switch_Account:
 		OCR_H := 110
 		; "Are you sure to log in and overwrite the current game progress?"
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-			Mouse_Click(336,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
+			Mouse_Click(336,780, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap "OK"
 
-		Search_Captured_Text := ["Enter","login","password"]
-		PIN_X := 190
-		PIN_Y := 250
-		PIN_W := 300
-		PIN_H := 50
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
-			Break
+		Gosub Enter_Login_Password_PIN
 	}
 	*/
 	
@@ -671,6 +645,7 @@ Switch_Account:
 		MsgBox, 0, Pause, User PIN: %User_PIN% Press OK to resume (No Timeout)
 
 	Switch_Account_END:
+	Gosub Enter_Login_Password_PIN
 
 	return
 }
@@ -679,7 +654,17 @@ Enter_Login_Password_PIN:
 {
 	; Subroutine_Running := "Enter_Login_Password_PIN"
 	
-	Goto Enter_Login_Password_PIN_Dialog
+	Search_Captured_Text := ["Enter","login","password"]
+	PIN_X := 190
+	PIN_Y := 250
+	PIN_W := 300
+	PIN_H := 50
+	loop, 5
+	{
+	if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
+		Goto Enter_Login_Password_PIN_Dialog ; Break
+	}
+	return	
 
 	Enter_Login_Password_PIN_Search:
 	Search_Captured_Text := ["Enter","login","password"]
