@@ -576,7 +576,7 @@ Switch_Account:
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	}
 
-	loop, 10 ; 15
+	loop, 7 ; 10 ; 15
 	{
 		OCR_X := 330 ; 320
 		OCR_Y := 675 ; 720
@@ -659,7 +659,7 @@ Enter_Login_Password_PIN:
 	PIN_Y := 250
 	PIN_W := 300
 	PIN_H := 50
-	loop, 5
+	loop, 2
 	{
 	if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
 		Goto Enter_Login_Password_PIN_Dialog ; Break
