@@ -691,10 +691,16 @@ Enter_Login_Password_PIN:
 				Goto Enter_Login_Password_PIN_Dialog
 	}
 	return
-
+	
 	Enter_Login_Password_PIN_Dialog:
+		gosub Enter_Login_PIN_Dialog
+	return
+}
+
+Enter_Login_PIN_Dialog:
+{
 	loop, 6
-		Mouse_Click(577,1213, {Timeout: 5}) ; , {Timeout: Delay_Medium+0}) ; Tap backspace
+		Mouse_Click(577,1213, {Timeout: 5}) ; , {Timeout: Delay_Micro+0}) ; Tap backspace
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Enter_User_PIN := StrSplit(User_PIN)
@@ -730,6 +736,7 @@ BruteForcePIN:
 {
 	; MsgBox, incorrect PIN: %User_PIN%
 	User_PIN_INIT := "110100"
+	Check_After_Loops := 100
 	loop, 1000000
 	{
 		User_PIN := (User_PIN_INIT + A_Index)
@@ -740,13 +747,13 @@ BruteForcePIN:
 			User_PIN := "0" . User_PIN
 			
 		if StrLen(User_PIN) > 6		
-			User_PIN := "0"	
+			User_PIN := 0	
 		
 		; MsgBox, sub:"%Subroutine_Running%" PIN:"%User_PIN%"
-		gosub Enter_Login_Password_PIN
+		gosub Enter_Login_PIN_Dialog ; Enter_Login_Password_PIN
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		
-		if (Mod(A_Index, 100) == 0)
+		if (Mod(A_Index, %Check_After_Loops%) == 0)
 		{
 			Subroutine_Running := "User_PIN " . User_PIN
 			Capture_Screen_Text := OCR([220, 551, 121, 71], "eng")
@@ -764,8 +771,8 @@ BruteForcePIN:
 		NOT_Right_PIN:
 	}
 	
-	
-	MsgBox, correct PIN: %User_PIN%
+	PIN_Start := (User_PIN-100)
+	MsgBox, correct PIN between: %PIN_Start% and %User_PIN%
 	return
 }
 
