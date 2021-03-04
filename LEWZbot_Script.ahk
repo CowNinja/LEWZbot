@@ -747,7 +747,7 @@ BruteForcePIN:
 			User_PIN := "0" . User_PIN
 			
 		if StrLen(User_PIN) > 6		
-			User_PIN := 0	
+			User_PIN := "000000"	
 		
 		; MsgBox, sub:"%Subroutine_Running%" PIN:"%User_PIN%"
 		gosub Enter_Login_PIN_Dialog ; Enter_Login_Password_PIN
