@@ -327,7 +327,7 @@ Launch_Lewz:
 	goto Launch_Lewz_Click_Icon
 
 	Launch_Lewz_Continue:
-	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
+	DllCall("Sleep","UInt",(rand_wait + 20*Delay_Long+0))
 	
 	loop, 5
 		Gosub Enter_Login_Password_PIN
@@ -349,13 +349,12 @@ Quit_LEWZ:
 	Text_To_Screen("{F5}")
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	
 	Go_Back_To_Home_Text := ["Quit"] ; ,"Quit the game"]
 	OCR_X := 150 ; 140
 	OCR_Y := 523 ; 515
 	OCR_W := 50 ; 64 ; 252
 	OCR_H := 26 ; 40 ; 155
-	loop, 10
+	loop, 5
 	{
 		if Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
 			break
@@ -365,7 +364,7 @@ Quit_LEWZ:
 		Gosub Check_Window_Geometry
 	}
 
-	Mouse_Click(327,770) ; Tap "OK"
+	Mouse_Click(340,780) ; Tap "OK"
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 
 	Text_To_Screen("{F8}") ; Home screen button
@@ -700,7 +699,7 @@ Enter_Login_Password_PIN:
 Enter_Login_PIN_Dialog:
 {
 	loop, 6
-		Mouse_Click(577,1213, {Timeout: 5}) ; , {Timeout: Delay_Micro+0}) ; Tap backspace
+		Mouse_Click(577,1213, {Timeout: Delay_Micro+0}) ; Tap backspace
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Enter_User_PIN := StrSplit(User_PIN)
