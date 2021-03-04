@@ -2130,18 +2130,14 @@ Speaker_Help:
 	OCR_H := 30 ; 60
 	loop, 2
 	{
-		loop, 2
-		{
-			Mouse_Click(630,1033) ; Tap speaker/help
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		}
+		Mouse_Click(630,1033) ; Tap speaker/help
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-		loop, 2
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-			{
-				Mouse_Click(357,570) ; Tap Claim
-				DllCall("Sleep","UInt",(rand_wait + 5*Delay_Short+0))
-			}
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+			Mouse_Click(357,570) ; Tap Claim
+		Else
+			Mouse_Click(630,1033) ; Tap speaker/help
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 
 	Gosub Go_Back_To_Home_Screen
@@ -2456,7 +2452,7 @@ Reserve_Factory:
 		loop, 2
 		{
 			Mouse_Click(610,1200) ; Tap Alliance Menu
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 			loop, 4
 				if Search_Captured_Text_OCR(["Alliance"]).Found
 					break
