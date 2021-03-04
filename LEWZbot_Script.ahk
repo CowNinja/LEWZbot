@@ -2128,16 +2128,24 @@ Speaker_Help:
 	OCR_Y := 565 ; 550
 	OCR_W := 75 ; 110
 	OCR_H := 30 ; 60
+	
 	loop, 2
-	{
 		Mouse_Click(630,1033) ; Tap speaker/help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
+	loop, 3
+	{
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-			Mouse_Click(357,570) ; Tap Claim
+		{
+			Mouse_Click(360,570) ; Tap Claim
+			break
+		}
 		Else
+		{
 			Mouse_Click(630,1033) ; Tap speaker/help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		}
 	}
 
 	Gosub Go_Back_To_Home_Screen
