@@ -3,8 +3,8 @@
 
 ## Goals (for proposed multithread idea):
 - Ability to run and control multiple Android VM (Virtual Machines) concurrently via adb (Android debug bridge) over network.
-  - Flowchart of ideas (DRAFT):
-![LEWZbot Main program FlowChart](Diagrams/LEWZ_Overview_002.svg)
+  - Flowchart of Main_Program ideas (DRAFT):
+![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Main_Program.jpg)
   - pseudo code outlining the idea in broad strokes:
 ```
 ; load list of account credentials into accounts_array
@@ -29,7 +29,11 @@ Use_Available_VM(credentials)
   VM.In_Use = True ; Mark selected VM as in-use
   return VM_Details ; IP and port number of used virtual machine
 }
-
+```
+  - Flowchart of Child_Process ideas (DRAFT):
+![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Child_Process.jpeg)
+  - pseudo code outlining the idea in broad strokes:
+```
 Threaded_Routine_Execution.ahk
 {
   log into retrieved account using available VM_Details
@@ -38,6 +42,111 @@ Threaded_Routine_Execution.ahk
   VM_Details.In_Use = False
 }
 ```
+  - Flowchart of ScreenCap and OCR ideas (DRAFT):
+![LEWZbot Main program FlowChart](Diagrams/LEWZbot_ScreenCap_and_OCR.jpg)
+  - Flowchart of Go_Back_to_Home_Screen ideas (DRAFT):
+![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Go_Back_to_Home_Screen.jpg)
+  - Flowchart of Quit_LEWZ and Launch_Lewz ideas (DRAFT):
+![LEWZbot Main program FlowChart](Diagrams/LEWZbot_Quit_LEWZ_and_Launch_Lewz.jpg)
+
+## Code to Flowchart progress:
+
+### Main functions/subroutines:
+[X] Launch_Lewz
+[X] Quit_LEWZ
+[ ] Reset_Posit
+[X] Go_Back_To_Home_Screen
+[ ] Switch_Account
+[ ] Enter_Login_Password_PIN
+[ ] BruteForcePIN
+
+### position Dependant subroutines:
+[ ] Peace_Shield
+[ ] Collect_Collisions
+[ ] Collect_Equipment_Crafting
+[ ] Collect_Recruits
+[ ] Collect_Runes
+[ ] Collect_Cafeteria
+[ ] Depot_Rewards
+[ ] Collect_Chips_Underground
+[ ] Adventure_Missions
+[ ] Train_Daily_Requirement
+[ ] Activity_Center_Wonder
+[ ] Golden_Chest
+
+### NOT position Dependant subroutines:
+[ ] Speaker_Help
+[ ] Drop_Zone
+[ ] Benefits_Center
+[ ] Speaker_Help
+[ ] Active_Skill
+[ ] Donate_Tech
+[ ] VIP_Shop
+[ ] Mail_Collection
+[ ] Alliance_Boss
+[ ] Gather_Resources
+[ ] Reserve_Factory
+[ ] Desert_Oasis
+[ ] Gather_On_Base_RSS
+[ ] Alliance_Wages
+[ ] Get_Inventory
+[ ] Get_User_Info
+[ ] Get_User_Location
+[ ] Send_Mail_To_Boss
+[ ] Send_Message_In_Chat
+[ ] Base_Search_World_Map
+[ ] Get_Window_Geometry
+[ ] Check_Window_Geometry
+[ ] Collect_Red_Envelopes
+[ ] Refresh_LogFiles
+
+### Cowninja Imported functions:
+[ ] Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := "")
+[ ] IsWindowVisible(App_Title)
+[ ] WindowFromPoint(x, y)
+[ ] Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
+[ ] OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
+[ ] Control_GetInfo(Win_Control, Options := "")
+[ ] Mouse_Click(X,Y, Options := "")
+[ ] Key_Menu()
+[ ] GUI_Update()
+[ ] Mouse_Drag(X1, Y1, X2, Y2, Options := "")
+[ ] Mouse_Move(X1, Y1, X2, Y2, Options := "")
+[ ] Mouse_GetPos(Options := 3)
+[ ] Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse")
+[ ] Search_OCR(OCR_Array, Options := "")
+[ ] DropFiles(window, files*)
+[X] Search_Captured_Text_OCR(Search_Text_Array, Options := "")
+[ ] Search_Pixels(Search_Pixels_Array, Options := "")
+[ ] Search_Images(Search_Images_Array, Options := "")
+[ ] Text_To_Log(ByRef Input_Array)
+[ ] Text_To_Screen(Text_To_Send, Options := "")
+[ ] IsWindowChildOf(aChild, aParent)
+[ ] EnumChildFindHwnd(aWnd, lParam)
+[ ] EnumChildFindPoint(aWnd, lParam)
+[ ] MsgBox(Message := "Press Ok to Continue.", Title := "", Type := 0, B1 := "", B2 := "", B3 := "", Time := "")
+[ ] InputBox1(Title, Prompt, Options := "")
+[ ] InputBox2(Title, Prompt, o := "")
+[ ] RunWaitOne(command)
+[ ] RunNoWaitOne(command)
+[ ] RunWaitMany(commands)
+[ ] GetRandom(p_Input,p_Delim="",p_Omit="")
+[ ] MsgBoxGetResult()
+[ ] Convert_OCR_Value(RSS_VAR_OLD)
+[ ] isEmptyOrEmptyStringsOnly(inputArray)
+[ ] DateAdd(DateTime, Time, TimeUnits)
+[ ] DateDiff(DateTime1, DateTime2, TimeUnits)
+[ ] FormatTime(YYYYMMDDHH24MISS:="", Format:="")
+[ ] ClipBoard_Save()
+[ ] ClipBoard_Restore()
+[ ] Mouse_Save()
+[ ] Mouse_Restore()
+[ ] Window_Save()
+[ ] Window_Restore()
+[ ] All_Save()
+[ ] All_Restore()
+
+## Real world examples:
 - example of adb Commands used to connect to android device over network:
   - Connect to Android virtual machine via ADB over Network:
 On the computer, start adb in tcpip mode:
