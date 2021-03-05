@@ -71,99 +71,99 @@ Threaded_Routine_Execution.ahk
 ## Code to Flowchart progress:
 
 ### Main functions/subroutines:
-[X] Launch_Lewz
-[X] Quit_LEWZ
-[ ] Reset_Posit
-[X] Go_Back_To_Home_Screen
-[ ] Switch_Account
-[ ] Enter_Login_Password_PIN
-[ ] BruteForcePIN
+- [X] Launch_Lewz
+- [X] Quit_LEWZ
+- [ ] Reset_Posit
+- [X] Go_Back_To_Home_Screen
+- [ ] Switch_Account
+- [ ] Enter_Login_Password_PIN
+- [ ] BruteForcePIN
 
 ### position Dependant subroutines:
-[ ] Peace_Shield
-[ ] Collect_Collisions
-[ ] Collect_Equipment_Crafting
-[ ] Collect_Recruits
-[ ] Collect_Runes
-[ ] Collect_Cafeteria
-[ ] Depot_Rewards
-[ ] Collect_Chips_Underground
-[ ] Adventure_Missions
-[ ] Train_Daily_Requirement
-[ ] Activity_Center_Wonder
-[ ] Golden_Chest
+- [ ] Peace_Shield
+- [ ] Collect_Collisions
+- [ ] Collect_Equipment_Crafting
+- [ ] Collect_Recruits
+- [ ] Collect_Runes
+- [ ] Collect_Cafeteria
+- [ ] Depot_Rewards
+- [ ] Collect_Chips_Underground
+- [ ] Adventure_Missions
+- [ ] Train_Daily_Requirement
+- [ ] Activity_Center_Wonder
+- [ ] Golden_Chest
 
 ### NOT position Dependant subroutines:
-[ ] Speaker_Help
-[ ] Drop_Zone
-[ ] Benefits_Center
-[ ] Speaker_Help
-[ ] Active_Skill
-[ ] Donate_Tech
-[ ] VIP_Shop
-[ ] Mail_Collection
-[ ] Alliance_Boss
-[ ] Gather_Resources
-[ ] Reserve_Factory
-[ ] Desert_Oasis
-[ ] Gather_On_Base_RSS
-[ ] Alliance_Wages
-[ ] Get_Inventory
-[ ] Get_User_Info
-[ ] Get_User_Location
-[ ] Send_Mail_To_Boss
-[ ] Send_Message_In_Chat
-[ ] Base_Search_World_Map
-[ ] Get_Window_Geometry
-[ ] Check_Window_Geometry
-[ ] Collect_Red_Envelopes
-[ ] Refresh_LogFiles
+- [ ] Speaker_Help
+- [ ] Drop_Zone
+- [ ] Benefits_Center
+- [ ] Speaker_Help
+- [ ] Active_Skill
+- [ ] Donate_Tech
+- [ ] VIP_Shop
+- [ ] Mail_Collection
+- [ ] Alliance_Boss
+- [ ] Gather_Resources
+- [ ] Reserve_Factory
+- [ ] Desert_Oasis
+- [ ] Gather_On_Base_RSS
+- [ ] Alliance_Wages
+- [ ] Get_Inventory
+- [ ] Get_User_Info
+- [ ] Get_User_Location
+- [ ] Send_Mail_To_Boss
+- [ ] Send_Message_In_Chat
+- [ ] Base_Search_World_Map
+- [ ] Get_Window_Geometry
+- [ ] Check_Window_Geometry
+- [ ] Collect_Red_Envelopes
+- [ ] Refresh_LogFiles
 
 ### Cowninja Imported functions:
-[ ] Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := "")
-[ ] IsWindowVisible(App_Title)
-[ ] WindowFromPoint(x, y)
-[ ] Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
-[ ] OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
-[ ] Control_GetInfo(Win_Control, Options := "")
-[ ] Mouse_Click(X,Y, Options := "")
-[ ] Key_Menu()
-[ ] GUI_Update()
-[ ] Mouse_Drag(X1, Y1, X2, Y2, Options := "")
-[ ] Mouse_Move(X1, Y1, X2, Y2, Options := "")
-[ ] Mouse_GetPos(Options := 3)
-[ ] Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse")
-[ ] Search_OCR(OCR_Array, Options := "")
-[ ] DropFiles(window, files*)
-[X] Search_Captured_Text_OCR(Search_Text_Array, Options := "")
-[ ] Search_Pixels(Search_Pixels_Array, Options := "")
-[ ] Search_Images(Search_Images_Array, Options := "")
-[ ] Text_To_Log(ByRef Input_Array)
-[ ] Text_To_Screen(Text_To_Send, Options := "")
-[ ] IsWindowChildOf(aChild, aParent)
-[ ] EnumChildFindHwnd(aWnd, lParam)
-[ ] EnumChildFindPoint(aWnd, lParam)
-[ ] MsgBox(Message := "Press Ok to Continue.", Title := "", Type := 0, B1 := "", B2 := "", B3 := "", Time := "")
-[ ] InputBox1(Title, Prompt, Options := "")
-[ ] InputBox2(Title, Prompt, o := "")
-[ ] RunWaitOne(command)
-[ ] RunNoWaitOne(command)
-[ ] RunWaitMany(commands)
-[ ] GetRandom(p_Input,p_Delim="",p_Omit="")
-[ ] MsgBoxGetResult()
-[ ] Convert_OCR_Value(RSS_VAR_OLD)
-[ ] isEmptyOrEmptyStringsOnly(inputArray)
-[ ] DateAdd(DateTime, Time, TimeUnits)
-[ ] DateDiff(DateTime1, DateTime2, TimeUnits)
-[ ] FormatTime(YYYYMMDDHH24MISS:="", Format:="")
-[ ] ClipBoard_Save()
-[ ] ClipBoard_Restore()
-[ ] Mouse_Save()
-[ ] Mouse_Restore()
-[ ] Window_Save()
-[ ] Window_Restore()
-[ ] All_Save()
-[ ] All_Restore()
+- [ ] Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := "")
+- [ ] IsWindowVisible(App_Title)
+- [ ] WindowFromPoint(x, y)
+- [ ] Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
+- [ ] OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText="")
+- [ ] Control_GetInfo(Win_Control, Options := "")
+- [ ] Mouse_Click(X,Y, Options := "")
+- [ ] Key_Menu()
+- [ ] GUI_Update()
+- [ ] Mouse_Drag(X1, Y1, X2, Y2, Options := "")
+- [ ] Mouse_Move(X1, Y1, X2, Y2, Options := "")
+- [ ] Mouse_GetPos(Options := 3)
+- [ ] Mouse_MoveControl(X, Y, Control="", WinTitle="", WinText="", Options="", ExcludeTitle="", ExcludeText="", RelativeTo="Client", TargetType="Mouse")
+- [ ] Search_OCR(OCR_Array, Options := "")
+- [ ] DropFiles(window, files*)
+- [X] Search_Captured_Text_OCR(Search_Text_Array, Options := "")
+- [ ] Search_Pixels(Search_Pixels_Array, Options := "")
+- [ ] Search_Images(Search_Images_Array, Options := "")
+- [ ] Text_To_Log(ByRef Input_Array)
+- [ ] Text_To_Screen(Text_To_Send, Options := "")
+- [ ] IsWindowChildOf(aChild, aParent)
+- [ ] EnumChildFindHwnd(aWnd, lParam)
+- [ ] EnumChildFindPoint(aWnd, lParam)
+- [ ] MsgBox(Message := "Press Ok to Continue.", Title := "", Type := 0, B1 := "", B2 := "", B3 := "", Time := "")
+- [ ] InputBox1(Title, Prompt, Options := "")
+- [ ] InputBox2(Title, Prompt, o := "")
+- [ ] RunWaitOne(command)
+- [ ] RunNoWaitOne(command)
+- [ ] RunWaitMany(commands)
+- [ ] GetRandom(p_Input,p_Delim="",p_Omit="")
+- [ ] MsgBoxGetResult()
+- [ ] Convert_OCR_Value(RSS_VAR_OLD)
+- [ ] isEmptyOrEmptyStringsOnly(inputArray)
+- [ ] DateAdd(DateTime, Time, TimeUnits)
+- [ ] DateDiff(DateTime1, DateTime2, TimeUnits)
+- [ ] FormatTime(YYYYMMDDHH24MISS:="", Format:="")
+- [ ] ClipBoard_Save()
+- [ ] ClipBoard_Restore()
+- [ ] Mouse_Save()
+- [ ] Mouse_Restore()
+- [ ] Window_Save()
+- [ ] Window_Restore()
+- [ ] All_Save()
+- [ ] All_Restore()
 
 ## Real world examples:
 - example of adb Commands used to connect to android device over network:
