@@ -1,5 +1,5 @@
 ; #####################################################################################
-; FUNCTIONS
+; FUNCTIONS OVERVIEW
 ; #####################################################################################
 ;
 ; find functions: ^[^\h][^\(\r\n\h]+\(
@@ -12,6 +12,8 @@
 ;	OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
 ;	Control_GetInfo(Win_Control, Options := ""){
 ;	Mouse_Click(X,Y, Options := "") {
+;	Key_Menu() {
+;	GUI_Update() {
 ;	Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 ;	Mouse_Move(X1, Y1, X2, Y2, Options := "") {
 ;	Mouse_GetPos(Options := 3) {
@@ -21,10 +23,12 @@
 ;	Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 ;	Search_Pixels(Search_Pixels_Array, Options := "") {
 ;	Search_Images(Search_Images_Array, Options := "") {
+;	Text_To_Log(ByRef Input_Array)
 ;	Text_To_Screen(Text_To_Send, Options := "") {
 ;	IsWindowChildOf(aChild, aParent) {
 ;	EnumChildFindHwnd(aWnd, lParam) {
 ;	EnumChildFindPoint(aWnd, lParam) {
+;	MsgBox(Message := "Press Ok to Continue.", Title := "", Type := 0, B1 := "", B2 := "", B3 := "", Time := "") {
 ;	InputBox1(Title, Prompt, Options := "") {
 ;	InputBox2(Title, Prompt, o := "") {
 ;	RunWaitOne(command) {
@@ -34,6 +38,9 @@
 ;	MsgBoxGetResult() {
 ;	Convert_OCR_Value(RSS_VAR_OLD) {
 ;	isEmptyOrEmptyStringsOnly(inputArray) {
+;	DateAdd(DateTime, Time, TimeUnits)
+;	DateDiff(DateTime1, DateTime2, TimeUnits)
+;	FormatTime(YYYYMMDDHH24MISS:="", Format:="")
 ;	ClipBoard_Save() {
 ;	ClipBoard_Restore() {
 ;	Mouse_Save()  {
