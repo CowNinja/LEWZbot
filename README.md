@@ -70,7 +70,7 @@ Threaded_Routine_Execution.ahk
 
 ## Code to Flowchart progress:
 
-### Main functions/subroutines:
+### Main functions/subroutines imported from [LEWZbot_Script.ahk](LEWZbot_Script.ahk):
 - [X] Launch_Lewz
 - [X] Quit_LEWZ
 - [ ] Reset_Posit
@@ -119,7 +119,7 @@ Threaded_Routine_Execution.ahk
 - [ ] Collect_Red_Envelopes
 - [ ] Refresh_LogFiles
 
-### Cowninja Imported functions:
+### Additional functions imported from [CowNinja_Functions.ahk](lib/CowNinja_Functions.ahk):
 - [ ] Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := "")
 - [ ] IsWindowVisible(App_Title)
 - [ ] WindowFromPoint(x, y)
