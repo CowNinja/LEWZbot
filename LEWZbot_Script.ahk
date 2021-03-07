@@ -1531,26 +1531,17 @@ Benefits_Center:
 	Subroutine_Running := "Benefits_Center"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; Initialize text to search for
-	Battle_Honor_text := "BattleHonor"
-	Daily_Signin_text := "Sign"
-	Daily_Signin_text2 := "LOGIN"
-	Monthly_Package_text := "ackage" ; "MonthlyPackage" "Monthly PRackage", "Rackage", "Monthly Package"
-	Monthly_Signin_text := "MonthlySign"
-	Select_Reward_text := "SelectReward"
-	Selection_Chest_text := "SelectionChest"
-	Single_Cumulation_text := "Cumulation"
-	Warrior_Trial_text := "Warrior" ; "trial"
-	Claim_text := "Claim"
-	
-	; Select_Reward_text := OCR([15, 210, 133, 30], "eng")
-	; Selection_Chest_text := OCR([176, 210, 133, 25], "eng")
-	; Single_Cumulation_text := OCR([354, 210, 105, 50], "eng")
-	; Daily_Signin_text := OCR([530, 210, 72, 30], "eng")
-	; Monthly_Signin_text := OCR([8, 209, 136, 30], "eng")
-	; Battle_Honor_text := OCR([189, 207, 110, 30], "eng")
-	; Monthly_Package_text := OCR([400, 200, 92, 47], "eng")
-
+	Subroutines_Text_Array := {Battle_Honor_Collect: "BattleHonor"
+		, Daily_Signin: "Sign"
+		, Daily_Signin: "LOGIN"
+		, Monthly_Package_Collect:"MonthlyP"
+		, Monthly_Signin:"MonthlyS"
+		, Select_Reward:"SelectReward"
+		, Selection_Chest:"SelectionChest"
+		, Single_Cumulation:"Cumulation"
+		, Warrior_Trial:"Warrior"
+		, Claim_Buttons:"Claim"}
+		
 	; "ReactionFurnace"
 	; "Warriortrial"
 	; "WarZAccountbindrewards"
@@ -1581,24 +1572,19 @@ Benefits_Center:
 	loop, 2
 		Mouse_Click(625,310) ; Tap Benefits Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait for Benefits Center to load
+	Gosub Benefits_Center_Reload
 
 	loop, 2
 	{
 		Gosub Benefits_Check_Tabs
-		Gosub Benefits_Check_Tabs
 		Gosub Go_Back_To_Home_Screen
+		Gosub Benefits_Center_Reload
 	}
-	Goto Benefits_Center_END
+	; Goto Benefits_Center_END
 
-	; loop, 4
-	{
-		; Gosub Benefits_Center_Reload
-		Gosub Benefits_Check_Tabs
-		Loop, 3
-			Gosub Benefits_swipe_Check_Tabs
-		Gosub Go_Back_To_Home_Screen
-	}
-	; return
+	Gosub Benefits_Check_Tabs
+	Loop, 3
+		Gosub Benefits_swipe_Check_Tabs
 
 	Goto Benefits_Center_END
 
@@ -1636,99 +1622,57 @@ Benefits_Center:
 	Benefits_Check_Tabs:
 	Subroutine_Running := "Benefits_Check_Tabs"
 	{
-
-		; Capture_Screen_Text := OCR([0, 180, 160, 80], "eng")
-		; Capture_Screen_Text := OCR([160, 180, 160, 80], "eng")
-		; Capture_Screen_Text := OCR([320, 180, 160, 80], "eng")
-		; Capture_Screen_Text := OCR([480, 180, 160, 80], "eng")
-
-		Benefits_X_Min := 0 ; 15 ; 0
+		Benefits_X_Min := 5 ; 15 ; 0
 		Benefits_X_Max := 480 ; 510 ; 409
 		Benefits_OCR_X := Benefits_X_Min
-		Benefits_OCR_Y := 200 ; 180 ; 184
-		Benefits_OCR_W := 170 ; 272
-		Benefits_OCR_H := 80 ; 72
+		Benefits_OCR_Y := 195 ; 180 ; 184
+		Benefits_OCR_W := 160 ; 272
+		Benefits_OCR_H := 50 ; 72
 		Benefits_X_Delta := 160 ; 135 ; 165
-		Benefits_Click_X := (Benefits_OCR_X + 2/Benefits_OCR_W)
-		Benefits_Click_Y := (Benefits_OCR_Y + 2/Benefits_OCR_H)
-		; X=0-684, 684/5=136, and 136*2=272, 0,136,272,408,544,680
-		; 684/4=171, 684/3=228
-		; or 484/3=161
+		Benefits_Click_X := round(Benefits_X_Min + Benefits_X_Delta/2)+0 ; round(Benefits_OCR_X + 2/Benefits_OCR_W)+0
+		Benefits_Click_Y := round(Benefits_OCR_Y + 2/Benefits_OCR_H)+0
+		
+		Mouse_Click(645,249) ; Tap to clear scrolling messages
+		; Mouse_Click(642,216) ; Tap to clear scrolling messages
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait for tab to load
+		Benefits_Center_Capture := []
+		loop, 4
+		{
+			Benefits_Center_Capture[A_Index] := RegExReplace(OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng"),"[^A-Za-z]+") ; [\r\n\h-_—]+")
+			Benefits_OCR_X += Benefits_X_Delta
+		}
+		
+		Benefits_Center_01 := Benefits_Center_Capture[1]
+		Benefits_Center_02 := Benefits_Center_Capture[2]
+		Benefits_Center_03 := Benefits_Center_Capture[3]
+		Benefits_Center_04 := Benefits_Center_Capture[4]
+		; MsgBox, 0:%Benefits_Center_00%`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
+		
+		; Benefits_Center_Capture := [Benefits_Center_01,Benefits_Center_02,Benefits_Center_03,Benefits_Center_04]
 
 		loop, 4
 		{
-			Mouse_Click(645,249) ; Tap to clear scrolling messages
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0)) ; wait for tab to load
-			loop, 2
+			Search_Captured_Text := Benefits_Center_Capture[A_index]
+
+			For Subroutine,Benefit_Title in Subroutines_Text_Array
 			{
-				Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Next Tab in Benefits Center
-				DllCall("Sleep","UInt",(rand_wait + 4*Delay_Short+0)) ; wait for tab to load
+				; Populate account variables from next keyed array item
+				; Benefit_Subroutine := Subroutine
+				; Benefit_Title := Text
+				If (RegExMatch(Search_Captured_Text,Benefit_Title))
+				{
+					Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Next Tab in Benefits Center
+					; MsgBox, index:%A_Index%`nSubroutine:"%Subroutine%"`nDoes "%Search_Captured_Text%" contain "%Benefit_Title%"?`n(Captured_Text = Benefit_Title) Click:(%Benefits_Click_X%,%Benefits_Click_Y%)`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
+					DllCall("Sleep","UInt",(rand_wait + 4*Delay_Long+0)) ; wait for tab to load
+					if IsLabel(Subroutine)
+						Gosub %Subroutine%
+					; MsgBox, returned from %Subroutine%
+				}
 			}
-			; DllCall("Sleep","UInt",(rand_wait + 4*Delay_Short+0)) ; wait for tab to load
-			; Capture_Screen_Text := ""
-			Capture_Screen_Text := OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng") ; benefit tab 1
-			Gosub Benefits_Selection_and_Run
-			Benefits_OCR_X += Benefits_X_Delta
-			Benefits_Click_X := (Benefits_OCR_X + Benefits_X_Delta)
+			Benefits_Click_X += Benefits_X_Delta
 		}
+		; MsgBox, index:%A_Index%`nSubroutine:"%Subroutine%"`nDoes "%Search_Captured_Text%" contain "%Benefit_Title%"?`n(Captured_Text = Benefit_Title) Click:(%Benefits_Click_X%,%Benefits_Click_Y%)`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
 		Gosub Benefits_Center_Reload
-		return
-	}
-
-	Benefits_Selection_and_Run:
-	{
-		Subroutine_Running := Benefits_Selection_and_Run
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0)) ; wait for tab to load
-
-		loop, 5
-		{
-			if (Capture_Screen_Text = "")
-				Capture_Screen_Text := OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng")
-			else
-				break
-		}
-
-		loop, 5
-		{
-			if (Capture_Screen_Text = "")
-				Capture_Screen_Text := OCR([0, 288, 300, 112], "eng")
-			else
-				break
-		}
-
-		Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h-_]+")
-
-		; MsgBox, Text Found:%Capture_Screen_Text%
-
-		If (RegExMatch(Capture_Screen_Text,Monthly_Signin_text))
-			Gosub Monthly_Signin
-		Else If (RegExMatch(Capture_Screen_Text,Select_Reward_text))
-			Gosub Select_Reward
-		Else If (RegExMatch(Capture_Screen_Text,Single_Cumulation_text))
-			Gosub Single_Cumulation
-		Else If (RegExMatch(Capture_Screen_Text,Warrior_Trial_text))
-			Gosub Warrior_Trial
-		Else If (RegExMatch(Capture_Screen_Text,Selection_Chest_text))
-			Gosub Selection_Chest
-		Else If (RegExMatch(Capture_Screen_Text,Battle_Honor_text))
-			Gosub Battle_Honor_Collect
-		Else If (RegExMatch(Capture_Screen_Text,Monthly_Package_text))
-			Gosub Monthly_Package_Collect
-		Else If (RegExMatch(Capture_Screen_Text,Daily_Signin_text))
-			Gosub Daily_Signin
-		Else If (RegExMatch(Capture_Screen_Text,Claim_text))
-			Gosub Claim_Buttons
-		Else If (RegExMatch(Capture_Screen_Text,Daily_Signin_text2))
-			Gosub Daily_Signin
-
-		; else
-		; MsgBox, 4, Text Not Found, Text Not Found in %Capture_Screen_Text% (4 Second Timeout), 4
-
-		Gosub Benefits_Center_Reload
-
-		Benefits_Text_Found:
-		Capture_Screen_Text := ""
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait to read next tab
 		return
 	}
 	return
@@ -1776,7 +1720,8 @@ Benefits_Center:
 		; Benefits Center Swipe Right One position
 		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
+		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
+		Mouse_Drag(600, 187, 245, 187, {EndMovement: T, SwipeTime: 1000}) ; 324 is half
 	}
 	return
 
@@ -2039,7 +1984,7 @@ Benefits_Center:
 
 		; Swipe Up X times
 		loop, 4
-			Mouse_Drag(133, 1027, 115, 522, {EndMovement: F, SwipeTime: 500})
+			Mouse_Drag(300, 1030, 300, 650, {EndMovement: F, SwipeTime: 1000})
 
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
