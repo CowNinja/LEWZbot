@@ -900,54 +900,54 @@ Peace_Shield:
 		
 		if At_War
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires11 = "Thursday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires11 = "Friday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour >= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else if (Shield_Expires11 = "Sunday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, No shield needed. (10 sec Timeout & auto),10
+			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, No shield needed. (5 sec Timeout & auto),5
 			Goto, Peace_Shield_END
 		}
 	}
 	
-	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (10 second Timeout & skip),10
+	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (5 second Timeout & skip),5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
 		goto Activate_Shield
@@ -998,7 +998,7 @@ Peace_Shield:
 	Goto, Shield_Not_Selected
 	
 	Shield_Not_Selected:
-	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again? (10 second Timeout & skip),10
+	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again? (5 second Timeout & skip),5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
 		Goto, Shield_Open_Base
@@ -1014,7 +1014,7 @@ Peace_Shield:
 			Mouse_Click(336,781) ;  Left, 1}  ; Tap Get & Use button, to confirm buying shield
 	
 	Peace_Shield_END:	
-	MsgBox, 4, , Pause script to place shield? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
