@@ -72,7 +72,7 @@ class MyObject
 	}
 }
 
-
+; code to reposition all message box dialoges adjacent to right side of MEMUplay window
 OnMessage(0x44, "Move_MsgBox")
 Move_MsgBox(P)
 {
@@ -163,7 +163,7 @@ Move_MsgBox(P)
 	Global App_Win_Y := 0
 	Global App_WinWidth := 730
 	Global App_WinHeight := 1249
-	; actual Game Area within MEMUplay:
+	; actual Game Area within MEMUplay, based on MEMUplay being set to 730 x 1249:
 	; ClassNN: Qt5QWindowIcon19
 	; Text: RenderWindowWindow
 	; Client: x: 1 y: 32 w: 689 h: 1216
