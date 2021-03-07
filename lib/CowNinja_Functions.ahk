@@ -370,7 +370,7 @@ GUI_Update() {
 Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
-	SwipeTime := (Options.HasKey("SwipeTime")) ? Options.SwipeTime : "10"
+	SwipeTime := (Options.HasKey("SwipeTime")) ? Options.SwipeTime : "1000"
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	EndMovement := (Options.HasKey("EndMovement")) ? Options.EndMovement : True
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
@@ -382,58 +382,48 @@ Mouse_Drag(X1, Y1, X2, Y2, Options := "") {
 	; CoordMode Mouse, Client ; Coordinates are relative to the active window's client area, which excludes the window's title bar, menu (if it has a standard one) and borders. Client coordinates are less dependent on OS version and theme.
 	CoordMode, %CoordModeTargetType%, %CoordModeRelativeTo%
 
+	Steps := 16
 	X_Delta := (X2 - X1)
 	Y_Delta := (Y2 - Y1)
+	X_Step := round(X_Delta/Steps)+0 ; celi(number) ; round up, floor(number) ; round down
+	Y_Step := round(Y_Delta/Steps)+0 ; celi(number) ; round up, floor(number) ; round down
 	Move_X := X1
 	Move_Y := Y1
-	Steps := 16
-	; FileAppend, %A_NOW%`,Down`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
 
-	/*
-	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X1% y%Y1% D NA
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X2% y%Y2% U NA
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
-	MsgBox, Done
-	*/
-
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
 	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X1% y%Y1% D NA
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short))
-	;Mouse_Click(X1,Y1, {DownUp: Down, Timeout: 0})
+	
 	loop, %Steps%
 	{
-		Move_X := Round(X1 + A_Index * (X_Delta/Steps))+0
-		Move_Y := Round(Y1 + A_Index * (Y_Delta/Steps))+0
-		; Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title)
-		; Mouse_MoveControl(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
+		Move_X += X_Step
+		Move_Y += Y_Step
 		Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title, "", "L K")
 		DllCall("Sleep","UInt",(SwipeTime/Steps))
-		; FileAppend, %A_NOW%`,Move`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
 	}
-	
 
-	; FileAppend, %A_NOW%`,UPup`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
-	; DllCall("Sleep","UInt",SwipeTime)
 	ControlClick, %Win_Control%, %FoundAppTitle%,,,, x%X2% y%Y2% U NA
 	if !EndMovement
 		return
 		
-	;Mouse_Click(X2,Y2, {DownUp: Up, Timeout: 0})
 	Steps /= 2
 	loop, (%Steps%)
 	{
-		Move_X := Round(X2 - A_Index * (X_Delta/X_Delta))+0
-		Move_Y := Round(Y2 - A_Index * (Y_Delta/Y_Delta))+0
-		if (Move_X = 0)
+		if (A_Index < (Steps/2))
+		{
+			Move_X += X_Step
+			Move_Y += Y_Step
+		}	
+		if (A_Index >= (Steps/2))
+		{
+			Move_X -= X_Step
+			Move_Y -= Y_Step
+		}	
+		if (Move_X <= 0)
 			Move_X := X2
-		if (Move_Y = 0)
+		if (Move_Y <= 0)
 			Move_Y := Y2
-		; Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title)
-		; Mouse_MoveControl(x, y, %Win_Control%, "ahk_id " %WinID%, "", "L K")
 		Mouse_MoveControl(Move_X, Move_Y, Win_Control, Win_Title, "", "L K")
 		DllCall("Sleep","UInt",(SwipeTime/Steps))
-		; FileAppend, %A_NOW%`,Move`,Move_X:`,%Move_X%`,Move_Y:`,%Move_Y%`,X1:`,%X1%`,Y1:`,%Y1%`,X2:`,%X2%`,Y2:`,%Y2%`n, %AppendCSVFile%
 	}
 
 	return
