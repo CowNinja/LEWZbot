@@ -23,15 +23,15 @@ global App_Control := "Qt5QWindowIcon19"
 Loop
 {
     Loop, 2
-        Tap("420","970")
+        Tap(420,970)
 
     Loop, 2
-        Tap("250","970")
+        Tap(250,970)
 		
     Loop, 2
     {
-        Tap("100","970")
-        Tap("340","750")
+        Tap(100,970)
+        Tap(340,750)
     }
 }
 
