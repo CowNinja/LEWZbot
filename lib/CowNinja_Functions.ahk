@@ -296,7 +296,7 @@ Mouse_Click(X,Y, Options := "") {
 	DllCall("Sleep","UInt",Timeout)		; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
 	GUI_Update()
 	
-	stdout.WriteLine(A_Now " Executing Mouse_Click for FoundAppTitle " FoundAppTitle " Subroutine " Subroutine_Running " at " FoundPictureX "," FoundPictureY " (X,Y_Pixel: " X_Pixel "," Y_Pixel ") (rand_pixel: " rand_pixel ") (X,Y_Pixel_offset:" X_Pixel_offset "," Y_Pixel_offset ")" )
+	stdout.WriteLine(A_Now " Executing Mouse_Click for FoundAppTitle:""" FoundAppTitle """ Subroutine:""" Subroutine_Running """ at (" X_Pixel "," Y_Pixel ") = Input:(" X "," Y ") + rand_pixel:(" rand_pixel ") + Pixel_offset:(" X_Pixel_offset "," Y_Pixel_offset ")" )
 	
 	return
 
@@ -1165,4 +1165,13 @@ All_Restore() {
 	Mouse_Restore()				; Restore original mouse position
 	Window_Restore()			; Restore original window
 	return
+}
+
+;-------------------------------------------------------------------------------
+StrJoin(arr, byref del) { ; join the array with delimiters and return a string
+;-------------------------------------------------------------------------------
+    Result := ""
+    for each, val in arr
+        Result .= val del
+    return RTrim(Result, del)
 }

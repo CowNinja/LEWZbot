@@ -99,8 +99,8 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			Pause_Script := False
-			CSB_Event := True ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			CSB_Event := False ; True ; True if CSB Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -1531,17 +1531,24 @@ Benefits_Center:
 	Subroutine_Running := "Benefits_Center"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Subroutines_Text_Array := {Battle_Honor_Collect: "BattleHonor"
-		, Daily_Signin: "Sign"
-		, Daily_Signin: "LOGIN"
-		, Monthly_Package_Collect:"MonthlyP"
-		, Monthly_Signin:"MonthlyS"
-		, Select_Reward:"SelectReward"
-		, Selection_Chest:"SelectionChest"
-		, Single_Cumulation:"Cumulation"
-		, Warrior_Trial:"Warrior"
-		, Claim_Buttons:"Claim"}
+	; Array of text to search for in benefits center tabs
+	;	format: Name_of_Subroutine_To_Run: if "text inside quotes" is found
+	;	format: Name_of_Subroutine_To_Run : ["text to find", Run_True_Or_False] 
+	;	Set tabs = True (1) to completed or False (0) to be skipped.
+	Subroutines_Text_Array := {Battle_Honor_Collect : ["BattleHonor", False]
+		, Daily_Signin : ["Sign", True]
+		, Daily_Signin : ["LOGIN", True]
+		, Monthly_Package_Collect : ["MonthlyP", True]
+		, Monthly_Signin : ["MonthlyS", True]
+		, Select_Reward : ["SelectReward", True]
+		, Selection_Chest : ["SelectionChest", True]
+		, Single_Cumulation : ["Cumulation", True]
+		, Warrior_Trial : ["Warrior", True]
+		, Claim_Buttons : ["Claim", True]}
 		
+	; **********
+	; Tab titles
+	; **********
 	; "ReactionFurnace"
 	; "Warriortrial"
 	; "WarZAccountbindrewards"
@@ -1557,17 +1564,6 @@ Benefits_Center:
 	; Limited Arms Supply
 	; Arms Supply
 	; Upgrade Base
-
-	; Set tabs = True (1) to completed or False (0) to be skipped.
-	Battle_Honor_Run := False
-	Daily_Signin_Run := True
-	Monthly_Package_Collect_Run := True
-	Monthly_Signin_Run := True
-	Select_Reward_Run := True
-	Selection_Chest_Run := True
-	Single_Cumulation_Run := True
-	Claim_Buttons_Run := True
-	Warrior_Trial_Run := True
 
 	loop, 2
 		Mouse_Click(625,310) ; Tap Benefits Center
@@ -1636,42 +1632,44 @@ Benefits_Center:
 		; Mouse_Click(642,216) ; Tap to clear scrolling messages
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait for tab to load
 		Benefits_Center_Capture := []
+		
+		; Capture four tab titles and remove all none alphabetic characters and and populate Array
 		loop, 4
 		{
 			Benefits_Center_Capture[A_Index] := RegExReplace(OCR([Benefits_OCR_X, Benefits_OCR_Y, Benefits_OCR_W, Benefits_OCR_H], "eng"),"[^A-Za-z]+") ; [\r\n\h-_—]+")
 			Benefits_OCR_X += Benefits_X_Delta
 		}
-		
-		Benefits_Center_01 := Benefits_Center_Capture[1]
-		Benefits_Center_02 := Benefits_Center_Capture[2]
-		Benefits_Center_03 := Benefits_Center_Capture[3]
-		Benefits_Center_04 := Benefits_Center_Capture[4]
-		; MsgBox, 0:%Benefits_Center_00%`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
-		
-		; Benefits_Center_Capture := [Benefits_Center_01,Benefits_Center_02,Benefits_Center_03,Benefits_Center_04]
+
+		; MsgBox, % "1, Captured_Text:`n- " StrJoin(Benefits_Center_Capture, "`n- " )
 
 		loop, 4
 		{
 			Search_Captured_Text := Benefits_Center_Capture[A_index]
 
-			For Subroutine,Benefit_Title in Subroutines_Text_Array
+			For Subroutine,Value in Subroutines_Text_Array
 			{
+				stdout.WriteLine(A_Now " (inside) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
 				; Populate account variables from next keyed array item
 				; Benefit_Subroutine := Subroutine
-				; Benefit_Title := Text
-				If (RegExMatch(Search_Captured_Text,Benefit_Title))
+				; Text := Value[1]
+				; Run := Value[2] ; True or False
+				; MsgBox % "Subroutine:""" Subroutine """ Text:""" Value[1] """ Run:""" Value[2] """"
+				If (Value[2]) && If (RegExMatch(Search_Captured_Text,Value[1]))
 				{
 					Mouse_Click(Benefits_Click_X,Benefits_Click_Y) ; Tap Next Tab in Benefits Center
-					; MsgBox, index:%A_Index%`nSubroutine:"%Subroutine%"`nDoes "%Search_Captured_Text%" contain "%Benefit_Title%"?`n(Captured_Text = Benefit_Title) Click:(%Benefits_Click_X%,%Benefits_Click_Y%)`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
 					DllCall("Sleep","UInt",(rand_wait + 4*Delay_Long+0)) ; wait for tab to load
 					if IsLabel(Subroutine)
 						Gosub %Subroutine%
 					; MsgBox, returned from %Subroutine%
+					Value[2] = !Value[2]
 				}
+				
 			}
 			Benefits_Click_X += Benefits_X_Delta
 		}
-		; MsgBox, index:%A_Index%`nSubroutine:"%Subroutine%"`nDoes "%Search_Captured_Text%" contain "%Benefit_Title%"?`n(Captured_Text = Benefit_Title) Click:(%Benefits_Click_X%,%Benefits_Click_Y%)`n1:%Benefits_Center_01%`n2:%Benefits_Center_02%`n3:%Benefits_Center_03%`n4:%Benefits_Center_04%
+		; stdout.WriteLine(A_Now " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		stdout.WriteLine(A_Now " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		
 		Gosub Benefits_Center_Reload
 		return
 	}
@@ -1734,8 +1732,8 @@ Benefits_Center:
 
 	Select_Reward:
 	{
-		if !Select_Reward_Run
-			return
+		; if !Select_Reward_Run
+		; 	return
 
 		Subroutine_Running := "Select_Reward"
 
@@ -1761,8 +1759,8 @@ Benefits_Center:
 
 	Monthly_Package_Collect:
 	{
-		if !Monthly_Package_Collect_Run
-			return
+		; if !Monthly_Package_Collect_Run
+		; 	return
 
 		Subroutine_Running := "Monthly_Package_Collect"
 
@@ -1774,8 +1772,8 @@ Benefits_Center:
 
 	Warrior_Trial:
 	{
-		if !Warrior_Trial_Run
-			return
+		; if !Warrior_Trial_Run
+		; 	return
 
 		Subroutine_Running := "Warrior_Trial_Collect"
 		; Mouse_Click(500,1200) ; Tap Claim
@@ -1800,8 +1798,8 @@ Benefits_Center:
 
 	Single_Cumulation:
 	{
-		if !Single_Cumulation_Run
-			return
+		; if !Single_Cumulation_Run
+		; 	return
 
 		Subroutine_Running := "Single_Cumulation"
 
@@ -1836,8 +1834,8 @@ Benefits_Center:
 
 	Daily_Signin:
 	{
-		if !Daily_Signin_Run
-			return
+		; if !Daily_Signin_Run
+		; 	return
 
 		Subroutine_Running := "Daily_Signin"
 		Mouse_Click(103,553) ; Daily Sign-In Click Day 1
@@ -1921,8 +1919,8 @@ Benefits_Center:
 
 	Monthly_Signin:
 	{
-		if !Monthly_Signin_Run
-			return
+		; if !Monthly_Signin_Run
+		; 	return
 
 		Subroutine_Running := "Monthly_Signin"
 		; Claim Monthly
@@ -1968,8 +1966,8 @@ Benefits_Center:
 
 	Selection_Chest:
 	{
-		if !Selection_Chest_Run
-			return
+		; if !Selection_Chest_Run
+		; 	return
 
 		Subroutine_Running := "Selection_Chest"
 
@@ -2011,8 +2009,8 @@ Benefits_Center:
 	Battle_Honor_Collect:
 	Subroutine_Running := "Battle_Honor_Collect"
 	{
-		if !Battle_Honor_Run
-			return
+		; if !Battle_Honor_Run
+		; 	return
 
 		loop, 4
 		{
