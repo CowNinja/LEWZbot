@@ -166,19 +166,19 @@ Threaded_Routine_Execution.ahk
 - [ ] All_Restore()
 
 ## Real world examples:
-- example of adb Commands used to connect to android device over network:
-  - Connect to Android virtual machine via ADB over Network:
+### example of adb Commands used to connect to android device over network:
+#### Connect to Android virtual machine via ADB over Network:
 On the computer, start adb in tcpip mode:
 Command: `adb tcpip <port>`
 Example: `adb tcpip 5555`
-  - Connect to your android device over network:
+#### Connect to your android device over network:
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
-- [Android Tesseract OCR](https://github.com/yushulx/android-tesseract-ocr) how to implement a simple Android OCR application with Tesseract-OCR.
+### [Android Tesseract OCR](https://github.com/yushulx/android-tesseract-ocr) how to implement a simple Android OCR application with Tesseract-OCR.
 ![image](http://www.codepool.biz/wp-content/uploads/2014/12/do_ocr_select.png)
 
-- [adb-screenshot.sh](https://gist.github.com/hkurokawa/75b44564cc1491b5f4a2) A shell script to take a screen shot of the android device, resize it and copy to clipboard · GitHub
+### [adb-screenshot.sh](https://gist.github.com/hkurokawa/75b44564cc1491b5f4a2) A shell script to take a screen shot of the android device, resize it and copy to clipboard · GitHub
 ```
 ## This script is for taking a screen shot of an Android device.
 ## If possible, it tries to resize the image file and then copy to the clipboard.
@@ -192,7 +192,7 @@ Example: `adb connect 10.0.0.212:5555`
 
 ```
 
-- [How to capture the screen as fast as possible through adb? - Stack Overflow](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb/27098784#27098784)
+### [How to capture the screen as fast as possible through adb? - Stack Overflow](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb/27098784#27098784)
 ```
 adb shell screencap /sdcard/mytmp/rock.raw
 adb pull /sdcard/mytmp/rock.raw
@@ -209,9 +209,8 @@ hexdump -e '/4 "%d"' -s 8 -n 4 rock.raw
 convert -size 480x800 -depth 8 rock.rgba rock.png
 ```
 
-
-- Remotely control VM (Virtual Machines) running Android and push ADB shell commands via IP:
-  - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
+### Remotely control VM (Virtual Machines) running Android and push ADB shell commands via IP:
+#### example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 ```
 #!/usr/bin/env bash
 
@@ -232,7 +231,7 @@ do
   tesseract $FILE stdout >> output.txt
 done
 ```
-   - example by [haideralipunjabi](https://github.com/haideralipunjabi) of running ADB over Network using python and solving Sudoku puzzles: [sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
+#### example by [haideralipunjabi](https://github.com/haideralipunjabi) of running ADB over Network using python and solving Sudoku puzzles: [sudoku_automate](https://github.com/haideralipunjabi/sudoku_automate)
 ```
 if __name__ == "__main__":
     # Connect the device using ADB
