@@ -168,11 +168,11 @@ Threaded_Routine_Execution.ahk
 ## Real world examples:
 ### example of adb Commands used to connect to android device over network:
 #### Connect to Android virtual machine via ADB over Network:
-On the computer, start adb in tcpip mode:
-Command: `adb tcpip <port>`
+On the computer, start adb in tcpip mode: 
+Command: `adb tcpip <port>` 
 Example: `adb tcpip 5555`
-#### Connect to your android device over network:
-Command: `adb connect <ip address of android phone>:<port>`
+#### Connect to your android device over network: 
+Command: `adb connect <ip address of android phone>:<port>` 
 Example: `adb connect 10.0.0.212:5555`
 
 ### [Android Tesseract OCR](https://github.com/yushulx/android-tesseract-ocr) how to implement a simple Android OCR application with Tesseract-OCR.
@@ -189,7 +189,6 @@ Example: `adb connect 10.0.0.212:5555`
 ## 
 ## The script passes unrecognized arguments to adb command, which means you can specify "-e" or "-d"
 ## to select which device to take a screenshot of.
-
 ```
 
 ### [How to capture the screen as fast as possible through adb? - Stack Overflow](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb/27098784#27098784)
