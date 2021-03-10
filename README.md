@@ -175,6 +175,26 @@ Example: `adb tcpip 5555`
 Command: `adb connect <ip address of android phone>:<port>`
 Example: `adb connect 10.0.0.212:5555`
 
+- [Android Tesseract OCR](https://github.com/yushulx/android-tesseract-ocr) how to implement a simple Android OCR application with Tesseract-OCR.
+![image](http://www.codepool.biz/wp-content/uploads/2014/12/do_ocr_select.png)
+
+- [adb-screenshot.sh](https://gist.github.com/hkurokawa/75b44564cc1491b5f4a2) A shell script to take a screen shot of the android device, resize it and copy to clipboard · GitHub
+```
+## This script is for taking a screen shot of an Android device.
+## If possible, it tries to resize the image file and then copy to the clipboard.
+##
+## Note the script generates screenshot_yyyyMMddHHmmss.png and screenshot_yyyyMMddHHmmss_s.png
+## under /sdcard on the device (you can specify another location with '-t' option)
+## and copies it to the current working directory.
+## 
+## The script passes unrecognized arguments to adb command, which means you can specify "-e" or "-d"
+## to select which device to take a screenshot of.
+
+```
+
+- [How to capture the screen as fast as possible through adb? - Stack Overflow]
+(https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb/27098784#27098784)
+
 - Remotely control VM (Virtual Machines) running Android and push ADB shell commands via IP:
   - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
 ```
