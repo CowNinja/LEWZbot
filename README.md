@@ -193,6 +193,22 @@ Example: `adb connect 10.0.0.212:5555`
 ```
 
 - [How to capture the screen as fast as possible through adb? - Stack Overflow](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb/27098784#27098784)
+```
+adb shell screencap /sdcard/mytmp/rock.raw
+adb pull /sdcard/mytmp/rock.raw
+adb shell rm /sdcard/mytmp/rock.raw
+
+// remove the header
+tail -c +13 rock.raw > rock.rgba
+
+// extract width height and pixelformat:
+hexdump -e '/4 "%d"' -s 0 -n 4 rock.raw
+hexdump -e '/4 "%d"' -s 4 -n 4 rock.raw
+hexdump -e '/4 "%d"' -s 8 -n 4 rock.raw
+
+convert -size 480x800 -depth 8 rock.rgba rock.png
+```
+
 
 - Remotely control VM (Virtual Machines) running Android and push ADB shell commands via IP:
   - example by [james2doyle](https://gist.github.com/james2doyle): Use adb to swipe and take screenshots. Then use tesseract to OCR the images [abd-screen-ocr.sh](https://gist.github.com/james2doyle/69aed02241ab6cc4d2bdb4d818c19f27)
