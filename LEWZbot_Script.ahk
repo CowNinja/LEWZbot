@@ -115,20 +115,16 @@ while WinExist(FoundAppTitle)
 			; if Pause_Script
 			; MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
+			; Extract current UTC hour
+			Current_Hour_UTC := FormatTime(A_NowUTC, "HH")
+			Current_Day_UTC := FormatTime(A_NowUTC, dddd)
+			
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
-			FormatTime, today,, dddd
-			if (today = "Thursday") ; && Current_Hour_UTC >= 19)
-				Peace_Shield_Needed := True
-			if (today = "Friday" || today = "Saturday")
-				Peace_Shield_Needed := True
-			if (today = "Sunday") ; && Current_Hour_UTC <= 19)
+			if (Current_Day_UTC = "Friday" || Current_Day_UTC = "Saturday" || Current_Day_UTC = "Sunday")
 				Peace_Shield_Needed := True
 			if At_War
 				Peace_Shield_Needed := True
-
-			; Extract current UTC hour
-			Current_Hour_UTC := FormatTime(A_NowUTC, "HH")
 			
 			; Figure out time of day for which subroutines will run
 			if (Current_Hour_UTC >= 16 && Current_Hour_UTC < 24)
