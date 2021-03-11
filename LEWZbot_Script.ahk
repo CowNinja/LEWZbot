@@ -829,13 +829,20 @@ Peace_Shield:
 
 	Goto, Shield_Open_Base
 	Shield_Search_Buttons:
+	; Capture City Buffs position one text
 	Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21], Timeout: 0})
+	; Capture City Buffs position one text
 	Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21], Timeout: 0})
+	; Capture City Buffs Shield duration position one text
 	Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 242], Size: [200, 22], Timeout: 0})
+	; Capture City Buffs Shield duration position one text
 	Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 394], Size: [200, 22], Timeout: 0})
 		
 	Loop, 10
 	{
+		; Is City Buffs first item a shield? (Shield_Pos01.Found)? if so,
+		;	is duration of time left on shield displayed (Shield_Ends_Pos01.Found)? if so,
+		;		Shield_Ends := (Shield_Ends_Pos01.Text)
 		if Shield_Pos01.Found
 		{
 			Click_X := 165
@@ -848,7 +855,10 @@ Peace_Shield:
 			Else
 				Goto, Activate_Shield
 		}
-		
+
+		; Is City Buffs first item a shield? (Shield_Pos02.Found)? if so,
+		;	is duration of time left on shield displayed (Shield_Pos02.Found)? if so,
+		;		Shield_Ends := (Shield_Pos02.Text)
 		if Shield_Pos02.Found
 		{
 			Click_X := 200
@@ -874,75 +884,80 @@ Peace_Shield:
 
 	Shield_Already_Active:
 	{
+		; Set Shield variables to zero
 		Shield_DD := Shield_HH := Shield_MM := Shield_SS := 0
 		
-		if RegExMatch(Shield_Ends,"\d+d",Shield_Days1)
-			RegExMatch(Shield_Days1,"\d+",Shield_DD)
+		; If Shield_Ends leads with days, Extract days only into (Shield_DD)
+		if RegExMatch(Shield_Ends,"\d+d",Shield_Days)
+			RegExMatch(Shield_Days,"\d+",Shield_DD)
 		
-		if RegExMatch(Shield_Ends,"\d+\:\d+\:\d+",Shield_Hours1)
+		; extract Hours, Minutes and Days till shield expires
+		if RegExMatch(Shield_Ends,"\d+\:\d+\:\d+",Shield_HHMMSS)
 		{
-			Shield_Hours2 := RegExReplace(Shield_Hours1,"[^\d]")
-			Shield_Hour_Array := StrSplit(Shield_Hours1, ":")
-			Shield_HH := Shield_Hour_Array[1]
-			Shield_MM := Shield_Hour_Array[2]
-			Shield_SS := Shield_Hour_Array[3]
+			Shield_HHMMSS := RegExReplace(Shield_HHMMSS,"[^\d\:]")
+			Shield_HHMMSS_Array := StrSplit(Shield_HHMMSS, ":")
+			Shield_HH := Shield_HHMMSS_Array[1]
+			Shield_MM := Shield_HHMMSS_Array[2]
+			Shield_SS := Shield_HHMMSS_Array[3]
 		}
 		
-		Shield_Expires10 := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
-		Shield_Expires11 := FormatTime(A_Now, "YYYYMMDDHH24MISS")
+		; Format Shield_Ends expiration as YYYYMMDDHH24MISS format
+		Shield_Length := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
+		; Format current time as as YYYYMMDDHH24MISS format
+		Shield_NOW_Plus_Duration := FormatTime(A_Now, "YYYYMMDDHH24MISS")
 		
 		; add expiration date and time to present date and time
-		EnvAdd, Shield_Expires12, Shield_DD, d
-		EnvAdd, Shield_Expires12, Shield_HH, h
-		EnvAdd, Shield_Expires12, Shield_MM, m
-		EnvAdd, Shield_Expires12, Shield_SS, s
-		Shield_Expires13 := FormatTime(Shield_Expires12)
+		EnvAdd, Shield_NOW_Plus_Duration, Shield_DD, d
+		EnvAdd, Shield_NOW_Plus_Duration, Shield_HH, h
+		EnvAdd, Shield_NOW_Plus_Duration, Shield_MM, m
+		EnvAdd, Shield_NOW_Plus_Duration, Shield_SS, s
+		Shield_Expires_DateTime := FormatTime(Shield_NOW_Plus_Duration)
 		
 		if At_War
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
-		else if (Shield_Expires11 = "Thursday")
+		else if (Shield_Expires_DateTime = "Thursday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
-		else if (Shield_Expires11 = "Friday")
+		else if (Shield_Expires_DateTime = "Friday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
-		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour <= 19)
+		else if (Shield_Expires_DateTime = "Saturday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
-		else if (Shield_Expires11 = "Saturday" && Shield_Expires_Hour >= 19)
+		else if (Shield_Expires_DateTime = "Saturday" && Shield_Expires_Hour >= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
-		else if (Shield_Expires11 = "Sunday" && Shield_Expires_Hour <= 19)
+		else if (Shield_Expires_DateTime = "Sunday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, recommend 24hour shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires13%`, No shield needed. (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, No shield needed. (5 sec Timeout & auto),5
 			Goto, Peace_Shield_END
 		}
 	}
