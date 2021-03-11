@@ -296,16 +296,16 @@ Mouse_Click(X,Y, Options := "") {
 	DllCall("Sleep","UInt",Timeout)		; DllCall("Sleep","UInt",rand_wait + (3*Delay_Short))
 	GUI_Update()
 	
-	stdout.WriteLine(A_Now " Executing Mouse_Click for FoundAppTitle:""" FoundAppTitle """ Subroutine:""" Subroutine_Running """ at (" X_Pixel "," Y_Pixel ") = Input:(" X "," Y ") + rand_pixel:(" rand_pixel ") + Pixel_offset:(" X_Pixel_offset "," Y_Pixel_offset ")" )
+	stdout.WriteLine(A_NowUTC " Executing Mouse_Click for FoundAppTitle:""" FoundAppTitle """ Subroutine:""" Subroutine_Running """ at (" X_Pixel "," Y_Pixel ") = Input:(" X "," Y ") + rand_pixel:(" rand_pixel ") + Pixel_offset:(" X_Pixel_offset "," Y_Pixel_offset ")" )
 	
 	return
 
 	; MsgBox, 3. Mouse_Click input:(%X%:%Y%) incremented:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%)
 	; MsgBox, ControlClick, %Win_Control%, %FoundAppTitle%,, %Button%, %Clicks%, x%X_Pixel% y%Y_Pixel% NA
 	; MsgBox, Mouse_Click input:(%X%:%Y%) math:(%X_Pixel%:%Y_Pixel%) Rand_pixel:%rand_pixel% min-max(%Min_Pix%-%Max_Pix%) Ctr:"%Win_Control%" or "%FoundAppControl%" Title:"%FoundAppTitle%" Button:"%Button%" Clicks:"%Clicks%" Timeout:"%Timeout%"
-	; stdout.WriteLine(A_Now " Found " image_name " at " FoundPictureX "," FoundPictureY)
+	; stdout.WriteLine(A_NowUTC " Found " image_name " at " FoundPictureX "," FoundPictureY)
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	; FileAppend, %A_NowUTC%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NowUTC%`r`n, %AppendCSVFile%
 	
 	return
 }
@@ -325,7 +325,7 @@ Key_Menu() {
 
 	; ; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	; FileAppend, %A_NowUTC%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NowUTC%`r`n, %AppendCSVFile%
 	return
 }
 
@@ -652,7 +652,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	if (vRet = "Yes")
 		goto Search_Captured_Text_Begin
 
-	; FileAppend, %A_NOW%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NOW%`r`n, %AppendCSVFile%
+	; FileAppend, %A_NowUTC%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NowUTC%`r`n, %AppendCSVFile%
 	Return {Found: False, Value: False, Text: Capture_Screen_Text} ; return 0
 	
 	
@@ -796,7 +796,7 @@ Search_Images(Search_Images_Array, Options := "") {
 
 Text_To_Log(ByRef Input_Array)
 {
-	Output1 := Output2 := A_Now ","
+	Output1 := Output2 := A_NowUTC ","
 	For VAR,Val in Input_Array
 	{
 		if Val

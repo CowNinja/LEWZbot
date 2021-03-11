@@ -64,9 +64,9 @@ class MyObject
 	{
 		global
 		; MsgBox, MyObject is cleaning up prior to exiting...
-		stdout.WriteLine(A_Now " ****************************************** ")
-		stdout.WriteLine(A_Now " ************* GRACEFUL EXIT ************** ")
-		stdout.WriteLine(A_Now " ****************************************** ")
+		stdout.WriteLine(A_NowUTC " ****************************************** ")
+		stdout.WriteLine(A_NowUTC " ************* GRACEFUL EXIT ************** ")
+		stdout.WriteLine(A_NowUTC " ****************************************** ")
 		stdout.Close()
 		CSVout.Close()
 	}
@@ -237,9 +237,9 @@ Move_MsgBox(P)
 
 ; SetDefaults()
 
-stdout.WriteLine(A_Now " ****************************************** ")
-stdout.WriteLine(A_Now " ******** STARTUP & INITIALIZATION ******** ")
-stdout.WriteLine(A_Now " ****************************************** ")
+stdout.WriteLine(A_NowUTC " ****************************************** ")
+stdout.WriteLine(A_NowUTC " ******** STARTUP & INITIALIZATION ******** ")
+stdout.WriteLine(A_NowUTC " ****************************************** ")
 
 ; load User Logins
 User_Logins := {}

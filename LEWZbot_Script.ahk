@@ -55,7 +55,7 @@ while WinExist(FoundAppTitle)
 	loop
 	{
 		; ([Subroutine_Running,A_ThisLabel,FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
-		; stdout.WriteLine(A_Now " Main_loop, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+		; stdout.WriteLine(A_NowUTC " Main_loop, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 		; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; WinActivate ; Automatically uses the window found above.
 
 		; MouseMove UpperX+(WinWidth/2), UpperY+(WinHeight/2)
@@ -904,7 +904,7 @@ Peace_Shield:
 		; Format Shield_Ends expiration as YYYYMMDDHH24MISS format
 		Shield_Length := "000000" . Shield_DD . Shield_HH . "24" . Shield_MM . Shield_SS
 		; Format current time as as YYYYMMDDHH24MISS format
-		Shield_NOW_Plus_Duration := FormatTime(A_Now, "YYYYMMDDHH24MISS")
+		Shield_NOW_Plus_Duration := FormatTime(A_NowUTC, "YYYYMMDDHH24MISS")
 		
 		; add expiration date and time to present date and time
 		EnvAdd, Shield_NOW_Plus_Duration, Shield_DD, d
@@ -1663,7 +1663,7 @@ Benefits_Center:
 
 			For Subroutine,Value in Subroutines_Text_Array
 			{
-				stdout.WriteLine(A_Now " (inside) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+				stdout.WriteLine(A_NowUTC " (inside) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
 				; Populate account variables from next keyed array item
 				; Benefit_Subroutine := Subroutine
 				; Text := Value[1]
@@ -1682,8 +1682,8 @@ Benefits_Center:
 			}
 			Benefits_Click_X += Benefits_X_Delta
 		}
-		; stdout.WriteLine(A_Now " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
-		stdout.WriteLine(A_Now " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		; stdout.WriteLine(A_NowUTC " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		stdout.WriteLine(A_NowUTC " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
 		
 		Gosub Benefits_Center_Reload
 		return
@@ -4622,7 +4622,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX1%, %PixelSearch_UpperY1%, %PixelSearch_LowerX1%, %PixelSearch_LowerY1%, *145 *Trans0xF0F0F0 %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 1 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4632,7 +4632,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX2%, %PixelSearch_UpperY2%, %PixelSearch_LowerX2%, %PixelSearch_LowerY2%, *145 *Trans0xF0F0F0 %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 2 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4642,7 +4642,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX1%, %PixelSearch_UpperY1%, %PixelSearch_LowerX1%, %PixelSearch_LowerY1%, *145 *Trans0xFFFFFF %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 3 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4652,7 +4652,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX2%, %PixelSearch_UpperY2%, %PixelSearch_LowerX2%, %PixelSearch_LowerY2%, *145 *Trans0xFFFFFF %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_Now "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 4 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4746,7 +4746,7 @@ Base_Search_World_Map:
 				Found_City_Location := StrReplace(Found_City_Location, ",", ":")
 				; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-				stdout.WriteLine(A_Now "Found_City_Info1," Found_City_Info1 " Found_City_Info2," Found_City_Info2 ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
+				stdout.WriteLine(A_NowUTC "Found_City_Info1," Found_City_Info1 " Found_City_Info2," Found_City_Info2 ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
 
 				if (Found_City_Location = "") ; if location blank, skip
 					goto Next_Coord_Search
@@ -4759,7 +4759,7 @@ Base_Search_World_Map:
 				Last_City_Name_Found := Found_City_Name2
 				Last_City_Loc_Found := Found_City_Location
 
-				stdout.WriteLine(A_Now "Found_City_Info," Found_City_Info ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
+				stdout.WriteLine(A_NowUTC "Found_City_Info," Found_City_Info ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
 
 				Next_Coord_Search:
 				; goto End_Of_Color_Search
@@ -4848,7 +4848,7 @@ Elivate_program:
 	Subroutine_Running := "Elivate_program"
 	; ([Subroutine_Running,A_ThisLabel])
 
-	; stdout.WriteLine(A_Now " Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC " Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 
 	; PERC := Chr(37)
 	; wmic process where "Name like '%PERC%MEmu%PERC%' OR Name like '%PERC%MEmu%PERC%'" CALL setpriority "above normal"
@@ -4860,7 +4860,7 @@ Elivate_program:
 	)
 	; runwait, %comspec% /c %commands%
 
-	; stdout.WriteLine(A_Now ", commands, " commands ", result: ," RunWaitOne(commands))
+	; stdout.WriteLine(A_NowUTC ", commands, " commands ", result: ," RunWaitOne(commands))
 	; WinMinimize ; Minimize the window found by WinWait.
 	RunNoWaitOne(commands)
 	; RunWaitOne(commands)
@@ -4971,7 +4971,7 @@ Elivate_program_old:
 			WinRestore
 			; MsgBox, WinWait cmdTitle:%cmdTitle% ; C:\Program Files\AutoHotkey\AutoHotkey.exe
 			WinMinimize ; Minimize the window found by WinWait.
-			FileAppend, "%A_NOW%"`,"Function"`,"%Function%"`,"WinWait cmdTitle"`,"%cmdTitle%"`n, %AppendCSVFile%
+			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdTitle"`,"%cmdTitle%"`n, %AppendCSVFile%
 			;break
 		}
 		if WinExist("ahk_class " . cmdClass) ; ahk_class ConsoleWindowClass ; if !ErrorLevel
@@ -4981,7 +4981,7 @@ Elivate_program_old:
 			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 			WinRestore
 			; MsgBox, WinWait "ahk_class " %cmdClass% ; ahk_class ConsoleWindowClass
-			FileAppend, "%A_NOW%"`,"Function"`,"%Function%"`,"WinWait cmdClass"`,"%cmdClass%"`n, %AppendCSVFile%
+			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdClass"`,"%cmdClass%"`n, %AppendCSVFile%
 			;break
 		}
 		if WinExist("ahk_exe " . cmdEXE) ; ahk_exe AutoHotkey.exe ; if !ErrorLevel
@@ -4991,7 +4991,7 @@ Elivate_program_old:
 			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 			WinRestore
 			; MsgBox, WinWait "ahk_exe " %cmdEXE% ; ahk_exe AutoHotkey.exe
-			FileAppend, "%A_NOW%"`,"Function"`,"%Function%"`,"WinWait cmdEXE"`,"%cmdEXE%"`n, %AppendCSVFile%
+			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdEXE"`,"%cmdEXE%"`n, %AppendCSVFile%
 			;break
 		}
 		if WinExist("ahk_id " . cmdID) ; ahk_id 0x64f14dc ; if !ErrorLevel
@@ -5001,7 +5001,7 @@ Elivate_program_old:
 			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 			WinRestore
 			; MsgBox, WinWait "ahk_id " %cmdID% ; ahk_id 0x64f14dc
-			FileAppend, "%A_NOW%"`,"Function"`,"%Function%"`,"WinWait cmdID"`,"%cmdID%"`n, %AppendCSVFile%
+			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdID"`,"%cmdID%"`n, %AppendCSVFile%
 			;break
 		}
 		if WinExist("ahk_pid " . cmdPID) ; ahk_pid 16120 ; if !ErrorLevel
@@ -5011,7 +5011,7 @@ Elivate_program_old:
 			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 			WinRestore
 			; MsgBox, WinWait "ahk_pid " %cmdPID% ; ahk_pid 16120
-			FileAppend, "%A_NOW%"`,"Function"`,"%Function%"`,"WinWait cmdPID"`,"%cmdPID%"`n, %AppendCSVFile%
+			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdPID"`,"%cmdPID%"`n, %AppendCSVFile%
 			;break
 		}
 	{
@@ -5067,7 +5067,7 @@ Get_Window_Geometry:
 	Subroutine_Running := "Get_Window_Geometry"
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
 
-	; stdout.WriteLine(A_Now " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 
 	LEWZGeo := Win_GetInfo(FoundAppTitle)
 	; FoundAppTitle := LEWZGeo.Title
@@ -5087,8 +5087,8 @@ Get_Window_Geometry:
 	LowerX := FoundAppWidth + UpperX ; compute lower right X coord of app window
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
-	; stdout.WriteLine(A_Now "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
-	; stdout.WriteLine(A_Now " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
+	; stdout.WriteLine(A_NowUTC "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+	; stdout.WriteLine(A_NowUTC " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
 	return
 }
 
@@ -5098,10 +5098,10 @@ Check_Window_Geometry:
 	Subroutine_Running := "Check_Window_Geometry"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; stdout.WriteLine(A_Now " Check_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC " Check_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; stdout.WriteLine(A_Now " Inside Check_Window_Geometry, image_name: " image_name)
+	; stdout.WriteLine(A_NowUTC " Inside Check_Window_Geometry, image_name: " image_name)
 
 	LEWZGeo := Win_GetInfo(FoundAppTitle)
 	FoundAppTitle := LEWZGeo.Title
@@ -5115,7 +5115,7 @@ Check_Window_Geometry:
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 
 	; WinGetPos, FoundAppX, FoundAppY, FoundAppWidth, FoundAppHeight, %FoundAppTitle%
-	; stdout.WriteLine(A_Now "Sub:" Subroutine_Running " Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+	; stdout.WriteLine(A_NowUTC "Sub:" Subroutine_Running " Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
 
 	if FoundAppX = App_Win_X
 		if FoundAppY = App_Win_Y
