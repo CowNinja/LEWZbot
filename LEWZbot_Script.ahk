@@ -118,19 +118,22 @@ while WinExist(FoundAppTitle)
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
 			FormatTime, today,, dddd
-			if (today = "Thursday" && A_Hour >= 19)
+			if (today = "Thursday") ; && Current_Hour_UTC >= 19)
 				Peace_Shield_Needed := True
 			if (today = "Friday" || today = "Saturday")
 				Peace_Shield_Needed := True
-			if (today = "Sunday" && A_Hour <= 19)
+			if (today = "Sunday") ; && Current_Hour_UTC <= 19)
 				Peace_Shield_Needed := True
 			if At_War
 				Peace_Shield_Needed := True
 
+			; Extract current UTC hour
+			Current_Hour_UTC := FormatTime(A_NowUTC, "HH")
+			
 			; Figure out time of day for which subroutines will run
-			if (A_Hour >= 12 && A_Hour < 19)
+			if (Current_Hour_UTC >= 16 && Current_Hour_UTC < 24)
 				Routine := "End_Of_Day"
-			else if (A_Hour >= 19 || A_Hour <= 05)
+			else if (Current_Hour_UTC >= 24 || Current_Hour_UTC <= 10)
 				Routine := "New_Day"
 			else
 				Routine := "Fast"
@@ -146,7 +149,7 @@ while WinExist(FoundAppTitle)
 				; DEBUG / Troubleshooting block - BEGIN
 				; add/remove or uncomment routines to check them
 				; ******************************************
-				; MsgBox, Hour: %A_Hour% %Routine%
+				; MsgBox, Hour: %Current_Hour_UTC% %Routine%
 				; for testing routines
 				; MsgBox, 0, Pause, Press OK to start (No Timeout)
 				; Gosub Benefits_Center
@@ -208,7 +211,7 @@ while WinExist(FoundAppTitle)
 				; ** Not position dependant **
 				; ****************************
 				if CSB_Event ; || if Desert_Event
-					if !(A_Hour = 19 && A_Min <= 30)
+					if !(Current_Hour_UTC = 19 && A_Min <= 30)
 						Gosub Reserve_Factory
 				Gosub Active_Skill				
 				Gosub Donate_tech
