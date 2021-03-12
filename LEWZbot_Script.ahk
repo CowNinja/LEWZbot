@@ -121,7 +121,7 @@ while WinExist(FoundAppTitle)
 			
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
-			if (Current_Day_UTC = "Friday" || Current_Day_UTC = "Saturday" || Current_Day_UTC = "Sunday")
+			if ((Current_Day_UTC = "Friday") || (Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday"))
 				Peace_Shield_Needed := True
 			if At_War
 				Peace_Shield_Needed := True
