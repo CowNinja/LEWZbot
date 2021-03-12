@@ -117,7 +117,7 @@ while WinExist(FoundAppTitle)
 
 			; Extract current UTC hour
 			Current_Hour_UTC := FormatTime(A_NowUTC, "HH")
-			Current_Day_UTC := FormatTime(A_NowUTC, dddd)
+			Current_Day_UTC := FormatTime(A_NowUTC, "dddd")
 			
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
