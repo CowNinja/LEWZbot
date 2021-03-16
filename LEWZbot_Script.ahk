@@ -100,7 +100,7 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			Pause_Script := False
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -197,8 +197,8 @@ while WinExist(FoundAppTitle)
 				; ******************************************
 				
 				Gosub Depot_Rewards
-				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-				; Gosub Golden_Chest
+				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+					Gosub Golden_Chest
 				Gosub Speaker_Help
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
