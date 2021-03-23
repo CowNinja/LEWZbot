@@ -386,6 +386,15 @@ loop
 	; MsgBox, 1. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
 	global FoundAppClass := "Qt5QWindowIcon"
 	global FoundAppControl := "Qt5QWindowIcon19"
+	
+	/*
+	WW1 := Win_WaitRegEX("(LEWZ",,,"\")
+	WW2 := Win_WaitRegEX(NewTitle)
+	WW1_Info := % "Win_WaitRegEX()`nID:""" WW1.ID """`ntitle:""" WW1.title """"
+	WW2_Info := % "Win_WaitRegEX(NewTitle)`nID:""" WW2.ID """`ntitle:""" WW2.title """"
+	MsgBox, %WW1_Info% `n%WW2_Info%
+	*/
+	
 	; NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
 	LEWZApp := Win_WaitRegEX(NewTitle)
 	global FoundAppTitle := LEWZApp.title
@@ -393,6 +402,7 @@ loop
 	global FoundAppProcess := byref FoundAppControl ; LEWZApp.ID
 	global FoundAppID := LEWZApp.ID
 	; global FoundAppPID := LEWZApp.PID
+	; MsgBox, % "Win_WaitRegEX(NewTitle) `nTitle:" FoundAppTitle "`nClass:" FoundAppClass "`nControl:" FoundAppControl "`nProcess:" FoundAppProcess "`nID:" FoundAppID
 	
 	NewTitle := RegExReplace(FoundAppTitle,"[^A-Za-z0-9]+")
 	WinSetTitle, %NewTitle%
