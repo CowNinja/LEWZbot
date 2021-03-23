@@ -344,6 +344,9 @@ Quit_LEWZ:
 	; Gosub Reset_Posit
 	; Gosub Go_Back_To_Home_Screen
 	; DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
+	
+	Reload_MEmu()
+	return
 
 	Text_To_Screen("{F5}")
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -5219,6 +5222,14 @@ Refresh_LogFiles:
 F1::
 Gui, Show, W400 H40, Window List
 return
+
+F5::
+Reload_MEmu()
+{
+	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm MEmu")
+	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" MEmu")
+	return 1
+}
 
 F6::
 Reload_Script:
