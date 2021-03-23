@@ -285,9 +285,9 @@ else
 MsgBox, Unexpected exit
 
 
-; Reload_MEmu <--> Launch_LEWZ <--> Go_Back_To_Home_Screen
+; Reload_MEmu() <--> Launch_LEWZ() <--> Go_Back_To_Home_Screen()
 
-; Reload_MEmu calls Launch_LEWZ and NOT Go_Back_To_Home_Screen
+; Reload_MEmu() calls Launch_LEWZ() and NOT Go_Back_To_Home_Screen()
 Reload_MEmu()
 {
 	Subroutine_Running := "Reload_MEmu"
@@ -323,7 +323,7 @@ Reload_MEmu()
 	return 0
 }
 
-; Launch_LEWZ calls Go_Back_To_Home_Screen and NOT Reload_MEmu
+; Launch_LEWZ() calls Go_Back_To_Home_Screen() and NOT Reload_MEmu()
 ; Launch LEWZ app from android main screen
 Launch_LEWZ()
 {
@@ -412,9 +412,9 @@ Launch_LEWZ()
 	return 0
 }
 
-; Go_Back_To_Home_Screen simple return a true or false value,
+; Go_Back_To_Home_Screen() simple return a true or false value,
 ; if Quit dialog is detected after hitting the back button
-; Go_Back_To_Home_Screen calls neither Launch_LEWZ NOR NOT Reload_MEmu
+; Go_Back_To_Home_Screen() calls neither Launch_LEWZ() NOR NOT Reload_MEmu()
 ; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
 Go_Back_To_Home_Screen()
 {
