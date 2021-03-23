@@ -598,7 +598,7 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "70" ; "75"
 	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
 	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
-	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "8"
+	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : 0 ; "8"
 
 	Search_Captured_Text_Begin:
 	; WinRestore, %FoundAppTitle%
@@ -663,9 +663,6 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; FileAppend, %A_NowUTC%`,A_ThisLabel`,%A_ThisLabel%`,Subroutine`,%Subroutine_Running%`,End time:`,%A_NowUTC%`r`n, %AppendCSVFile%
 	Return {Found: False, Value: False, Text: Capture_Screen_Text} ; return 0
 	
-	
-	
-		
 	/*
 	; old Search captured text
 	For index, value in Search_Text_Array

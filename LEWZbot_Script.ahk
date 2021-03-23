@@ -284,34 +284,42 @@ else
 }
 MsgBox, Unexpected exit
 
+
+; Reload_MEmu <--> Launch_LEWZ <--> Go_Back_To_Home_Screen
+
 ; Reload_MEmu calls Launch_LEWZ and NOT Go_Back_To_Home_Screen
 Reload_MEmu()
 {
 	Subroutine_Running := "Reload_MEmu"
 	Gui, Status:new, , Status
 	Gui, Status:Margin, 0, 0
-	Gui, Status:add,text,, MEmu reloading... loop, %Main_Loop_Counter%
-	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
+	Gui, Status:add,text,, MEmu reloading...
 	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
 	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm MEmu")
-	Gui, Status:add,text,, ShutdownVm MEmu
+	Gui, Status:add,text,, MEmu Shutdown
 	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
 	RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" MEmu")
 	Loop, 10
 	{
-		Gui, Status:add,text,, Loading MEmu %A_Index%
-		Gui, Status:show, x731 y0 w300 h500
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+		loop, 3
 		if Launch_LEWZ()
 		{
 			Gui, Status:add,text,, MEmu Loaded!!
 			Gui, Status:show, x731 y0 w300 h500
+			GUI_Count++
 			return 1
 		}
+		
+		Gui, Status:add,text,, Loading MEmu %A_Index%
 		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
 	}
 	Gui, Status:add,text,, MEmu NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
 	return 0
 }
 
@@ -322,9 +330,9 @@ Launch_LEWZ()
 	Subroutine_Running := "Launch_LEWZ"
 	; Gui, Status:new, , Status
 	; Gui, Status:Margin, 0, 0
-	Gui, Status:add,text,, LEWZ loading... loop, %Main_Loop_Counter%
+	; Gui, Status:add,text,, LEWZ loading...
 	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
-	Gui, Status:show, x731 y0 w300 h500
+	; Gui, Status:show, x731 y0 w300 h500
 
 	Launch_LEWZ_Click_Icon:
 	/*
@@ -333,60 +341,80 @@ Launch_LEWZ()
 	OCR_Y := 536
 	OCR_W := 140
 	OCR_H := 42
-	LL_Icon01 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	LL_Icon01 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]})
 	OCR_X := 7
 	OCR_Y := 880
 	OCR_W := 140
 	OCR_H := 42
-	LL_Icon02 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	LL_Icon02 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]})
 	*/
 
-	LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42], Timeout: 0})
-	LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42], Timeout: 0})
 
 	loop, 30
 	{
+		LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42]})
+		LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42]})
+		
+		Select_App()
+		Gosub Check_Window_Geometry
+		
 		if LL_Icon01.Found
 		{
-			Mouse_Click(480,500) ; Tap LEWZ ICON
 			Gui, Status:add,text,, LEWZ icon found
+			Mouse_Click(480,500, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
 			Gui, Status:show, x731 y0 w300 h500
-			Goto Launch_LEWZ_Continue
+			GUI_Count++
+			Icon_Found := True ; Goto Launch_LEWZ_Continue
 		}
 
 		if LL_Icon02.Found
 		{
-			Mouse_Click(67,844) ; Tap LEWZ ICON
 			Gui, Status:add,text,, LEWZ icon found
+			Mouse_Click(67,844, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
 			Gui, Status:show, x731 y0 w300 h500
-			Goto Launch_LEWZ_Continue
+			GUI_Count++
+			Icon_Found := True ; Goto Launch_LEWZ_Continue
 		}
 	}
-	Launch_LEWZ_Fail:
-	return 0
+	if Icon_Found
+		Goto Launch_LEWZ_Continue
+	Else
+		return 0
 
 	Launch_LEWZ_Continue:
-	; DllCall("Sleep","UInt",(rand_wait + 20*Delay_Long+0))
+	Gui, Status:add,text,, Loading LEWZ %A_Index%
+	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
+	
+	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
+	Loop, 10
+		Gosub Enter_Login_Password_PIN
+	
 	Loop, 10
 	{
-		Gui, Status:add,text,, Loading LEWZ %A_Index%
-		Gui, Status:show, x731 y0 w300 h500
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		Gosub Enter_Login_Password_PIN
 		if Go_Back_To_Home_Screen()
 		{
 			Gui, Status:add,text,, LEWZ Loaded!!
 			Gui, Status:show, x731 y0 w300 h500
+			GUI_Count++
 			return 1
 		}
+		
+		Gui, Status:add,text,, Loading LEWZ %A_Index%
 		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
 	}
-	Gui, Status:add,text,, MEmu NOT Loaded!
+	Gui, Status:add,text,, LEWZ NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
 	return 0
 }
 
-; Go_Back_To_Home_Screen calls neither Launch_LEWZ OR NOT Reload_MEmu
+; Go_Back_To_Home_Screen simple return a true or false value,
+; if Quit dialog is detected after hitting the back button
+; Go_Back_To_Home_Screen calls neither Launch_LEWZ NOR NOT Reload_MEmu
 ; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
 Go_Back_To_Home_Screen()
 {
@@ -399,16 +427,19 @@ Go_Back_To_Home_Screen()
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	}
 
+	/*
 	Go_Back_To_Home_Text := ["Quit"] ; ,"Quit the game"]
 	OCR_X := 150 ; 140
 	OCR_Y := 523 ; 515
 	OCR_W := 50 ; 64 ; 252
 	OCR_H := 26 ; 40 ; 155
-	Quit_OCR := Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	Quit_OCR := Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]})
+	*/
 
 	Go_Back_To_Home_Screen_OCR_Quit:
-	loop, 10
+	loop, 40
 	{
+		Quit_OCR := Search_Captured_Text_OCR(["Quit"], {Pos: [150, 523], Size: [50, 26]})
 		loop, 2
 			if Quit_OCR.Found
 				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
@@ -423,6 +454,7 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
 	loop, 10
 	{
+		Quit_OCR := Search_Captured_Text_OCR(["Quit"], {Pos: [150, 523], Size: [50, 26]})
 		loop, 2
 			if !Quit_OCR.Found
 				return 1
@@ -504,12 +536,14 @@ Switch_Account:
 	Mouse_Click(100,300, {Clicks: 2,Timeout: (1*Delay_Long+0)}) ; Tap Account
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	Account_Yes := Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35], Timeout: 0})
 	; Capture_Screen_Text := OCR([315, 860, 60, 35], "eng") ; "Yes"
 
 	loop, 3
+	{
+		Account_Yes := Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]})
 		if Account_Yes.Found
 			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap Yes
+	}
 
 	loop, 2
 		Mouse_Click(350,875) ; Tap "Switch Account"
@@ -573,7 +607,7 @@ Switch_Account:
 		OCR_W := 40 ; 50
 		OCR_H := 30 ; 80
 		; Capture_Screen_Text := OCR([323, 732, 47, 77], "eng")
-		if Search_Captured_Text_OCR(["OK"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(["OK"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(340,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 
 		OCR_X := 315
@@ -581,7 +615,7 @@ Switch_Account:
 		OCR_W := 60
 		OCR_H := 35
 		; Capture_Screen_Text := OCR([315, 860, 60, 35], "eng") ; "Yes"
-		if Search_Captured_Text_OCR(["Yes"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap Yes
 
 		/*
@@ -591,7 +625,7 @@ Switch_Account:
 		OCR_W := 425
 		OCR_H := 42	; 118
 		; "Are you sure to log in and overwrite the current game progress?"
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 		*/
 
@@ -610,7 +644,7 @@ Switch_Account:
 		OCR_W := 366
 		OCR_H := 40
 		; "Previous game progress found:"
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(336,780, {Clicks: 1, Timeout: (1*Delay_Long+0)}) ; Tap "OK"
 
 		Search_Captured_Text := ["Are you sure to","log in and","overwrite the","current game","progress?"]
@@ -619,7 +653,7 @@ Switch_Account:
 		OCR_W := 325
 		OCR_H := 110
 		; "Are you sure to log in and overwrite the current game progress?"
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap "OK"
 
 		Gosub Enter_Login_Password_PIN
@@ -644,15 +678,20 @@ Enter_Login_Password_PIN:
 {
 	; Subroutine_Running := "Enter_Login_Password_PIN"
 
+	/*
 	Search_Captured_Text := ["Enter","login","password"]
 	PIN_X := 190
 	PIN_Y := 250
 	PIN_W := 300
 	PIN_H := 50
+	OCR_PIN := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H]})
+	*/
+		
 	loop, 2
 	{
-	if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
-		Goto Enter_Login_Password_PIN_Dialog ; Break
+		OCR_PIN := Search_Captured_Text_OCR(["Enter","login","password"], {Pos: [190, 250], Size: [300, 50]})
+		if OCR_PIN.Found
+			Goto Enter_Login_Password_PIN_Dialog ; Break
 	}
 	return
 
@@ -663,8 +702,11 @@ Enter_Login_Password_PIN:
 	PIN_W := 300
 	PIN_H := 50
 	loop, 6
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H], Timeout: 0}).Found
-			Goto Enter_Login_Password_PIN_Dialog
+	{
+		OCR_PIN := Search_Captured_Text_OCR(["Enter","login","password"], {Pos: [190, 250], Size: [300, 50]})
+		if OCR_PIN.Found
+			Goto Enter_Login_Password_PIN_Dialog ; Break
+	}
 	return
 
 	Enter_Login_Password_PIN_Search_old:
@@ -806,10 +848,10 @@ Peace_Shield:
 
 		loop, 3
 		{
-			if Search_Captured_Text_OCR(["City","Buff"], {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["City","Buff"]).Found
 				Goto, Shield_Search_Buttons
 
-			if Search_Captured_Text_OCR(["Buff"], {Pos: [362, 512], Size: [44, 14], Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Buff"], {Pos: [362, 512], Size: [44, 14]}).Found
 			{
 				Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -822,17 +864,17 @@ Peace_Shield:
 
 	Goto, Shield_Open_Base
 	Shield_Search_Buttons:
-	; Capture City Buffs position one text
-	Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21], Timeout: 0})
-	; Capture City Buffs position one text
-	Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21], Timeout: 0})
-	; Capture City Buffs Shield duration position one text
-	Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 242], Size: [200, 22], Timeout: 0})
-	; Capture City Buffs Shield duration position one text
-	Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 394], Size: [200, 22], Timeout: 0})
-
 	Loop, 10
 	{
+		; Capture City Buffs position one text
+		Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21]})
+		; Capture City Buffs position one text
+		Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21]})
+		; Capture City Buffs Shield duration position one text
+		Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 242], Size: [200, 22]})
+		; Capture City Buffs Shield duration position one text
+		Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 394], Size: [200, 22]})
+
 		; Is City Buffs first item a shield? (Shield_Pos01.Found)? if so,
 		;	is duration of time left on shield displayed (Shield_Ends_Pos01.Found)? if so,
 		;		Shield_Ends := (Shield_Ends_Pos01.Text)
@@ -1015,11 +1057,13 @@ Peace_Shield:
 
 	Shield_Purchase:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	Shield_Purchase := Search_Captured_Text_OCR(["are","you","sure","After","usage"], {Pos: [139, 521], Size: [411, 72], Timeout: 0})
 
 	loop, 5
+	{
+		Shield_Purchase := Search_Captured_Text_OCR(["are","you","sure","After","usage"], {Pos: [139, 521], Size: [411, 72]})
 		If Shield_Purchase.Found
 			Mouse_Click(336,781) ;  Left, 1}  ; Tap Get & Use button, to confirm buying shield
+	}
 
 	Peace_Shield_END:
 	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5
@@ -1044,7 +1088,7 @@ Collect_Collisions:
 		Mouse_Click(515,375) ; Tap Collision
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
-			if Search_Captured_Text_OCR(["Particle"], {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Particle"]).Found
 				goto Collect_Collisions_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1094,8 +1138,8 @@ Collect_Equipment_Crafting:
 		Mouse_Click(430,390) ; Tap Craft
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
-			if Search_Captured_Text_OCR(["Giant"], {Timeout: 0}).Found
-					goto Collect_Equipment_Found
+			if Search_Captured_Text_OCR(["Giant"]).Found
+				goto Collect_Equipment_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
 	}
@@ -1144,7 +1188,7 @@ Collect_Recruits:
 		Mouse_Click(350,375) ; Tap Recruit
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
-			if Search_Captured_Text_OCR(["Recruitment"], {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Recruitment"]).Found
 				goto Collect_Recruits_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1197,7 +1241,7 @@ Collect_Runes:
 		Mouse_Click(570,340) ; Rune Extraction
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		loop, 3
-			if Search_Captured_Text_OCR(["Rune"], {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Rune"]).Found
 				goto Collect_Runes_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1397,7 +1441,7 @@ Activity_Center_Open()
 			; Mouse_Click(180,600) ; Tap Activity Center
 
 			loop, 5
-				if Search_Captured_Text_OCR(["Activity","Center"], {Timeout: 0}).Found
+				if Search_Captured_Text_OCR(["Activity","Center"]).Found
 					return 1
 		}
 		Gosub Reset_Posit
@@ -1414,22 +1458,22 @@ Activity_Center_Wonder:
 	Loop, 10
 	{
 		Search_Captured_Text := ["Desert Wonder"]
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 589], Size: [300, 50], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 589], Size: [300, 50]}).Found
 		{
 			Mouse_Click(282,610) ; Tap activity 01
 			goto Activity_Center_Continue_Tab
 		}
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 779], Size: [300, 50], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 779], Size: [300, 50]}).Found
 		{
 			Mouse_Click(256,803) ; Tap activity 02
 			goto Activity_Center_Continue_Tab
 		}
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 976], Size: [300, 50], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 976], Size: [300, 50]}).Found
 		{
 			Mouse_Click(242,1005) ; Tap activity 03
 			goto Activity_Center_Continue_Tab
 		}
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 1174], Size: [300, 50], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [170, 1174], Size: [300, 50]}).Found
 		{
 			Mouse_Click(210,1200) ; Tap activity 04
 			goto Activity_Center_Continue_Tab
@@ -1443,7 +1487,7 @@ Activity_Center_Wonder:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Loop, 5
 	{
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [233, 44], Size: [230, 52], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [233, 44], Size: [230, 52]}).Found
 		{
 			Mouse_Click(250,136) ; Tap Wonder tab
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -1620,7 +1664,7 @@ Benefits_Center:
 	{
 		Search_Captured_Text := ["Benefits Center"]
 		loop, 2
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text).Found
 				return
 
 		; Gosub Get_Window_Geometry
@@ -2110,7 +2154,7 @@ Speaker_Help:
 
 	loop, 3
 	{
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 		{
 			Mouse_Click(360,570) ; Tap Claim
 			break
@@ -2156,12 +2200,12 @@ Drop_Zone:
 	OCR_W := 70
 	OCR_H := 50	; 100
 	loop, 5
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			break
 
 	loop, 5
 	{
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			loop, 20
 				Mouse_Click(410,1050, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
 		; else
@@ -2265,7 +2309,7 @@ Active_Skill:
 	{
 		; Looking for green use buttons on main active skill interface
 		Look_For_Use_Button:
-		if !Search_Captured_Text_OCR(Active_Skill_Button_text, {Pos: [Button_OCR_X, Button_OCR_Y], Size: [Button_OCR_W, Button_OCR_H], Timeout: 0}).Found
+		if !Search_Captured_Text_OCR(Active_Skill_Button_text, {Pos: [Button_OCR_X, Button_OCR_Y], Size: [Button_OCR_W, Button_OCR_H]}).Found
 			Goto Active_Skill_Click_Button_Next
 
 		Active_Skill_Click_Button_NOW:
@@ -2278,7 +2322,7 @@ Active_Skill:
 		Match_OCR_W := 330
 		Match_OCR_H := 36
 		loop, 2
-		if Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [Match_OCR_X, Match_OCR_Y], Size: [Match_OCR_W, Match_OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [Match_OCR_X, Match_OCR_Y], Size: [Match_OCR_W, Match_OCR_H]}).Found
 				goto Active_Skill_Skill_Opened
 
 		goto Active_Skill_Click_Button_Next ; No matching title found, examin next button
@@ -2326,7 +2370,7 @@ Active_Skill:
 		Active_Skill_OCR_H := 25 ; 46
 		; check to see if active skill is properly displayed x times
 		loop, 5
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [Active_Skill_OCR_X, Active_Skill_OCR_Y], Size: [Active_Skill_OCR_W, Active_Skill_OCR_H], Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [Active_Skill_OCR_X, Active_Skill_OCR_Y], Size: [Active_Skill_OCR_W, Active_Skill_OCR_H]}).Found
 				return
 
 		; Gosub Get_Window_Geometry
@@ -2466,7 +2510,7 @@ Reserve_Factory:
 
 			loop, 6
 			{
-				Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+				Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]})
 				; Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
 				; MsgBox, % A_Index ". (" OCR_X "," OCR_Y ") " Alliance_Menu.Text
 				if Alliance_Menu.Found
@@ -2509,7 +2553,7 @@ Donate_Tech:
 		loop, 3
 		{
 			Gosub Click_Top_Tech
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text).Found
 				goto Donate_Tech_Open_NEXT ; Donate_Tech_Open
 		}
 		if !Go_Back_To_Home_Screen()
@@ -2527,7 +2571,7 @@ Donate_Tech:
 	{
 		Gosub Click_Top_Tech
 		goto Donate_Tech_Open_NEXT
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			goto Donate_Tech_Open_NEXT
 	}
 
@@ -2571,9 +2615,9 @@ Donate_Tech:
 				Mouse_Click(469,Tech_Click_Y) ; select tech
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-				OCR_Donate_04 := Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30], Timeout: 0})
-				; OCR_Donate_imm := Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42], Timeout: 0})
-				OCR_Donate_Buy := Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35], Timeout: 0})
+				OCR_Donate_04 := Search_Captured_Text_OCR(["04:"], {Pos: [295, 730], Size: [50, 30]})
+				; OCR_Donate_imm := Search_Captured_Text_OCR(["immediately"], {Pos: [140, 642], Size: [169, 42]})
+				OCR_Donate_Buy := Search_Captured_Text_OCR(["Buy"], {Pos: [70, 820], Size: [55, 35]})
 
 				if (OCR_Donate_04.Found)
 					Goto Donations_OVER ; Goto Outer_Loop_Donation_Break ; Break Outer_Loop_Donation
@@ -2742,7 +2786,7 @@ Depot_Rewards:
 	loop, 5
 	{
 		loop, 3
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text).Found
 				goto Continue_Depot_Treasures
 
 		if !Go_Back_To_Home_Screen()
@@ -2790,7 +2834,7 @@ Depot_Rewards:
 	loop, 8
 	{
 		; Looking for Rewards Button titles that match list
-		if !Search_Captured_Text_OCR(Depot_Rewards_Button_Text_Array, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if !Search_Captured_Text_OCR(Depot_Rewards_Button_Text_Array, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			goto Next_Depot_Button
 
 		Depot_Rewards_Click_Found_Item:
@@ -2822,7 +2866,7 @@ VIP_Shop:
 	loop, 2
 	{
 		loop, 2
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text).Found
 				goto Continue_VIP_Shop
 
 		if !Go_Back_To_Home_Screen()
@@ -2857,7 +2901,7 @@ VIP_Shop:
 	loop, 6
 	{
 		; Looking for VIP items that match list
-		if !Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if !Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			goto VIP_Shop_Click_Button_Next
 
 		VIP_Shop_Click_Found_Item:
@@ -2967,7 +3011,7 @@ Mail_Collection:
 	Subroutine_Running := "Mark_All_As_Read"
 	Loop, 2
 	{
-		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26], Timeout: 0}).Found ; Is the Mark as Read button displayed?
+		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26]}).Found ; Is the Mark as Read button displayed?
 		{
 			Mouse_Click(340,1200) ; Tap "MARK AS READ" button
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
@@ -2993,11 +3037,11 @@ Mail_Collection:
 		loop, 5
 		{
 			; if mail loaded, return
-			if Search_Captured_Text_OCR(["Mail"], {Pos: [309, 46], Size: [76, 50], Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Mail"], {Pos: [309, 46], Size: [76, 50]}).Found
 				return ; Gosub, Read_Mail_Open
 
 			; if mail not loaded, tap on mail icon
-			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24], Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24]}).Found
 			{
 				Mouse_Click(500,1200) ; Tap Mail
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -3118,14 +3162,14 @@ Alliance_Wages:
 			loop, 3
 			{
 				OCR_Y := 920
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 				{
 					Mouse_Click(405,932) ; Tap Alliance Wages button
 					goto Found_Alliance_Wages_Menu
 				}
 
 				OCR_Y := 1020
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 				{
 					Mouse_Click(405,1044) ; Tap Alliance Wages button
 					goto Found_Alliance_Wages_Menu
@@ -3793,7 +3837,7 @@ Desert_Oasis:
 		loop, 2
 		{
 			loop, 5
-				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+				if Search_Captured_Text_OCR(Desert_Oasis_Coordinates_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 					Goto Desert_Oasis_Stealing_Found
 
 			Mouse_Click(590,690) ; Tap Close Steal dialog if open
@@ -3860,7 +3904,7 @@ Enter_Coordinates_Open_Check()
 	OCR_W := 220
 	OCR_H := 40
 	loop, 5
-		if Search_Captured_Text_OCR(Coordinates_Box_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Coordinates_Box_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			return 1
 	return 0
 }
@@ -3921,7 +3965,7 @@ Gather_On_Base_RSS:
 	; Capture_Screen_Text := OCR([236, 40, 215, 57], "eng") ; check if
 	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
 
-	if Search_Captured_Text_OCR(["Desert"], {Timeout: 0}).Found
+	if Search_Captured_Text_OCR(["Desert"]).Found
 		Goto END_Gather_Base_RSS
 
 	loop, 2 {
@@ -3981,7 +4025,7 @@ Gather_On_Base_RSS:
 	; Capture_Screen_Text := OCR([236, 40, 215, 57], "eng") ; check if
 	; If (RegExMatch(Capture_Screen_Text,Search_Captured_Text))
 
-	if Search_Captured_Text_OCR(["Desert"], {Timeout: 0}).Found
+	if Search_Captured_Text_OCR(["Desert"]).Found
 		Goto END_Gather_Base_RSS
 
 	loop, 2 {
@@ -4177,28 +4221,28 @@ Golden_Chest:
 	loop, 3
 	{
 		; Capture_Screen_Text := OCR([181, 596, 80, 33], "eng") ; Check Activity Center item 01
-		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 596], Size: [120, 33], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 596], Size: [120, 33]}).Found
 		{
 			Mouse_Click(180, 596) ; Tap Activity Center item 01
 			goto Golden_Chest_Open_for_free_button
 		}
 
 		; Capture_Screen_Text := OCR([181, 790, 80, 33], "eng") ; Check Activity Center item 02
-		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 790], Size: [120, 33], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 790], Size: [120, 33]}).Found
 		{
 			Mouse_Click(180, 793) ; Tap Activity Center item 02
 			goto Golden_Chest_Open_for_free_button
 		}
 
 		; Capture_Screen_Text := OCR([181, 985, 80, 33], "eng") ; Check Activity Center item 03
-		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 985], Size: [120, 33], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 985], Size: [120, 33]}).Found
 		{
 			Mouse_Click(180, 989) ; Tap Activity Center item 03
 			goto Golden_Chest_Open_for_free_button
 		}
 
 		; Capture_Screen_Text := OCR([181, 1182, 80, 33], "eng") ; Check Activity Center item 04
-		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 1182], Size: [120, 33], Timeout: 0}).Found
+		if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [180, 1182], Size: [120, 33]}).Found
 		{
 			Mouse_Click(180, 1182) ; Tap Activity Center item 04
 			goto Golden_Chest_Open_for_free_button
@@ -4211,7 +4255,7 @@ Golden_Chest:
 	loop, 2
 	{
 		loop, 3
-			if Search_Captured_Text_OCR(["Golden Chest"], {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(["Golden Chest"]).Found
 				goto Golden_Chest_Finish
 
 		; MsgBox, 0, Pause, Tap Golden Chest`, Press OK to resume (No Timeout)
@@ -4226,7 +4270,7 @@ Golden_Chest:
 	Golden_Chest_Text := ["free"]
 
 	; Capture_Screen_Text := OCR([150, 1182, 40, 30], "eng") ; Check if "Open for free" button
-	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [40, 21], Timeout: 0}).Found
+	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [40, 21]}).Found
 		Mouse_Click(125, 1200) ; Tap "Open for free" button
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
@@ -4237,7 +4281,7 @@ Golden_Chest:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	; Capture_Screen_Text := OCR([150, 1182, 85, 30], "eng") ; Check if "Open for free" button
-	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [40, 21], Timeout: 0}).Found
+	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [40, 21]}).Found
 		Mouse_Click(125, 1200) ; Tap "Open for free" button
 	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Medium+0))
 	loop, 2
@@ -4289,7 +4333,7 @@ Send_Mail_To_Boss:
 	loop, 2
 	{
 		loop, 5
-			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
+			if Search_Captured_Text_OCR(Search_Captured_Text).Found
 				goto Compose_Message
 
 		if !Go_Back_To_Home_Screen()
@@ -5268,6 +5312,39 @@ Refresh_LogFiles:
 	stdout := FileOpen(LogFile, "w `n")
 	CSVout := FileOpen(CSVFile, "w `n")
 
+	return
+}
+
+Select_App() {
+	; MsgBox, 1. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
+	global FoundAppClass := "Qt5QWindowIcon"
+	global FoundAppControl := "Qt5QWindowIcon19"
+	
+	/*
+	WW1 := Win_WaitRegEX("(LEWZ",,,"\")
+	WW2 := Win_WaitRegEX(NewTitle)
+	WW1_Info := % "Win_WaitRegEX()`nID:""" WW1.ID """`ntitle:""" WW1.title """"
+	WW2_Info := % "Win_WaitRegEX(NewTitle)`nID:""" WW2.ID """`ntitle:""" WW2.title """"
+	MsgBox, %WW1_Info% `n%WW2_Info%
+	*/
+	
+	; NewTitle := InputBox2("App Title", "App Title", {Input:"Show", Width:300, Height:150, x:700, y:1000, Timeout: 10, Default:NewTitle})
+	LEWZApp := Win_WaitRegEX(NewTitle)
+	global FoundAppTitle := LEWZApp.title
+	global FoundAppClass := LEWZApp.Class
+	global FoundAppProcess := byref FoundAppControl ; LEWZApp.ID
+	global FoundAppID := LEWZApp.ID
+	; global FoundAppPID := LEWZApp.PID
+	; MsgBox, % "Win_WaitRegEX(NewTitle) `nTitle:" FoundAppTitle "`nClass:" FoundAppClass "`nControl:" FoundAppControl "`nProcess:" FoundAppProcess "`nID:" FoundAppID
+	
+	NewTitle := RegExReplace(FoundAppTitle,"[^A-Za-z0-9]+")
+	WinSetTitle, %NewTitle%
+	FoundAppTitle := NewTitle
+	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
+	; MsgBox, 4. FoundAppTitle:"%FoundAppTitle%" NewTitle:"%NewTitle%" NewTitle2:"%NewTitle2%"
+	; Operation_Recorder_Window := FoundAppTitle . " Recorder"
+	; MsgBox, 2. FoundAppTitle:"%FoundAppTitle%" FoundAppID:"%FoundAppID%"
+	
 	return
 }
 
