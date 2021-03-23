@@ -8,8 +8,8 @@
 ;	Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := ""){	; Win_GetInfo(Options := ""){
 ;	IsWindowVisible(App_Title) {
 ;	WindowFromPoint(x, y)
-;	Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
-;	OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
+;	Win_WaitRegEX(WW_Title, WW_Text="", Timeout="", ExcludeTitle="", ExcludeText=""){
+;	OLD_Win_WaitRegEX(WW_Title, WW_Text="", Timeout="", ExcludeTitle="", ExcludeText=""){
 ;	Control_GetInfo(Win_Control, Options := ""){
 ;	Mouse_Click(X,Y, Options := "") {
 ;	Key_Menu() {
@@ -164,58 +164,66 @@ WindowFromPoint(x, y)
 ; Examples:
 ; Win_WaitRegEX("LEWZ")
 ; ****************************************************************************
-Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
+Win_WaitRegEX(WW_Title="", WW_Text="", Timeout="", ExcludeTitle="", ExcludeText=""){
 	SetTitleMatchMode, RegEx
-	; MsgBox, 1. Begin, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
-	; WinWait , WinTitle, WinText, Timeout, ExcludeTitle, ExcludeText
+	
+	if (!WW_Title && !WW_Text)
+	{
+		MsgBox, 4, , empty!`nWW_Title:"%WW_Title%"`nWW_Text:"%WW_Text%" (4 Second Timeout & skip), 4
+		return
+	}
+	
+	; MsgBox, 1. Begin, Title REGEX:"%WW_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
+	; WinWait , WinTitle, WW_Text, Timeout, ExcludeTitle, ExcludeText
 
-	WinWait, %Win_WaitRegEX_Title%, %WinText%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
+	WinWait, %WW_Title%, %WW_Text%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
 	if ErrorLevel
 	{
-		Win_WaitRegEX_Title := RegExReplace(Win_WaitRegEX_Title,"[^w]+")
-		WinWait, %Win_WaitRegEX_Title%, %WinText%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
+		WW_Title := RegExReplace(WW_Title,"[^w]+")
+		WinWait, %WW_Title%, %WW_Text%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
 		if ErrorLevel
 			return 0
 	}
 	
 	Window_Save()
 
-	WinActivate, %Win_WaitRegEX_Title%, ; If not active, It activates it
-	WinWaitActive, %Win_WaitRegEX_Title% ; Waits until the specified window is active or not active.
+	WinActivate, %WW_Title%, ; If not active, It activates it
+	WinWaitActive, %WW_Title% ; Waits until the specified window is active or not active.
 	WinGetTitle, Win_WaitGetTitle, A
 	Win_WaitGetID := DllCall("GetParent", UInt,WinExist("A")), Win_WaitGetID := !Win_WaitGetID ? WinExist("A") : Win_WaitGetID
 
-	; MsgBox, 2. Middle, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
+	; MsgBox, 2. Middle, Title REGEX:"%WW_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
 
-	if WinActive(%Win_WaitRegEX_Title%)
-	{
-		Win_WaitGetID := WinActive(%Win_WaitRegEX_Title%)
-		WinGetTitle, Win_WaitGetTitle, ahk_id %Win_WaitGetID%
-		WinActivate, ahk_id %Win_WaitGetID%, ; If not active, It activates it
-		WinWaitActive, ahk_id %Win_WaitGetID% ; Waits until the specified window is active or not active.
-	}
+	if WW_Title is alnum
+		if WinActive(%WW_Title%)
+		{
+			Win_WaitGetID := WinActive(%WW_Title%)
+			WinGetTitle, Win_WaitGetTitle, ahk_id %Win_WaitGetID%
+			WinActivate, ahk_id %Win_WaitGetID%, ; If not active, It activates it
+			WinWaitActive, ahk_id %Win_WaitGetID% ; Waits until the specified window is active or not active.
+		}
 	
 	Window_Restore()
 
-	; MsgBox, 3. Finish, Title REGEX:"%Win_WaitRegEX_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
+	; MsgBox, 3. Finish, Title REGEX:"%WW_Title%"`nTitle Get:"%Win_WaitGetTitle%"`nTitle Found:"%FoundAppTitle%"`nID Get:"%Win_WaitGetID%"`nID Found:"%FoundAppID%"
 	Return {Title: Win_WaitGetTitle, ID: Win_WaitGetID}
 }
 
 ; ****************************************************************************
-OLD_Win_WaitRegEX(Win_WaitRegEX_Title, WinText="", Timeout="", ExcludeTitle="", ExcludeText=""){
+OLD_Win_WaitRegEX(WW_Title, WW_Text="", Timeout="", ExcludeTitle="", ExcludeText=""){
 	SetTitleMatchMode, RegEx
-	MsgBox, 1. Begin, Title(REGEX:"%Win_WaitRegEX_Title%" Get:"%Win_WaitGetTitle%" Found:"%FoundAppTitle%" ID(Get:"%Win_WaitGetID%" Found:"%FoundAppID%")
-	; WinWait , WinTitle, WinText, Timeout, ExcludeTitle, ExcludeText
-	WinWait, %Win_WaitRegEX_Title%, %WinText%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
-	If !WinActive(%Win_WaitRegEX_Title%) ; Checks if window exists and is currently active (foremost)
-		WinActivate, %Win_WaitRegEX_Title% ; If not active, It activates it
-	WinWaitActive, %Win_WaitRegEX_Title% ; Waits until the specified window is active or not active.
-	Win_WaitGetID := WinActive(%Win_WaitRegEX_Title%), if !(Win_WaitGetID = 0), FoundAppID := Win_WaitGetID
+	MsgBox, 1. Begin, Title(REGEX:"%WW_Title%" Get:"%Win_WaitGetTitle%" Found:"%FoundAppTitle%" ID(Get:"%Win_WaitGetID%" Found:"%FoundAppID%")
+	; WinWait , WinTitle, WW_Text, Timeout, ExcludeTitle, ExcludeText
+	WinWait, %WW_Title%, %WW_Text%, %Timeout%, %ExcludeTitle%, %ExcludeText% ; Waits until the specified window exists.
+	If !WinActive(%WW_Title%) ; Checks if window exists and is currently active (foremost)
+		WinActivate, %WW_Title% ; If not active, It activates it
+	WinWaitActive, %WW_Title% ; Waits until the specified window is active or not active.
+	Win_WaitGetID := WinActive(%WW_Title%), if !(Win_WaitGetID = 0), FoundAppID := Win_WaitGetID
 	WinGetTitle, Win_WaitGetTitle, ahk_id %Win_WaitGetID%
 	if !(Win_WaitGetTitle = "")
 		FoundAppTitle := Win_WaitGetTitle
 
-	MsgBox, 2. Finish, Title(REGEX:"%Win_WaitRegEX_Title%" Get:"%Win_WaitGetTitle%" Found:"%FoundAppTitle%" ID(Get:"%Win_WaitGetID%" Found:"%FoundAppID%"
+	MsgBox, 2. Finish, Title(REGEX:"%WW_Title%" Get:"%Win_WaitGetTitle%" Found:"%FoundAppTitle%" ID(Get:"%Win_WaitGetID%" Found:"%FoundAppID%"
 	Return {Title: Win_WaitGetTitle, ID: Win_WaitGetID}
 }
 
