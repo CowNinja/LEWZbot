@@ -93,7 +93,8 @@ while WinExist(FoundAppTitle)
 				goto END_of_user_loop
 
 			; loop, 2
-				Gosub Go_Back_To_Home_Screen
+				if !Go_Back_To_Home_Screen()
+					Reload_MEmu()
 			
 			; ***************************************
 			; Main DEBUG and event Variables - START
@@ -189,7 +190,8 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; ; Activity_Center_Open()
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; Gosub Go_Back_To_Home_Screen
+				; if !Go_Back_To_Home_Screen()
+					; Reload_MEmu()
 				; Gosub Speaker_Help
 				; goto END_of_user_loop
 				; ******************************************
@@ -265,10 +267,11 @@ while WinExist(FoundAppTitle)
 		; start new log files
 		Gosub Refresh_LogFiles
 		; relaunch LEWZ
-		; Gosub Quit_LEWZ
-		; Gosub Launch_Lewz
+		; Reload_MEmu()
+		; Launch_Lewz()
 		gosub Reload_Script
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 }
 if !WinExist(FoundAppTitle)
@@ -281,104 +284,154 @@ else
 }
 MsgBox, Unexpected exit
 
-; Tap Memu Title Bar
-Memu_Title_Bar:
-{
-	Subroutine_Running := "Memu_Title_Bar"
 
-	Mouse_Click(423,25) ; Tap Memu Title Bar
-	return
+Reload_MEmu()
+{
+	Subroutine_Running := "Reload_MEmu"
+	Gui, Status:new, , Status
+	Gui, Status:Margin, 0, 0
+	Gui, Status:add,text,, MEmu reloading... loop, %Main_Loop_Counter%
+	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
+	Gui, Status:show, x731 y0 w300 h500
+	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm MEmu")
+	
+	Gui, Status:add,text,, ShutdownVm MEmu
+	Gui, Status:show, x731 y0 w300 h500
+	RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" MEmu")
+	Loop, 10
+	{
+		Gui, Status:add,text,, Loading MEmu %A_Index%
+		Gui, Status:show, x731 y0 w300 h500
+		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+		if Launch_LEWZ()
+		{
+			Gui, Status:add,text,, MEmu Loaded!!
+			Gui, Status:show, x731 y0 w300 h500
+			return 1
+		}
+	}
+	Gui, Status:add,text,, MEmu NOT Loaded!
+	Gui, Status:show, x731 y0 w300 h500
+	return 0
 }
 
-; Launch LEWZ app from android main screen
-Launch_Lewz:
-{
-	Subroutine_Running := "Launch_Lewz"
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Launch_Lewz_Click_Icon:
+; Launch LEWZ app from android main screen
+Launch_LEWZ()
+{
+	Subroutine_Running := "Launch_LEWZ"
+	Gui, Status:new, , Status
+	Gui, Status:Margin, 0, 0
+	Gui, Status:add,text,, LEWZ loading... loop, %Main_Loop_Counter%
+	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
+	Gui, Status:show, x731 y0 w300 h500
+
+	Launch_LEWZ_Click_Icon:
+	/*
 	Search_Captured_Text := ["Last Empire"]
-	OCR_X := 410
+		OCR_X := 410
 	OCR_Y := 536
 	OCR_W := 140
 	OCR_H := 42
+	LL_Icon01 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	OCR_X := 7
+	OCR_Y := 880
+	OCR_W := 140
+	OCR_H := 42
+	LL_Icon02 := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	*/
+	
+	LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42], Timeout: 0})
+	LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42], Timeout: 0})
 
 	loop, 30
 	{
-		OCR_X := 410
-		OCR_Y := 536
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if LL_Icon01.Found
 		{
 			Mouse_Click(480,500) ; Tap LEWZ ICON
-			Goto Launch_Lewz_Continue
+			Gui, Status:add,text,, LEWZ icon found
+			Gui, Status:show, x731 y0 w300 h500
+			Goto Launch_LEWZ_Continue
 		}
 
-		OCR_X := 7
-		OCR_Y := 880
-		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
+		if LL_Icon02.Found
 		{
 			Mouse_Click(67,844) ; Tap LEWZ ICON
-			Goto Launch_Lewz_Continue
+			Gui, Status:add,text,, LEWZ icon found
+			Gui, Status:show, x731 y0 w300 h500
+			Goto Launch_LEWZ_Continue
 		}
 	}
-	Launch_Lewz_Retry:
-	Gosub Quit_LEWZ
-	goto Launch_Lewz_Click_Icon
+	Launch_LEWZ_Fail:
+	return 0
 
-	Launch_Lewz_Continue:
-	DllCall("Sleep","UInt",(rand_wait + 20*Delay_Long+0))
-	
-	loop, 5
+	Launch_LEWZ_Continue:
+	; DllCall("Sleep","UInt",(rand_wait + 20*Delay_Long+0))	
+	Loop, 10
+	{
+		Gui, Status:add,text,, Loading LEWZ %A_Index%
+		Gui, Status:show, x731 y0 w300 h500
+		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		Gosub Enter_Login_Password_PIN
-
-	; Gosub Go_Back_To_Home_Screen
-	return
+		if Go_Back_To_Home_Screen()
+		{
+			Gui, Status:add,text,, LEWZ Loaded!!
+			Gui, Status:show, x731 y0 w300 h500
+			return 1
+		}
+	}
+	Gui, Status:add,text,, MEmu NOT Loaded!
+	Gui, Status:show, x731 y0 w300 h500
+	return 0
 }
 
-; Force quit LEWZ APK
-Quit_LEWZ:
+
+; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
+Go_Back_To_Home_Screen()
 {
-	Subroutine_Running := "Quit_LEWZ"
+	; Subroutine_Running := "Go_Back_To_Home_Screen"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Quit LEWZ
-	; Gosub Reset_Posit
-	; Gosub Go_Back_To_Home_Screen
-	; DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
+	; Go back
+	loop, 10
+	{
+		Text_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
+	}
 	
-	Reload_MEmu()
-	return
-
-	Text_To_Screen("{F5}")
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
 	Go_Back_To_Home_Text := ["Quit"] ; ,"Quit the game"]
 	OCR_X := 150 ; 140
 	OCR_Y := 523 ; 515
 	OCR_W := 50 ; 64 ; 252
 	OCR_H := 26 ; 40 ; 155
-	loop, 5
+	Quit_OCR := Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0})
+	
+	Go_Back_To_Home_Screen_OCR_Quit:
+	loop, 10
 	{
-		if Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-			break
+		loop, 2
+			if Quit_OCR.Found
+				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		Gosub Check_Window_Geometry
 	}
+	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
+	return 0
 
-	Mouse_Click(340,780) ; Tap "OK"
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
+	Go_Back_To_Home_Screen_OCR_NOT_Quit:
+	loop, 10
+	{
+		loop, 2
+			if !Quit_OCR.Found
+				return 1
 
-	Text_To_Screen("{F8}") ; Home screen button
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
-
-	; loop, 5
-	; {
-	; 	Mouse_Click(283,5, {Control: Qt5QWindowIcon}) ; close LEWZ and/or other app tabs
-	; SendEvent {Click, 283,5}
-	;	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-	;}
-	return
+		Text_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Gosub Check_Window_Geometry
+	}
+	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
+	return 0
 }
 
 ; Clear in-game splash pages
@@ -398,7 +451,8 @@ Game_Start_popups:
 
 	; Mouse_Click(379,736) ; Collect Cafeteria
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -410,7 +464,8 @@ Reset_Posit:
 	; go back x times
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	; Gosub Speaker_Help
 
 	; Tap World/home button x times
@@ -420,79 +475,11 @@ Reset_Posit:
 		DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
 	}
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
-; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
-Go_Back_To_Home_Screen:
-{
-	; Subroutine_Running := "Go_Back_To_Home_Screen"
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Go back
-	loop, 10
-	{
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
-
-	Gosub Go_Back_To_Home_Screen_OCR_Quit
-	Gosub Go_Back_To_Home_Screen_OCR_NOT_Quit
-
-	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	return
-
-	Go_Back_To_Home_Screen_OCR_Quit:
-	
-	Go_Back_To_Home_Text := ["Quit"] ; ,"Quit the game"]
-	OCR_X := 150 ; 140
-	OCR_Y := 523 ; 515
-	OCR_W := 50 ; 64 ; 252
-	OCR_H := 26 ; 40 ; 155
-	loop, 40
-	{
-		loop, 2
-			if Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-				return
-
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-		Gosub Check_Window_Geometry
-	}
-	goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
-	return
-
-	Go_Back_To_Home_Screen_OCR_NOT_Quit:
-	Go_Back_To_Home_Text := ["Quit"] ; ,"Quit the game"]
-	OCR_X := 150 ; 140
-	OCR_Y := 523 ; 515
-	OCR_W := 50 ; 64 ; 252
-	OCR_H := 26 ; 40 ; 155
-	loop, 10
-	{
-		loop, 2
-			if !Search_Captured_Text_OCR(Go_Back_To_Home_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H], Timeout: 0}).Found
-				return
-
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-		Gosub Check_Window_Geometry
-	}
-	goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
-	return
-
-	Reload_LEWZ_routine:
-	{
-		Gosub Quit_LEWZ
-		Gosub Launch_Lewz
-		; Gosub Switch_Account
-		; Gosub Enter_Login_Password_PIN
-
-		goto Go_Back_To_Home_Screen_OCR_Quit
-		return
-	}
-	return
-}
 
 ; Login to account using stored credentials
 Switch_Account:
@@ -506,7 +493,8 @@ Switch_Account:
 		GUI_Count++
 
 	Switch_Account_START:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	Mouse_Click(50,70, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap Commander Info
 		
 	Mouse_Click(600,1200, {Clicks: 2,Timeout: (1*Delay_Long+0+0)}) ; Tap Settings
@@ -795,7 +783,8 @@ Peace_Shield_OLD:
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -825,7 +814,8 @@ Peace_Shield:
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 			}
 		}
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Peace_Shield_END
 
@@ -1036,7 +1026,8 @@ Peace_Shield:
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 
 	return
 }
@@ -1054,7 +1045,8 @@ Collect_Collisions:
 		loop, 3
 			if Search_Captured_Text_OCR(["Particle"], {Timeout: 0}).Found
 				goto Collect_Collisions_Found
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Collect_Collisions_END
 	Collect_Collisions_Found:
@@ -1071,7 +1063,8 @@ Collect_Collisions:
 	}
 
 	Collect_Collisions_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
@@ -1084,7 +1077,8 @@ Collect_Collisions:
 		Mouse_Click(180,1130, {Timeout: Delay_Medium+0}) ; Tap Collide
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -1101,7 +1095,8 @@ Collect_Equipment_Crafting:
 		loop, 3
 			if Search_Captured_Text_OCR(["Giant"], {Timeout: 0}).Found
 					goto Collect_Equipment_Found
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Collect_Equipment_END
 	Collect_Equipment_Found:
@@ -1118,7 +1113,8 @@ Collect_Equipment_Crafting:
 	}
 
 	Collect_Equipment_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
@@ -1131,7 +1127,8 @@ Collect_Equipment_Crafting:
 		Mouse_Click(180,1180, {Timeout: Delay_Medium+0}) ; Tap Craft or Recruit or Extract
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -1148,7 +1145,8 @@ Collect_Recruits:
 		loop, 3
 			if Search_Captured_Text_OCR(["Recruitment"], {Timeout: 0}).Found
 				goto Collect_Recruits_Found
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Collect_Recruits_END
 	Collect_Recruits_Found:
@@ -1165,7 +1163,8 @@ Collect_Recruits:
 	}
 
 	Collect_Recruits_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 	
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
@@ -1181,7 +1180,8 @@ Collect_Recruits:
 		Mouse_Click(460,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Mouse_Click(450,1180, {Timeout: Delay_Medium+0}) ; Tap "OK"
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -1198,7 +1198,8 @@ Collect_Runes:
 		loop, 3
 			if Search_Captured_Text_OCR(["Rune"], {Timeout: 0}).Found
 				goto Collect_Runes_Found
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Collect_Runes_END
 	Collect_Runes_Found:
@@ -1215,7 +1216,8 @@ Collect_Runes:
 	}
 
 	Collect_Runes_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -1249,7 +1251,8 @@ Collect_Red_Envelopes:
 		Mouse_Click(33,62) ; Tap back Button
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	return
 }
@@ -1274,7 +1277,8 @@ Shield_Warrior_Trial_etc:
 			MsgBox, 0, Pause, Check location`, Press OK to return home (No Timeout)
 
 			; Go_Back_Home_Delay_Long := True
-			Gosub Go_Back_To_Home_Screen
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
 		+0}
 	*/
 
@@ -1293,7 +1297,8 @@ Shield_Warrior_Trial_etc:
 
 	; MsgBox, 0, Pause, Check SVIP`, Press OK to return home (No Timeout)
 
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	; }
 
 	MsgBox, 4, Benefits, Benefits_Center_Monthly? (8 Second Timeout & skip), 8
@@ -1309,7 +1314,8 @@ Shield_Warrior_Trial_etc:
 
 	; MsgBox, 0, Pause, Check Activate Skills`, Press OK to return home (No Timeout)
 
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	; }
 
 	MsgBox, 4, Desert_Oasis, Desert_Oasis? (8 Second Timeout & skip), 8
@@ -1323,7 +1329,8 @@ Shield_Warrior_Trial_etc:
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		MsgBox, 0, Pause, Check location`, SVIP`, wonder rewards`, activate skills`, etc? Press OK to resume (No Timeout)
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 }
@@ -1366,7 +1373,8 @@ Activity_Center_Wonder_old:
 	; Mouse_Click(250,150) ; Tap Outside reward popup
 
 	MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 
 	return
 }
@@ -1377,7 +1385,8 @@ Activity_Center_Open()
 	{
 		loop, 3
 		{
-			Gosub Go_Back_To_Home_Screen
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
 			Mouse_Drag(200, 350, 332, 350, {EndMovement: T, SwipeTime: 500})
 			; Mouse_Drag(110, 536, 262, 537, {EndMovement: T, SwipeTime: 500})
 			Mouse_Click(137,580) ; Tap activity center
@@ -1481,7 +1490,8 @@ Activity_Center_Wonder:
 	
 	Activity_Center_END:
 	; MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 
 	return
 }
@@ -1490,7 +1500,8 @@ Benefits_Center_Monthly:
 {
 	Subroutine_Running := "Benefits_Center_Monthly"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Mouse_Click(625,280) ; Tap Benefits Center
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
@@ -1504,7 +1515,8 @@ Benefits_Center_Monthly:
 
 	MsgBox, 0, Pause, Collect Warrior Trials and monthly package`, Press OK to resume (No Timeout)
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	; loop, through benefits tabs to clear any new ones
@@ -1590,7 +1602,8 @@ Benefits_Center:
 	loop, 2
 	{
 		Gosub Benefits_Check_Tabs
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		Gosub Benefits_Center_Reload
 	}
 	; Goto Benefits_Center_END
@@ -1612,7 +1625,8 @@ Benefits_Center:
 
 		; Gosub Get_Window_Geometry
 		Gosub Check_Window_Geometry
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		loop, 2
 			Mouse_Click(625,310, {Timeout: Delay_Short}) ; Tap Benefits Center
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
@@ -1620,7 +1634,8 @@ Benefits_Center:
 	return
 
 	Benefits_Center_END:
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	return
 
 	Benefits_swipe_Check_Tabs:
@@ -2080,7 +2095,8 @@ Speaker_Help:
 {
 	Subroutine_Running := "Speaker_Help"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Search_Captured_Text := ["Claim"]
 	OCR_X := 308 ; 290
@@ -2107,7 +2123,8 @@ Speaker_Help:
 		}
 	}
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -2158,7 +2175,8 @@ Drop_Zone:
 	;	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 	; }
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -2167,7 +2185,8 @@ Adventure_Missions:
 	Subroutine_Running := "Adventure_Missions"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -2178,7 +2197,8 @@ Collect_Cafeteria:
 
 	Mouse_Click(379,736) ; Collect Cafeteria
 
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	return
 }
 
@@ -2312,14 +2332,16 @@ Active_Skill:
 
 		; Gosub Get_Window_Geometry
 		Gosub Check_Window_Geometry
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		Mouse_Click(195,1195) ; Tap Activate Skills
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	}
 	return
 
 	Active_Skill_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 }
@@ -2337,7 +2359,8 @@ Collect_Chips_Underground:
 	; Tap on each Chip Plant
 	; Hit F5 for back button
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -2346,7 +2369,8 @@ Reserve_Factory:
 {
 	Subroutine_Running := "Reserve_Factory"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	; *******************************
 	; Collect Reserve supplies
@@ -2411,7 +2435,8 @@ Reserve_Factory:
 	}
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 	
 	Alliance_Help_Open:
@@ -2456,7 +2481,8 @@ Reserve_Factory:
 				if (OCR_Y > Max_Y)
 					OCR_Y := Min_Y
 			}
-			Gosub Go_Back_To_Home_Screen
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
 		}
 		return
 		; MsgBox, 0, Pause, Loop done. Press OK to resume (No Timeout)
@@ -2488,7 +2514,8 @@ Donate_Tech:
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
 				goto Donate_Tech_Open_NEXT ; Donate_Tech_Open
 		}
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	goto Donations_OVER
 
@@ -2694,7 +2721,8 @@ Donate_Tech:
 	return
 	
 	Donations_OVER:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -2720,7 +2748,8 @@ Depot_Rewards:
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
 				goto Continue_Depot_Treasures
 
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		Mouse_Click(140,662, {Timeout: 1*Delay_Long+0}) ; Tap depot
 		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
 		; DllCall("Sleep","UInt",rand_wait + (2*Delay_Long))
@@ -2739,7 +2768,8 @@ Depot_Rewards:
 	Gosub Depot_Click_Button
 
 	Depot_Rewards_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	Depot_Click_Button:
@@ -2798,7 +2828,8 @@ VIP_Shop:
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
 				goto Continue_VIP_Shop
 
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		Mouse_Click(156,90) ; Tap VIP Shop
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
@@ -2813,7 +2844,8 @@ VIP_Shop:
 	Gosub VIP_Shop_Click_Button
 
 	VIP_Shop_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	VIP_Shop_Click_Button:
@@ -2862,7 +2894,8 @@ Mail_Collection:
 {
 	Subroutine_Running := "Mail_Collection"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	
 	Mail_Keyword_Array := ["Mail","Activities","Alliance","Last Empire","System"]
 	Mail_BACK2_Array := ["Alliance Arms","Cross-State","Desert Conflict","Other Event","Single Player","Arms Race"]
@@ -2929,7 +2962,8 @@ Mail_Collection:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	Mark_All_As_Read:
@@ -2978,7 +3012,8 @@ Mail_Collection:
 			Text_To_Screen("{F5}")
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 	}
 	return
 }
@@ -2987,7 +3022,8 @@ Alliance_Boss_Regular:
 {
 	Subroutine_Running := "Alliance_Boss"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Mouse_Click(610,1214) ; Tap Alliance
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
@@ -3007,7 +3043,8 @@ Alliance_Boss_Regular:
 
 	Mouse_Click(340,780) ; Tap Confirm Feed Boss
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -3015,7 +3052,8 @@ Alliance_Boss_Oasis:
 {
 	Subroutine_Running := "Alliance_Boss"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Mouse_Click(610,1214) ; Tap Alliance
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
@@ -3035,7 +3073,8 @@ Alliance_Boss_Oasis:
 
 	Mouse_Click(340,780) ; Tap Confirm Feed Boss
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -3043,7 +3082,8 @@ Alliance_Wages:
 {
 	Subroutine_Running := "Alliance_Wages"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Goto Alliance_Menu_Wages
 
@@ -3095,7 +3135,8 @@ Alliance_Wages:
 				}
 			}
 
-			Gosub Go_Back_To_Home_Screen
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
 			Mouse_Click(605,1212) ; Tap Alliance Menu
 		}
 		goto Alliance_Wages_END
@@ -3104,7 +3145,8 @@ Alliance_Wages:
 		Gosub Alliance_Wages_Continue
 
 		Alliance_Wages_END:
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		return
 	}
 
@@ -3310,7 +3352,8 @@ Train_Daily_Requirement:
 {
 	Subroutine_Running := "Train_Daily_Requirement"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Gosub Reset_Posit
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
@@ -3444,7 +3487,8 @@ Train_Daily_Requirement:
 
 		Mouse_Click(509,1189) ; Tap Train Now
 
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 
 		return
 	}
@@ -3454,7 +3498,8 @@ Gather_Resources:
 {
 	Subroutine_Running := "Gather_Resources"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Mouse_Click(76,1200) ; Tap World/home button
 	DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
@@ -3544,7 +3589,8 @@ Gather_Resources:
 	End_Gathering:
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	Search_And_Deploy_Resources:
@@ -3773,7 +3819,8 @@ Desert_Oasis:
 		MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -3788,7 +3835,8 @@ Enter_Coordinates_From_Home()
 		if Enter_Coordinates_From_World()
 			return 1
 	
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return 0
 }
 
@@ -3825,7 +3873,8 @@ Gather_On_Base_RSS:
 {
 	Subroutine_Running := "Gather_On_Base_RSS"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Swipe_Up_Left_RSS:
 	loop, 5
@@ -4110,7 +4159,8 @@ Gather_On_Base_RSS:
 	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	END_Gather_Base_RSS:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4119,7 +4169,8 @@ Golden_Chest:
 {
 	Subroutine_Running := "Golden_Chest"
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 	
 	if !Activity_Center_Open()
 		goto Golden_Chest_END
@@ -4207,7 +4258,8 @@ Golden_Chest:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Golden_Chest_END:
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4230,7 +4282,8 @@ Send_Mail_To_Boss:
 	; MsgBox, After: %Message_To_The_Boss%
 
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; Gosub Go_Back_To_Home_Screen
+	; if !Go_Back_To_Home_Screen()
+		; Reload_MEmu()
 
 	Open_Mail:
 
@@ -4244,13 +4297,15 @@ Send_Mail_To_Boss:
 			if Search_Captured_Text_OCR(Search_Captured_Text, {Timeout: 0}).Found
 				goto Compose_Message
 
-		Gosub Go_Back_To_Home_Screen
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
 		Mouse_Click(492,1202) ; Tap mail
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	; MsgBox, Capture_Screen_Text: %Capture_Screen_Text%
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 
 	Compose_Message:
@@ -4270,7 +4325,8 @@ Send_Mail_To_Boss:
 	Mouse_Click(352,1174) ; Tap Send button
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4312,7 +4368,8 @@ Send_Message_In_Chat:
 	Mouse_Click(650,1213) ; Tap Send
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4420,7 +4477,8 @@ Get_Inventory:
 
 	; MsgBox, %Message_To_The_Boss%
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4471,7 +4529,8 @@ Get_User_Info:
 	; User_Power := trim(User_Power)
 	; MsgBox, % "2. after trim " User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 
 	; User_Diamonds := OCR([590, 90, 96, 30], "eng")
 	User_Diamonds := OCR([590, 95, 90, 20], "eng")
@@ -4515,7 +4574,8 @@ Get_User_Location:
 	; Message_To_The_Boss .= "Location:`,""" . User_City_Location_Array[1] . ":" . User_City_Location_Array[2] . """`,"
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -4793,7 +4853,8 @@ Base_Search_World_Map:
 	}
 
 	; Go_Back_Home_Delay_Long := True
-	Gosub Go_Back_To_Home_Screen
+	if !Go_Back_To_Home_Screen()
+		Reload_MEmu()
 	return
 }
 
@@ -5226,11 +5287,11 @@ return
 F4::ExitApp
 
 F5::
-Reload_MEmu()
+Reload_MEmu:
 {
-	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm MEmu")
-	RunWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" MEmu")
-	return 1
+	Reload_MEmu()
+	Launch_LEWZ()
+	return
 }
 
 F6::
@@ -5293,7 +5354,8 @@ Return
 
 ; Terminate running routine
 F9::
-Gosub Go_Back_To_Home_Screen
+if !Go_Back_To_Home_Screen()
+	Reload_MEmu()
 Gosub, Exit_Sub
 MsgBox, This MsgBox will never happen because of the EXIT.
 return
