@@ -5223,6 +5223,8 @@ F1::
 Gui, Show, W400 H40, Window List
 return
 
+F4::ExitApp
+
 F5::
 Reload_MEmu()
 {
@@ -5300,7 +5302,6 @@ Exit_Sub:
 Exit ; Terminate this subroutine as well as the calling subroutine.
 
 ; Close running AHK
-F4::ExitApp
 ; #c:: OCR()
 #g:: Vis2.OCR.google() ; Googles the text instead of saving it to clipboard.
 #i:: ImageIdentify()
