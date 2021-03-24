@@ -101,9 +101,9 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			Pause_Script := False
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
-			At_War := False ; if set to True, peace shield will be enabled
+			At_War := True ; if set to True, peace shield will be enabled
 			; ***************************************
 			; Main DEBUG and event Variables - END
 			; ***************************************
@@ -155,7 +155,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Mail_Collection
 				; Gosub Desert_Oasis
 				; Gosub Donate_Tech
-				; Gosub Activity_Center_Wonder
+				; Gosub Peace_Shield
 				; Gosub BruteForcePIN
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
@@ -866,21 +866,22 @@ Peace_Shield:
 	Shield_Search_Buttons:
 	Loop, 10
 	{
-		; Capture City Buffs position one text
+		; Capture City Buffs positions
 		Shield_Pos01 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 160], Size: [150, 21]})
-		; Capture City Buffs position one text
 		Shield_Pos02 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 312], Size: [150, 21]})
-		; Capture City Buffs Shield duration position one text
+		Shield_Pos03 := Search_Captured_Text_OCR(["Peace","Shield"], {Pos: [134, 462], Size: [150, 21]})
+		
+		; Capture City Buffs Shield duration
 		Shield_Ends_Pos01 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 242], Size: [200, 22]})
-		; Capture City Buffs Shield duration position one text
 		Shield_Ends_Pos02 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 394], Size: [200, 22]})
+		Shield_Ends_Pos03 := Search_Captured_Text_OCR(["Ends"], {Pos: [270, 543], Size: [200, 22]})
 
 		; Is City Buffs first item a shield? (Shield_Pos01.Found)? if so,
 		;	is duration of time left on shield displayed (Shield_Ends_Pos01.Found)? if so,
 		;		Shield_Ends := (Shield_Ends_Pos01.Text)
 		if Shield_Pos01.Found
 		{
-			Click_X := 165
+			Click_X := 200
 			Click_Y := 216
 			If Shield_Ends_Pos01.Found
 			{
@@ -891,7 +892,7 @@ Peace_Shield:
 				Goto, Activate_Shield
 		}
 
-		; Is City Buffs first item a shield? (Shield_Pos02.Found)? if so,
+		; Is City Buffs second item a shield? (Shield_Pos02.Found)? if so,
 		;	is duration of time left on shield displayed (Shield_Pos02.Found)? if so,
 		;		Shield_Ends := (Shield_Pos02.Text)
 		if Shield_Pos02.Found
@@ -901,6 +902,22 @@ Peace_Shield:
 			If Shield_Ends_Pos02.Found
 			{
 				Shield_Ends := (Shield_Ends_Pos02.Text)
+				Goto, Shield_Already_Active
+			}
+			Else
+				Goto, Activate_Shield
+		}
+
+		; Is City Buffs third item a shield? (Shield_Pos03.Found)? if so,
+		;	is duration of time left on shield displayed (Shield_Pos03.Found)? if so,
+		;		Shield_Ends := (Shield_Pos03.Text)
+		if Shield_Pos03.Found
+		{
+			Click_X := 200
+			Click_Y := 528
+			If Shield_Ends_Pos03.Found
+			{
+				Shield_Ends := (Shield_Ends_Pos03.Text)
 				Goto, Shield_Already_Active
 			}
 			Else
@@ -948,7 +965,7 @@ Peace_Shield:
 		EnvAdd, Shield_NOW_Plus_Duration, Shield_SS, s
 		Shield_Expires_DateTime := FormatTime(Shield_NOW_Plus_Duration)
 
-		if At_War
+		if (At_War && (Shield_DD < 1))
 		{
 			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
 			vRet := MsgBoxGetResult()
