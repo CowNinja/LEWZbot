@@ -324,8 +324,8 @@ Key_Menu() {
 	Gui, Keys:add,text,, F1 Switch App
 	Gui, Keys:add,text,, F3 Quick Collect
 	Gui, Keys:add,text,, F4 Exit Script
-	Gui, Keys:add,text,, F5 Reload MEmu
 	Gui, Keys:add,text,, F6 Reload Script
+	Gui, Keys:add,text,, CTRL+F6 Reload MEmu
 	; Gui, Keys:add,text,, F7 Reset_Posit = %Resetting_Posit% ; or (%Resetting_Posit% ? "True" : "False")
 	Gui, Keys:add,text,, % "F7 Reset_Posit = " (Resetting_Posit ? "Yes" : "No")
 	Gui, Keys:add,text,, % "Pause Script = " (A_IsPaused ? "Yes" : "No")

@@ -5358,7 +5358,7 @@ return
 
 F4::ExitApp
 
-F5::
+^F6::
 Reload_MEmu:
 {
 	Reload_MEmu()
