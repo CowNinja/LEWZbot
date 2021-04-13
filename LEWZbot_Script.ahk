@@ -85,7 +85,7 @@ while WinExist(FoundAppTitle)
 			Output .= "Email: " Val[1] " "
 			; Output .= "Password: " Val[2] " "
 			; Output .= "PIN: " Val[3]
-			MsgBox, 3, , Login to %Output% ? (10 second Timeout & auto),10
+			MsgBox, 3, , Login to %Output% ? (5 second Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout")
 				Gosub Switch_Account
@@ -108,7 +108,7 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - END
 			; ***************************************
 
-			; MsgBox, 4, , Enable Pause? (8 Second Timeout & skip), 8
+			; MsgBox, 4, , Enable Pause? (8 Second Timeout & skip), 5 ; 8
 			; vRet := MsgBoxGetResult()
 			; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 			; Pause_Script := True
@@ -246,7 +246,7 @@ while WinExist(FoundAppTitle)
 				Gosub Send_Mail_To_Boss
 				; Gosub Send_Message_In_Chat
 
-				; MsgBox, 4, , Pause before switching accounts? (4 Second Timeout & skip), 4
+				; MsgBox, 4, , Pause before switching accounts? (4 Second Timeout & skip), 5 ; 4
 				; vRet := MsgBoxGetResult()
 				; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 				; MsgBox, 0, Pause, Press OK to resume (No Timeout)
@@ -703,7 +703,7 @@ Switch_Account:
 	*/
 
 	Switch_Account_PIN:
-	MsgBox, 4, User PIN, user PIN: %User_PIN% - Pause script? (10 second Timeout), 5 ; 10
+	MsgBox, 4, User PIN, user PIN: %User_PIN% - Pause script? (5 second Timeout), 5 ; 15 ; 0
 	vRet := MsgBoxGetResult()
 	; if (vRet = "No")
 	;	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
@@ -834,7 +834,7 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1
 				{
 					PIN_Start := (User_PIN - Check_After_Loops)
 					stdout.WriteLine(A_NowUTC ",Found," Text_Found ",User_Email," User_Email ",Check_After_Loops," Check_After_Loops ",PIN," User_PIN )
-					MsgBox, 3, , % " PIN discovered for account:" User_Email "`nbetween: " PIN_Start " and " User_PIN " (10 second Timeout & auto)",10
+					MsgBox, 3, , % " PIN discovered for account:" User_Email "`nbetween: " PIN_Start " and " User_PIN " (10 second Timeout & auto)",15 ; 0
 						vRet := MsgBoxGetResult()
 						if (vRet = "Yes")
 							break	
@@ -863,7 +863,7 @@ Peace_Shield_OLD:
 	Mouse_Click(302,235) ; Tap on Peace shield
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-	MsgBox, 4, , Pause script to place shield? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5 ; 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
@@ -975,7 +975,7 @@ Peace_Shield:
 	}
 
 	Shield_Not_Found:
-	MsgBox, 4, , % "Shield Button not found in:""" Shield_Pos01.Text """ Or """ Shield_Pos02.Text """`, Try again? (10 second Timeout & skip)",10
+	MsgBox, 4, , % "Shield Button not found in:""" Shield_Pos01.Text """ Or """ Shield_Pos02.Text """`, Try again? (5 second Timeout & skip)",5 ; 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
 		goto Shield_Open_Base
@@ -1015,54 +1015,54 @@ Peace_Shield:
 
 		if (At_War && (Shield_DD < 1))
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires_DateTime = "Thursday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires_DateTime = "Friday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires_DateTime = "Saturday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
 		}
 		else if (Shield_Expires_DateTime = "Saturday" && Shield_Expires_Hour >= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else if (Shield_Expires_DateTime = "Sunday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, No shield needed. (5 sec Timeout & auto),5
+			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, No shield needed. (5 sec Timeout & auto),5 ; 5
 			Goto, Peace_Shield_END
 		}
 	}
 
-	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (5 second Timeout & skip),5
+	MsgBox, 4, , Shield Already Active`, %Capture_Screen_Text%`,  Select new shield anyway? (5 second Timeout & skip),5 ; 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
 		goto Activate_Shield
@@ -1113,7 +1113,7 @@ Peace_Shield:
 	Goto, Shield_Not_Selected
 
 	Shield_Not_Selected:
-	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again? (5 second Timeout & skip),5
+	MsgBox, 4, , Shield not selected:"%Capture_Screen_Text%"`, Try again? (5 second Timeout & skip),5 ; 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes")
 		Goto, Shield_Open_Base
@@ -1131,7 +1131,7 @@ Peace_Shield:
 	}
 
 	Peace_Shield_END:
-	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5
+	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5 ; 5
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
@@ -1377,12 +1377,12 @@ Shield_Warrior_Trial_etc:
 	; check shield and unclaimed rewards
 
 	/*
-	MsgBox, 4, Peace_Shield, Peace_Shield? (8 Second Timeout & skip), 8
+	MsgBox, 4, Peace_Shield, Peace_Shield? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		Gosub Peace_Shield
 
-	MsgBox, 4, Location, Check location? (8 Second Timeout & skip), 8
+	MsgBox, 4, Location, Check location? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		{
@@ -1397,13 +1397,13 @@ Shield_Warrior_Trial_etc:
 		+0}
 	*/
 
-	MsgBox, 4, Wonder Rewards, Wonder Rewards? (8 Second Timeout & skip), 8
+	MsgBox, 4, Wonder Rewards, Wonder Rewards? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		Gosub Activity_Center_Wonder
 
 	/*
-	; MsgBox, 4, SVIP, check SVIP? (8 Second Timeout & skip), 8
+	; MsgBox, 4, SVIP, check SVIP? (8 Second Timeout & skip), 5 ; 8
 	; vRet := MsgBoxGetResult()
 	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 	; {
@@ -1416,12 +1416,12 @@ Shield_Warrior_Trial_etc:
 		; Reload_MEmu()
 	; }
 
-	MsgBox, 4, Benefits, Benefits_Center_Monthly? (8 Second Timeout & skip), 8
+	MsgBox, 4, Benefits, Benefits_Center_Monthly? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		Gosub Benefits_Center_Monthly
 
-	; MsgBox, 4, Activate Skills, Activate Skills? (8 Second Timeout & skip), 8
+	; MsgBox, 4, Activate Skills, Activate Skills? (8 Second Timeout & skip), 5 ; 8
 	; vRet := MsgBoxGetResult()
 	; if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 	; {
@@ -1433,13 +1433,13 @@ Shield_Warrior_Trial_etc:
 		; Reload_MEmu()
 	; }
 
-	MsgBox, 4, Desert_Oasis, Desert_Oasis? (8 Second Timeout & skip), 8
+	MsgBox, 4, Desert_Oasis, Desert_Oasis? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		Gosub Desert_Oasis
 	*/
 
-	MsgBox, 4, , Pause? Check location`, SVIP`, wonder rewards`, activate skills`, etc? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Pause? Check location`, SVIP`, wonder rewards`, activate skills`, etc? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") ; || if (vRet = "No")
 		MsgBox, 0, Pause, Check location`, SVIP`, wonder rewards`, activate skills`, etc? Press OK to resume (No Timeout)
@@ -1862,7 +1862,7 @@ Benefits_Center:
 	Mouse_Click(553,172) ; Tap Tab 4 Benefits Center
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
-	; MsgBox, 4, , Battle_Honor_Collect (8 Second Timeout & skip), 8
+	; MsgBox, 4, , Battle_Honor_Collect (8 Second Timeout & skip), 5 ; 8
 	; vRet := MsgBoxGetResult()
 	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 	; Gosub Battle_Honor_Collect
@@ -2788,7 +2788,7 @@ Donate_Tech:
 				; VAR1 := RegExReplace(VAR1,"[\r\n]+")
 				; VAR2 := RegExReplace(VAR2,"[\r\n]+")
 				; VAR3 := RegExReplace(VAR3,"[\r\n]+")
-				MsgBox, 0, OCR return, % "Was value (F)ound? Using what (V)alue? Found (T)ext:`n" VAR1 "`n" VAR2 "`n" VAR3
+				MsgBox, 0, OCR return, % "Was value (F)ound? Using what (V)alue? Found (T)ext:`n" VAR1 "`n" VAR2 "`n" VAR5 ; 3
 				*/
 			}
 				; Gosub Click_Top_Tech
@@ -3412,7 +3412,7 @@ Alliance_Wages:
 		Gosub Click_Points_Boxes
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
-		; MsgBox, 4, , Retry? (8 Second Timeout & skip), 8
+		; MsgBox, 4, , Retry? (8 Second Timeout & skip), 5 ; 8
 		; vRet := MsgBoxGetResult()
 		; if (vRet = "No")
 		; goto Alliance_Wages_Active_TAB_2
@@ -3428,7 +3428,7 @@ Alliance_Wages:
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 
 		END_Alliance_Wages_Active_TAB_1:
-		; MsgBox, 4, , Retry? (8 Second Timeout & skip), 8
+		; MsgBox, 4, , Retry? (8 Second Timeout & skip), 5 ; 8
 		; vRet := MsgBoxGetResult()
 		; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		; goto TRY_MORE_01_Alliance_Wages_Active_TAB_1
@@ -3764,7 +3764,7 @@ Gather_Resources:
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	MsgBox, 4, , Gather Oil Well? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Gather Oil Well? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		{
@@ -3776,7 +3776,7 @@ Gather_Resources:
 	Gather_Farm:
 	Subroutine_Running := "Gather_Farm"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	MsgBox, 4, , Gather Farm? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Gather Farm? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		{
@@ -3802,7 +3802,7 @@ Gather_Resources:
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-	MsgBox, 4, , Gather Steel Mill? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Gather Steel Mill? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		{
@@ -3819,7 +3819,7 @@ Gather_Resources:
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	MsgBox, 4, , Gather Alloy Mine? (8 Second Timeout & skip), 8
+	MsgBox, 4, , Gather Alloy Mine? (8 Second Timeout & skip), 5 ; 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		{
@@ -3828,7 +3828,7 @@ Gather_Resources:
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		}
 
-	MsgBox, 4, , Gather more? (10 Second Timeout & skip), 10
+	MsgBox, 4, , Gather more? (10 Second Timeout & skip), 15 ; 0
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 		Gosub Gather_Fuel
@@ -3936,22 +3936,22 @@ Desert_Oasis:
 		goto SE_Tower
 		; goto END_Stealing
 
-		MsgBox, 4, , Steal from NW_Tower (595:599)? (8 Second Timeout & skip), 8
+		MsgBox, 4, , Steal from NW_Tower (595:599)? (8 Second Timeout & skip), 5 ; 8
 		vRet := MsgBoxGetResult()
 		if (vRet = "Yes")
 			goto NW_Tower
 
-		MsgBox, 4, , Steal from NE_Tower(599:595)? (8 Second Timeout & skip), 8
+		MsgBox, 4, , Steal from NE_Tower(599:595)? (8 Second Timeout & skip), 5 ; 8
 		vRet := MsgBoxGetResult()
 		if (vRet = "Yes")
 			goto NE_Tower
 
-		MsgBox, 4, , Steal from SW_Tower(600:604)? (8 Second Timeout & skip), 8
+		MsgBox, 4, , Steal from SW_Tower(600:604)? (8 Second Timeout & skip), 5 ; 8
 		vRet := MsgBoxGetResult()
 		if (vRet = "Yes")
 			goto SE_Tower
 
-		MsgBox, 4, , Steal from SE_Tower(604:599)? (8 Second Timeout & skip), 8
+		MsgBox, 4, , Steal from SE_Tower(604:599)? (8 Second Timeout & skip), 5 ; 8
 		vRet := MsgBoxGetResult()
 		if (vRet = "Yes")
 			goto SE_Tower
@@ -4007,7 +4007,7 @@ Desert_Oasis:
 		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
 		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
 		; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
-		; MsgBox, 4, Coordinates, Are Desert_Tower_X`,Y %Desert_Tower_X% %Desert_Tower_X% Correct? (8 Second Timeout & auto),8
+		; MsgBox, 4, Coordinates, Are Desert_Tower_X`,Y %Desert_Tower_X% %Desert_Tower_X% Correct? (8 Second Timeout & auto),5 ; 8
 
 		loop, 2
 		{
@@ -5150,7 +5150,7 @@ Check_For_Zombie_Popup()
 	PixelSearch, Px, Py, %Attack_UpperX%, %Attack_UpperY%, %Attack_LowerX%, %Attack_LowerY%, %Attack_Color%, Attack_Variation, Fast
 	if ErrorLevel
 	{
-		; MsgBox, No Zombie or Rover return 0
+		; MsgBox, No Zombie or Rover return 5 ; 0
 		return 0
 	}
 	else
@@ -5158,7 +5158,7 @@ Check_For_Zombie_Popup()
 		Mouse_Click(550,1037) ; Tap next to speaker
 		; Text_To_Screen("{Esc}")
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		; MsgBox, Zombie or Rover return 1
+		; MsgBox, Zombie or Rover return 5 ; 1
 		return 1
 	}
 	return
@@ -5334,7 +5334,7 @@ Elivate_program_old:
 			WinMinimize ; Minimize the window found by WinWait.
 			DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 			WinRestore
-			; MsgBox, WinWait "ahk_pid " %cmdPID% ; ahk_pid 16120
+			; MsgBox, WinWait "ahk_pid " %cmdPID% ; ahk_pid 16125 ; 0
 			FileAppend, "%A_NowUTC%"`,"Function"`,"%Function%"`,"WinWait cmdPID"`,"%cmdPID%"`n, %AppendCSVFile%
 			;break
 		}
