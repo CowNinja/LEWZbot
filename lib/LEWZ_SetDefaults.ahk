@@ -28,7 +28,7 @@ FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
 ; LogPrefix := DateString . "@" . TimeString
 
 ; String concatenation with explicit concatenation operator
-Global LogFile := ".\logs\" . FileDateTimeString . "_MEmu.log"
+Global LogFile := ".\logs\" . FileDateTimeString . "_MEmu_log.csv"
 Global CSVFile := ".\CSV\" . FileDateTimeString . "_Farms.csv"
 Global AppendCSVFile := ".\CSV\" . FileDateTimeString . "_Append.csv"
 
@@ -64,9 +64,9 @@ class MyObject
 	{
 		global
 		; MsgBox, MyObject is cleaning up prior to exiting...
-		stdout.WriteLine(A_NowUTC " ****************************************** ")
-		stdout.WriteLine(A_NowUTC " ************* GRACEFUL EXIT ************** ")
-		stdout.WriteLine(A_NowUTC " ****************************************** ")
+		stdout.WriteLine(A_NowUTC ",****************************************** ")
+		stdout.WriteLine(A_NowUTC ",************* GRACEFUL EXIT ************** ")
+		stdout.WriteLine(A_NowUTC ",****************************************** ")
 		stdout.Close()
 		CSVout.Close()
 	}
@@ -255,9 +255,9 @@ MsgMonitor(wParam, lParam, msg)
 
 ; SetDefaults()
 
-stdout.WriteLine(A_NowUTC " ****************************************** ")
-stdout.WriteLine(A_NowUTC " ******** STARTUP & INITIALIZATION ******** ")
-stdout.WriteLine(A_NowUTC " ****************************************** ")
+stdout.WriteLine(A_NowUTC ",****************************************** ")
+stdout.WriteLine(A_NowUTC ",******** STARTUP & INITIALIZATION ******** ")
+stdout.WriteLine(A_NowUTC ",****************************************** ")
 
 ; load User Logins
 User_Logins := {}
