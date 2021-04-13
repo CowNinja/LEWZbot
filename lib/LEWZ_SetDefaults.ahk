@@ -86,6 +86,22 @@ Move_MsgBox(P)
 	}
 }
 
+; Receives a custom message and up to two numbers from some other script or program (to send strings rather than numbers, see the example after this one).
+OnMessage(0x5555, "MsgMonitor")
+OnMessage(0x5556, "MsgMonitor")
+MsgMonitor(wParam, lParam, msg)
+{
+    ; Since returning quickly is often important, it is better to use ToolTip than
+    ; something like MsgBox that would prevent the function from finishing:
+	; ToolTip Message %msg% arrived:`nWPARAM: %wParam%`nLPARAM: %lParam%
+	Text_Found := wParam
+	/*
+	if wParam
+		Text_Found := True
+	else
+		Text_Found := False
+	*/
+}
 
 ; SetDefaults()
 {
@@ -100,7 +116,8 @@ Move_MsgBox(P)
 	Global rand_max := 10 ; Max time wait between buttons (ms)
 	Global rand_wait
 	Random, rand_wait, %rand_min%, %rand_max%
-	Global Delay_Micro := (50 + 0) ; 50 ; default delay for MICRO pauses
+	Global Delay_Pico := 10 ; 50 ; default delay for PICO pauses
+	Global Delay_Micro := (5*Delay_Pico + 0) ; 50 ; default delay for MICRO pauses
 	Global Delay_Short := (2*Delay_Micro + 0) ; 100 ; default delay for SHORT pauses
 	Global Delay_Medium := (5*Delay_Short + 0) ; 500 ; default delay for MEDIUM pauses
 	Global Delay_Long := (2*Delay_Medium + 0) ; 1000 ; default delay for LONG pauses
@@ -192,6 +209,7 @@ Move_MsgBox(P)
 	Global OCR_Y := 30
 	Global OCR_W := 560
 	Global OCR_H := 75
+	Global Text_Found := False
 
 	; variables for desert oasis tower coordinates
 	Global Desert_Tower_X := 0
