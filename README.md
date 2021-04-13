@@ -76,7 +76,7 @@ Threaded_Routine_Execution.ahk
 - [ ] Reset_Posit
 - [X] Go_Back_To_Home_Screen
 - [ ] Switch_Account
-- [ ] Enter_Login_Password_PIN
+- [ ] Login_Password_PIN_Enter()
 - [ ] BruteForcePIN
 
 ### position Dependant subroutines:
