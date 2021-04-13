@@ -93,14 +93,14 @@ while WinExist(FoundAppTitle)
 				goto END_of_user_loop
 
 			; loop, 2
-				if !Go_Back_To_Home_Screen()
-					Reload_MEmu()
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
 
 			; ***************************************
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			Pause_Script := False
-			CSB_Event := False ; True ; True if CSB Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
@@ -160,7 +160,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Speaker_Help
 				; Gosub Golden_Chest
 				; Gosub Reserve_Factory
-				; Gosub Gather_On_Base_RSS
+				; Login_Password_PIN_BruteForce()
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				; Gosub Game_Start_popups
@@ -172,8 +172,8 @@ while WinExist(FoundAppTitle)
 				; ****************************
 				; ** Position dependant **
 				; ****************************
-				if Peace_Shield_Needed
-					Gosub Peace_Shield
+				; if Peace_Shield_Needed
+				;	Gosub Peace_Shield
 				; Gosub Reset_Posit
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
@@ -199,8 +199,8 @@ while WinExist(FoundAppTitle)
 				; ******************************************
 
 				Gosub Depot_Rewards
-				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-				;	Gosub Golden_Chest
+				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+					Gosub Golden_Chest
 				Gosub Speaker_Help
 				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -358,12 +358,11 @@ Launch_LEWZ()
 
 	loop, 30
 	{
-		LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42]})
-		LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42]})
 		
 		Select_App()
 		Gosub Check_Window_Geometry
 		
+		LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42]})
 		if LL_Icon01.Found
 		{
 			Gui, Status:add,text,, LEWZ icon found
@@ -373,6 +372,7 @@ Launch_LEWZ()
 			Icon_Found := True ; Goto Launch_LEWZ_Continue
 		}
 
+		LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42]})
 		if LL_Icon02.Found
 		{
 			Gui, Status:add,text,, LEWZ icon found
@@ -381,6 +381,8 @@ Launch_LEWZ()
 			GUI_Count++
 			Icon_Found := True ; Goto Launch_LEWZ_Continue
 		}
+		
+		Login_Password_PIN_Enter()
 	}
 	if Icon_Found
 		Goto Launch_LEWZ_Continue
@@ -394,12 +396,12 @@ Launch_LEWZ()
 	
 	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
 	Loop, 10
-		Gosub Enter_Login_Password_PIN
+		Login_Password_PIN_Enter()
 	
 	Loop, 10
 	{
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-		Gosub Enter_Login_Password_PIN
+		Login_Password_PIN_Enter()
 		if Go_Back_To_Home_Screen()
 		{
 			Gui, Status:add,text,, LEWZ Loaded!!
@@ -641,7 +643,7 @@ Switch_Account:
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 		*/
 
-		Gosub Enter_Login_Password_PIN
+		Login_Password_PIN_Enter()
 	}
 
 	; gosub BruteForcePIN
@@ -668,7 +670,7 @@ Switch_Account:
 		if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
 			Mouse_Click(336,780, {Clicks: 1,Timeout: (1*Delay_Long+0)}) ; Tap "OK"
 
-		Gosub Enter_Login_Password_PIN
+		Login_Password_PIN_Enter()
 	}
 	*/
 
@@ -681,14 +683,37 @@ Switch_Account:
 		MsgBox, 0, Pause, User PIN: %User_PIN% Press OK to resume (No Timeout)
 
 	Switch_Account_END:
-	Gosub Enter_Login_Password_PIN
+	Login_Password_PIN_Enter()
 
 	return
 }
 
-Enter_Login_Password_PIN:
+; Login_Password_PIN_Find() <--> Login_Password_PIN_Taps
+; Login_Password_PIN_BruteForce() <--> Login_Password_PIN_Taps
+
+; Login_Password_PIN_Find() returns true if PIN text found, OR false if PIN text not found
+Login_Password_PIN_Enter() ; FMR Enter_Login_Password_PIN:
 {
-	; Subroutine_Running := "Enter_Login_Password_PIN"
+	; loop, 10
+	{
+		if Login_Password_PIN_Find() ; if Text_Found
+		{
+			Login_Password_PIN_Taps()
+			; Runwait, taskkill /im Login_Password_PIN_Find.ahk /f
+			return 1 ; true if PIN text found
+		}
+	}
+	; Runwait, taskkill /im Login_Password_PIN_Find.ahk /f
+	return 0 ; false if PIN text not found	
+}
+
+Login_Password_PIN_Find()
+{
+	; Subroutine_Running := "Login_Password_PIN_Find"
+	
+	; Text_Found := True
+	; RunDependent("Login_Password_PIN_Find.ahk")
+	; return
 
 	/*
 	Search_Captured_Text := ["Enter","login","password"]
@@ -698,59 +723,35 @@ Enter_Login_Password_PIN:
 	PIN_H := 50
 	OCR_PIN := Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [PIN_X, PIN_Y], Size: [PIN_W, PIN_H]})
 	*/
-		
+	
+	
+	; Is PIN text present on Screen?
+	;	If true, continue
+	; 	If False, return 0
 	loop, 2
 	{
 		OCR_PIN := Search_Captured_Text_OCR(["Enter","login","password"], {Pos: [190, 250], Size: [300, 50]})
 		if OCR_PIN.Found
-			Goto Enter_Login_Password_PIN_Dialog ; Break
+			return 1 ; true if PIN text found
 	}
-	return
-
-	Enter_Login_Password_PIN_Search:
-	Search_Captured_Text := ["Enter","login","password"]
-	PIN_X := 190
-	PIN_Y := 250
-	PIN_W := 300
-	PIN_H := 50
-	loop, 6
-	{
-		OCR_PIN := Search_Captured_Text_OCR(["Enter","login","password"], {Pos: [190, 250], Size: [300, 50]})
-		if OCR_PIN.Found
-			Goto Enter_Login_Password_PIN_Dialog ; Break
-	}
-	return
-
-	Enter_Login_Password_PIN_Search_old:
-	PIN_X := (190 + X_Pixel_offset)
-	PIN_Y := (250 + Y_Pixel_offset)
-	PIN_W := 300
-	PIN_H := 50
-	{
-		Capture_Screen_Text := OCR([PIN_X, PIN_Y, PIN_W, PIN_H], "eng")
-		Capture_Screen_Text := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
-
-		For index, value in Enter_Login_Password_PIN_Text_Array
-			If (RegExMatch(Capture_Screen_Text,value))
-				Goto Enter_Login_Password_PIN_Dialog
-	}
-	return
-
-	Enter_Login_Password_PIN_Dialog:
-		gosub Enter_Login_PIN_Dialog
-	return
+	Text_Found := False
+	return 0 ; false if PIN text not found
+	
 }
 
-Enter_Login_PIN_Dialog:
+Login_Password_PIN_Taps() ; FMR Enter_Login_PIN_Dialog:
 {
+	; tap backspace X times
 	loop, 6
-		Mouse_Click(577,1213, {Timeout: Delay_Micro+0}) ; Tap backspace
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Mouse_Click(465, 1164, {Timeout: 3*Delay_Pico}) ; Tap backspace
+		; old Mouse_Click(577,1213, {Timeout: 2*Delay_Pico}) ; Tap backspace
+	DllCall("Sleep","UInt",(1*Delay_Micro+0))
 
+	; Split PIN and tap each corrsponding number
 	Enter_User_PIN := StrSplit(User_PIN)
 	Loop % Enter_User_PIN.MaxIndex()
 	{
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		DllCall("Sleep","UInt",(3*Delay_Pico+0))
 
 		if Enter_User_PIN[A_Index] = "0"
 			Mouse_Click(340,1200, {Timeout: 0}) ; Tap 0
@@ -773,52 +774,50 @@ Enter_Login_PIN_Dialog:
 		if Enter_User_PIN[A_Index] = "9"
 			Mouse_Click(560,1100, {Timeout: 0}) ; Tap 9
 	}
+	DllCall("Sleep","UInt",(3*Delay_Micro+0))
 	return
 }
 
-BruteForcePIN:
+Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1000") ; FMR BruteForcePIN:
 {
-	; MsgBox, incorrect PIN: %User_PIN%
-	User_PIN_INIT := "110100"
-	Check_After_Loops := 100
-	loop, 1000000
-	{
-		User_PIN := (User_PIN_INIT + A_Index)
-		; MsgBox, PIN: %User_PIN%
-
-		loop, 5
-		if StrLen(User_PIN) < 6
-			User_PIN := "0" . User_PIN
-
-		if StrLen(User_PIN) > 6
-			User_PIN := "000000"
-
-		; MsgBox, sub:"%Subroutine_Running%" PIN:"%User_PIN%"
-		gosub Enter_Login_PIN_Dialog ; Enter_Login_Password_PIN
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-
-		if (Mod(A_Index, %Check_After_Loops%) == 0)
+	Subroutine_Running := "BruteForce PIN " . User_PIN
+	if Login_Password_PIN_Find()
+		loop, 1000000
 		{
-			Subroutine_Running := "User_PIN " . User_PIN
-			Capture_Screen_Text := OCR([220, 551, 121, 71], "eng")
-			If (RegExMatch(Capture_Screen_Text,"Incorrect")) || if (RegExMatch(Capture_Screen_Text,"orgot"))
-				goto NOT_Right_PIN
+			User_PIN := (User_PIN_INIT + A_Index)
 
-			Else
+			loop, 5
 			{
-				MsgBox, 3, , Did %User_PIN% work? OCR:"%Capture_Screen_Text%" (10 second Timeout & auto),10
-				vRet := MsgBoxGetResult()
-				if (vRet = "Yes") || if (vRet = "Timeout")
+				if StrLen(User_PIN) > 6
+					User_PIN := "000000"
+				if StrLen(User_PIN) < 6
+					User_PIN := "0" . User_PIN
+				if StrLen(User_PIN) = 6
 					break
 			}
-		}
-		NOT_Right_PIN:
-	}
+		
+			Login_Password_PIN_Taps() ; Login_Password_PIN_Find
+			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
-	PIN_Start := (User_PIN-100)
-	MsgBox, correct PIN between: %PIN_Start% and %User_PIN%
+			if (Mod(A_Index, %Check_After_Loops%) == 0) ; if !Text_Found
+				if Login_Password_PIN_Find()
+				{
+					PIN_Start := (User_PIN - Check_After_Loops)
+					stdout.WriteLine(A_NowUTC ",Found," Text_Found ",User_Email," User_Email ",Check_After_Loops," Check_After_Loops ",PIN," User_PIN )
+					MsgBox, 3, , % " PIN discovered for account:" User_Email "`nbetween: " PIN_Start " and " User_PIN " (10 second Timeout & auto)",10
+						vRet := MsgBoxGetResult()
+						if (vRet = "Yes")
+							break	
+
+					if Go_Back_To_Home_Screen()
+						break
+				}
+
+		}
 	return
 }
+
+
 
 Peace_Shield_OLD:
 {
@@ -1656,7 +1655,7 @@ Benefits_Center:
 	;	format: Name_of_Subroutine_To_Run: if "text inside quotes" is found
 	;	format: Name_of_Subroutine_To_Run : ["text to find", Run_True_Or_False]
 	;	Set tabs = True (1) to completed or False (0) to be skipped.
-	Subroutines_Text_Array := {Battle_Honor_Collect : ["BattleHonor", False]
+	Subroutines_Text_Array := {Battle_Honor_Collect : ["BattleHonor", True]
 		, Daily_Signin : ["Sign", True]
 		, Daily_Signin : ["LOGIN", True]
 		, Monthly_Package_Collect : ["MonthlyP", True]
@@ -1726,7 +1725,7 @@ Benefits_Center:
 	return
 
 	Benefits_Center_END:
-	; if !Go_Back_To_Home_Screen()
+	Go_Back_To_Home_Screen()
 		; Reload_MEmu()
 	return
 
@@ -1795,6 +1794,7 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
 
 		Gosub Benefits_Center_Reload
+		Gosub Daily_Signin
 		return
 	}
 	return
