@@ -55,7 +55,7 @@ while WinExist(FoundAppTitle)
 	loop
 	{
 		; ([Subroutine_Running,A_ThisLabel,FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
-		; stdout.WriteLine(A_NowUTC " Main_loop, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+		; stdout.WriteLine(A_NowUTC ",Main_loop," image_name ",Main_Loop_Counter:," Main_Loop_Counter ",Restart_Loops:," Restart_Loops ",Reset_App_Yes:," Reset_App_Yes)
 		; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; WinActivate ; Automatically uses the window found above.
 
 		; MouseMove UpperX+(WinWidth/2), UpperY+(WinHeight/2)
@@ -225,8 +225,8 @@ while WinExist(FoundAppTitle)
 					Gosub Mail_Collection
 					Gosub Alliance_Wages
 				}
-				if !Desert_Event
-					Gosub Gather_On_Base_RSS
+				; if !Desert_Event
+				;	Gosub Gather_On_Base_RSS
 				if Desert_Event
 				{
 					Gosub Desert_Oasis
@@ -292,41 +292,64 @@ MsgBox, Unexpected exit
 Reload_MEmu()
 {
 	Subroutine_Running := "Reload_MEmu"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	
 	MEmu_Instance := "MEmu_1" ; MEmu_1 MEmu_2
 	
-	Gui, Status:new, , Status
-	Gui, Status:Margin, 0, 0
-	Gui, Status:add,text,, MEmu VM Shutdown...
-	Gui, Status:show, x731 y0 w300 h500
-	GUI_Count++
-	RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm " . MEmu_Instance)
-	DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
-	Gui, Status:add,text,, MEmu VM Startup...
-	Gui, Status:show, x731 y0 w300 h500
-	GUI_Count++
-	RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" " . MEmu_Instance)
-	DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+	Reload_MEmu_START:
+	gosub Reload_MEmu_Kill
+	gosub Reload_MEmu_Launch
+		
 	Loop, 10
 	{
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		loop, 3
-		if Launch_LEWZ()
-		{
-			Gui, Status:add,text,, MEmu Loaded!!
+			if Launch_LEWZ()
+			{
+				Gui, Status:add,text,, MEmu finished Loaded!!
+				Gui, Status:show, x731 y0 w300 h500
+				GUI_Count++
+				return 1
+			}
+
+			Gui, Status:add,text,, Loading MEmu %A_Index%
 			Gui, Status:show, x731 y0 w300 h500
 			GUI_Count++
-			return 1
-		}
-		
-		Gui, Status:add,text,, Loading MEmu %A_Index%
-		Gui, Status:show, x731 y0 w300 h500
-		GUI_Count++
 	}
 	Gui, Status:add,text,, MEmu NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
 	GUI_Count++
+	goto Reload_MEmu_START
 	return 0
+	
+	
+	Reload_MEmu_Kill:
+	{
+		Gui, Status:new, , Status
+		Gui, Status:Margin, 0, 0
+		Gui, Status:add,text,, MEmu VM Shutdown...
+		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
+		loop, 2
+		{
+			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm " . MEmu_Instance)
+			DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
+		}
+		return
+	}
+
+	Reload_MEmu_Launch:
+	{		
+		Gui, Status:add,text,, MEmu VM Startup...
+		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
+		loop, 2
+		{
+			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" " . MEmu_Instance)
+			DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+		}
+		return
+	}
 }
 
 ; Launch_LEWZ() calls Go_Back_To_Home_Screen() and NOT Reload_MEmu()
@@ -334,6 +357,7 @@ Reload_MEmu()
 Launch_LEWZ()
 {
 	Subroutine_Running := "Launch_LEWZ"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; Gui, Status:new, , Status
 	; Gui, Status:Margin, 0, 0
 	; Gui, Status:add,text,, LEWZ loading...
@@ -427,6 +451,7 @@ Launch_LEWZ()
 Go_Back_To_Home_Screen()
 {
 	; Subroutine_Running := "Go_Back_To_Home_Screen"
+	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Go back
 	loop, 10
@@ -445,7 +470,7 @@ Go_Back_To_Home_Screen()
 	*/
 
 	Go_Back_To_Home_Screen_OCR_Quit:
-	loop, 40
+	loop, 80
 	{
 		loop, 2
 		{
@@ -485,6 +510,7 @@ Go_Back_To_Home_Screen()
 Game_Start_popups:
 {
 	Subroutine_Running := "Game_Start_popups"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Clear first pop-up by pressing back
 	Text_To_Screen("{F5}")
@@ -507,6 +533,7 @@ Game_Start_popups:
 Reset_Posit:
 {
 	Subroutine_Running := "Reset_Posit"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; go back x times
 
@@ -532,6 +559,7 @@ Reset_Posit:
 Switch_Account:
 {
 	Subroutine_Running := "Switch_Account"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Gui, Status:add,text,, ********************************
 	Gui, Status:add,text,, Switching to %User_Name%
 	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
@@ -710,6 +738,7 @@ Login_Password_PIN_Enter() ; FMR Enter_Login_Password_PIN:
 Login_Password_PIN_Find()
 {
 	; Subroutine_Running := "Login_Password_PIN_Find"
+	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	
 	; Text_Found := True
 	; RunDependent("Login_Password_PIN_Find.ahk")
@@ -781,6 +810,7 @@ Login_Password_PIN_Taps() ; FMR Enter_Login_PIN_Dialog:
 Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1000") ; FMR BruteForcePIN:
 {
 	Subroutine_Running := "BruteForce PIN " . User_PIN
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	if Login_Password_PIN_Find()
 		loop, 1000000
 		{
@@ -822,6 +852,7 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1
 Peace_Shield_OLD:
 {
 	Subroutine_Running := "Peace_Shield"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	Mouse_Click(290,405) ; Tap on base
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -845,6 +876,7 @@ Peace_Shield_OLD:
 Peace_Shield:
 {
 	Subroutine_Running := "Peace_Shield"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	Shield_Open_Base:
 	Shield_Found_3Day := False
@@ -1114,6 +1146,7 @@ Peace_Shield:
 Collect_Collisions:
 {
 	Subroutine_Running := "Collect_Collisions"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1164,6 +1197,7 @@ Collect_Collisions:
 Collect_Equipment_Crafting:
 {
 	Subroutine_Running := "Collect_Equipment_Crafting"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1214,6 +1248,7 @@ Collect_Equipment_Crafting:
 Collect_Recruits:
 {
 	Subroutine_Running := "Collect_Recruits"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1267,6 +1302,7 @@ Collect_Recruits:
 Collect_Runes:
 {
 	Subroutine_Running := "Collect_Runes"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 2
 	{
 		Mouse_Click(430,280) ; Tap Command Center
@@ -1302,6 +1338,7 @@ Collect_Runes:
 Collect_Red_Envelopes:
 {
 	Subroutine_Running := "Collect_Red_Envelopes"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	loop, 3
@@ -1590,6 +1627,7 @@ Activity_Center_Wonder:
 Benefits_Center_Monthly:
 {
 	Subroutine_Running := "Benefits_Center_Monthly"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -1649,6 +1687,7 @@ Benefits_Center_Monthly:
 Benefits_Center:
 {
 	Subroutine_Running := "Benefits_Center"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; Array of text to search for in benefits center tabs
@@ -1689,6 +1728,8 @@ Benefits_Center:
 		Mouse_Click(625,310) ; Tap Benefits Center
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0)) ; wait for Benefits Center to load
 	Gosub Benefits_Center_Reload
+	
+	/*
 
 	loop, 2
 	{
@@ -1698,15 +1739,20 @@ Benefits_Center:
 		Gosub Benefits_Center_Reload
 	}
 	; Goto Benefits_Center_END
-
+	*/
+	
 	Gosub Benefits_Check_Tabs
 	Loop, 3
+	{
+		Gosub Benefits_Center_Reload
 		Gosub Benefits_swipe_Check_Tabs
+	}
 
 	Goto Benefits_Center_END
 
 	Benefits_Center_Reload:
 	Subroutine_Running := "Benefits_Center_Reload"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 5
 	{
 		Search_Captured_Text := ["Benefits Center"]
@@ -1731,6 +1777,7 @@ Benefits_Center:
 
 	Benefits_swipe_Check_Tabs:
 	Subroutine_Running := "Benefits_swipe_Check_Tabs"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		; Gosub Swipe_Right
 		Gosub Swipe_Right2
@@ -1740,6 +1787,7 @@ Benefits_Center:
 
 	Benefits_Check_Tabs:
 	Subroutine_Running := "Benefits_Check_Tabs"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		Benefits_X_Min := 5 ; 15 ; 0
 		Benefits_X_Max := 480 ; 510 ; 409
@@ -1771,7 +1819,7 @@ Benefits_Center:
 
 			For Subroutine,Value in Subroutines_Text_Array
 			{
-				stdout.WriteLine(A_NowUTC " (inside) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+				stdout.WriteLine(A_NowUTC ",(inside) index:," A_Index ",Subroutine:," Subroutine ",Does:,""" Search_Captured_Text """,contain:,""" Value[1] """,(Captured_Text contain Value)? Captured_Text:,""" StrJoin(Benefits_Center_Capture, """ & """ ) """")
 				; Populate account variables from next keyed array item
 				; Benefit_Subroutine := Subroutine
 				; Text := Value[1]
@@ -1790,8 +1838,8 @@ Benefits_Center:
 			}
 			Benefits_Click_X += Benefits_X_Delta
 		}
-		; stdout.WriteLine(A_NowUTC " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
-		stdout.WriteLine(A_NowUTC " (end) index:" A_Index " Subroutine:" Subroutine " Does:""" Search_Captured_Text """ contain:""" Value[1] """ (Captured_Text contain Value)? Captured_Text: """ StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		; stdout.WriteLine(A_NowUTC ",(end) index:," A_Index ",Subroutine:," Subroutine ",Does:,""" Search_Captured_Text """,contain:,""" Value """,(Captured_Text contain Value)? Captured_Text:,""" StrJoin(Benefits_Center_Capture, """ & """ ) """")
+		stdout.WriteLine(A_NowUTC ",(end) index:," A_Index ",Subroutine:," Subroutine ",Does:,""" Search_Captured_Text """,contain:,""" Value[1] """,(Captured_Text contain Value)? Captured_Text:,""" StrJoin(Benefits_Center_Capture, """ & """ ) """")
 
 		Gosub Benefits_Center_Reload
 		Gosub Daily_Signin
@@ -1860,6 +1908,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Select_Reward"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(644,512) ; Select Reward - Drop Down Menu
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
@@ -1887,6 +1936,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Monthly_Package_Collect"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(500,1200) ; Tap Claim
 
@@ -1900,6 +1950,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Warrior_Trial_Collect"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Mouse_Click(500,1200) ; Tap Claim
 
 		Mouse_Click(560,1220) ; Select redeem steel
@@ -1926,6 +1977,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Single_Cumulation"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(560,550) ; Tap Claim
 
@@ -1939,6 +1991,7 @@ Benefits_Center:
 		;	return
 
 		Subroutine_Running := "Claim_Buttons"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Mouse_Click(180,1130, {Timeout: Delay_Short+0}) ; Tap Collide
 		if (OCR([530, 479, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #1
 			Mouse_Click(600,500, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 01
@@ -1962,6 +2015,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Daily_Signin"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		Mouse_Click(103,553) ; Daily Sign-In Click Day 1
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Micro+0))
 
@@ -2046,6 +2100,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Monthly_Signin"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Claim Monthly
 		loop, 2
 			Mouse_Click(342,1215) ; Tap collect Monthly Signin
@@ -2093,6 +2148,7 @@ Benefits_Center:
 		; 	return
 
 		Subroutine_Running := "Selection_Chest"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(87,430) ; Tap Free Chest
 		DllCall("Sleep","UInt",(rand_wait + 8*Delay_Short+0))
@@ -2131,6 +2187,7 @@ Benefits_Center:
 
 	Battle_Honor_Collect:
 	Subroutine_Running := "Battle_Honor_Collect"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		; if !Battle_Honor_Run
 		; 	return
@@ -2185,6 +2242,7 @@ Benefits_Center:
 Speaker_Help:
 {
 	Subroutine_Running := "Speaker_Help"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -2226,6 +2284,7 @@ Speaker_Help:
 Drop_Zone:
 {
 	Subroutine_Running := "Drop_Zone"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(285,200) ; Tap On Drop Zone
@@ -2278,6 +2337,7 @@ Drop_Zone:
 Adventure_Missions:
 {
 	Subroutine_Running := "Adventure_Missions"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	if !Go_Back_To_Home_Screen()
@@ -2288,6 +2348,7 @@ Adventure_Missions:
 Collect_Cafeteria:
 {
 	Subroutine_Running := "Collect_Cafeteria"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(379,736) ; Collect Cafeteria
@@ -2300,6 +2361,7 @@ Collect_Cafeteria:
 Active_Skill:
 {
 	Subroutine_Running := "Active_Skill"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(195,1195) ; Tap Activate Skills
@@ -2314,6 +2376,8 @@ Active_Skill:
 	loop, 2
 		Mouse_Click(215,425) ; Active Skill tab #2 - Officer
 	Gosub Active_Skill_Click_Button
+	
+	/*
 
 	; loop, 2
 	; Mouse_Click(340,425) ; Active Skill tab #3 - Combat
@@ -2326,6 +2390,7 @@ Active_Skill:
 	loop, 2
 		Mouse_Click(600,425) ; Active Skill tab #5 - Support
 	Gosub Active_Skill_Click_Button
+	*/
 
 	goto Active_Skill_END
 
@@ -2453,6 +2518,7 @@ Active_Skill:
 Collect_Chips_Underground:
 {
 	Subroutine_Running := "Collect_Chips_Underground"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; Tap underground
@@ -2472,6 +2538,7 @@ Collect_Chips_Underground:
 Reserve_Factory:
 {
 	Subroutine_Running := "Reserve_Factory"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -2592,10 +2659,12 @@ Reserve_Factory:
 
 		Alliance_Help_Continue:
 		; Mouse_Click(355,825) ; Tap Alliance Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))		
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 		Mouse_Click(480,140) ; Tap Reserve Factory Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))		
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 		return
 	}
@@ -2606,6 +2675,7 @@ Reserve_Factory:
 Donate_Tech:
 {
 	Subroutine_Running := "Donate_tech"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	Search_Captured_Text := ["Technology"]
 	loop, 3
@@ -2669,6 +2739,7 @@ Donate_Tech:
 		loop, 7
 		{
 			Subroutine_Running := "Donate_tech #" . Round(1+(Tech_Click_Y - Tech_Click_Initial)/Tech_Click_Inc, 0)
+			stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 			Inner_Loop_Donation:
 			; loop, 2
@@ -2831,30 +2902,20 @@ Donate_Tech:
 Depot_Rewards:
 {
 	Subroutine_Running := "Depot_Rewards"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	; set variables
 	Depot_Rewards_Button_Text_Array := ["Free","Reward","Request","Help"]
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	loop, 2
-	{
-		Mouse_Click(140,662, {Timeout: 1*Delay_Long+0}) ; Tap depot
-		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
-	}
-	; DllCall("Sleep","UInt",rand_wait + (3*Delay_Medium))
-
-	Search_Captured_Text := ["Treasures"]
 	loop, 5
 	{
-		loop, 3
-			if Search_Captured_Text_OCR(Search_Captured_Text).Found
-				goto Continue_Depot_Treasures
-
-		if !Go_Back_To_Home_Screen()
-			Reload_MEmu()
 		Mouse_Click(140,662, {Timeout: 1*Delay_Long+0}) ; Tap depot
 		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
-		; DllCall("Sleep","UInt",rand_wait + (2*Delay_Long))
+		
+		loop, 3
+			if Search_Captured_Text_OCR(["Treasures"]).Found
+				goto Continue_Depot_Treasures
 	}
 	goto Depot_Rewards_END
 
@@ -2892,7 +2953,8 @@ Depot_Rewards:
 	Click_X := (OCR_X + Click_X_Delta)
 	Click_Y := (OCR_Y + Click_Y_Delta)
 
-	loop, 8
+	; loop, 8
+	loop, 6
 	{
 		; Looking for Rewards Button titles that match list
 		if !Search_Captured_Text_OCR(Depot_Rewards_Button_Text_Array, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
@@ -2918,6 +2980,7 @@ Depot_Rewards:
 VIP_Shop:
 {
 	Subroutine_Running := "VIP_Shop"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(156,90) ; Tap VIP Shop
@@ -2995,6 +3058,7 @@ VIP_Shop:
 Mail_Collection:
 {
 	Subroutine_Running := "Mail_Collection"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3040,26 +3104,31 @@ Mail_Collection:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Subroutine_Running := "Single Player Arms Race"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,170) ; Tap Activities - SPAR (Single Player Arms Race)
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Alliance Arms Race"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,257) ; Tap Activities - AAR (Alliance Arms Race)
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Cross-State Battle"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,360) ; Tap Activities - CSB (Cross-State Battle)
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Desert Conflict"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,445) ; Tap Activities - Desert Conflict
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Other Event Mail"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,540) ; Tap Activities - Other Event Mail
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	Gosub Mark_All_As_Read
@@ -3070,6 +3139,7 @@ Mail_Collection:
 
 	Mark_All_As_Read:
 	Subroutine_Running := "Mark_All_As_Read"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Loop, 2
 	{
 		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26]}).Found ; Is the Mark as Read button displayed?
@@ -3093,6 +3163,7 @@ Mail_Collection:
 
 	Mail_Collection_Open:
 	Subroutine_Running := "Mail_Collection_Open"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	loop, 2
 	{
 		loop, 5
@@ -3185,6 +3256,7 @@ Open_Menu_Alliance(SubMenu := "")
 Alliance_Boss_Regular:
 {
 	Subroutine_Running := "Alliance_Boss"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3215,6 +3287,7 @@ Alliance_Boss_Regular:
 Alliance_Boss_Oasis:
 {
 	Subroutine_Running := "Alliance_Boss"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3245,6 +3318,7 @@ Alliance_Boss_Oasis:
 Alliance_Wages:
 {
 	Subroutine_Running := "Alliance_Wages"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3320,6 +3394,7 @@ Alliance_Wages:
 	; Alliance Wages - Active (TAB 1)
 	Alliance_Wages_Active_TAB_1:
 	Subroutine_Running := "Alliance_Wages_Active_TAB_1"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		; Gosub Click_Through_Wage_Tabs
 		Gosub Click_Points_Boxes
@@ -3362,6 +3437,7 @@ Alliance_Wages:
 	; Alliance Wages - Active (TAB 2)
 	Alliance_Wages_Active_TAB_2:
 	Subroutine_Running := "Alliance_Wages_Active_TAB_2"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		Mouse_Click(335,390) ; Tap Alliance Wages - Attendance (TAB 2)
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -3400,6 +3476,7 @@ Alliance_Wages:
 	; Alliance Wages - Active (TAB 3)
 	Alliance_Wages_Active_TAB_3:
 	Subroutine_Running := "Alliance_Wages_Active_TAB_3"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 
 		loop, 2
@@ -3515,6 +3592,7 @@ Alliance_Wages:
 Train_Daily_Requirement:
 {
 	Subroutine_Running := "Train_Daily_Requirement"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3661,6 +3739,7 @@ Train_Daily_Requirement:
 Gather_Resources:
 {
 	Subroutine_Running := "Gather_Resources"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -3670,6 +3749,7 @@ Gather_Resources:
 
 	Gather_Fuel:
 	Subroutine_Running := "Gather_Fuel"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; Tap search button x times
 	loop, 2
 	{
@@ -3695,6 +3775,7 @@ Gather_Resources:
 
 	Gather_Farm:
 	Subroutine_Running := "Gather_Farm"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	MsgBox, 4, , Gather Farm? (8 Second Timeout & skip), 8
 	vRet := MsgBoxGetResult()
 	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
@@ -3706,6 +3787,7 @@ Gather_Resources:
 
 	Gather_Steel:
 	Subroutine_Running := "Gather_Steel"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; Tap search button x times
 	loop, 2
 	{
@@ -3731,6 +3813,7 @@ Gather_Resources:
 
 	Gather_Alloy:
 	Subroutine_Running := "Gather_Alloy"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; Swipe left x times
 	loop, 2
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
@@ -3826,6 +3909,7 @@ Gather_Resources:
 Desert_Oasis:
 {
 	Subroutine_Running := "Desert_Oasis"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	loop, 3
 		if Enter_Coordinates_From_Home()
@@ -3835,6 +3919,7 @@ Desert_Oasis:
 
 	Desert_Oasis_Enter_Coordinates_Next:
 	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Next"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
 		; Mouse_Click(242,526) ; Tap inside X Coordinate Text box
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -3917,6 +4002,7 @@ Desert_Oasis:
 
 		Desert_Oasis_Tower:
 		Subroutine_Running := "Desert_Oasis_Tower"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
 		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
 		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
@@ -3992,6 +4078,7 @@ Desert_Oasis:
 Enter_Coordinates_From_Home()
 {
 	Subroutine_Running := "Enter_Coordinates_From_Home"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(73,1207) ; Tap on World Button
 	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0))
 
@@ -4007,6 +4094,7 @@ Enter_Coordinates_From_Home()
 Enter_Coordinates_From_World()
 {
 	Subroutine_Running := "Enter_Coordinates_From_World"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(337,1000) ; Tap on Enter Coordinates Button
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
@@ -4021,6 +4109,7 @@ Enter_Coordinates_From_World()
 Enter_Coordinates_Open_Check()
 {
 	Subroutine_Running := "Enter_Coordinates_Open_Check"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Coordinates_Box_Text := ["Enter","coordinates"]
 	OCR_X := 237
 	OCR_Y := 303
@@ -4036,6 +4125,7 @@ Enter_Coordinates_Open_Check()
 Gather_On_Base_RSS:
 {
 	Subroutine_Running := "Gather_On_Base_RSS"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -4333,6 +4423,7 @@ Gather_On_Base_RSS:
 Golden_Chest:
 {
 	Subroutine_Running := "Golden_Chest"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
@@ -4430,6 +4521,7 @@ Golden_Chest:
 Send_Mail_To_Boss:
 {
 	Subroutine_Running := "Send_Mail_To_Boss"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; FormatTime, DateString,, yyyy-MM-dd
 	; FormatTime, TimeString,, HH:mm
 	FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
@@ -4497,6 +4589,7 @@ Send_Mail_To_Boss:
 Send_Message_In_Chat:
 {
 	Subroutine_Running := "Send_Message_In_Chat"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(316,1122) ; Tap on Chat Bar
@@ -4540,6 +4633,7 @@ Send_Message_In_Chat:
 Get_Inventory:
 {
 	Subroutine_Running := "Get_Inventory"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(169,40) ; Tap Fuel on upper menu bar
@@ -4649,6 +4743,7 @@ Get_Inventory:
 Get_User_Info:
 {
 	Subroutine_Running := "Get_User_Info"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(47,80) ; Tap commander info on upper menu bar
@@ -4712,6 +4807,7 @@ Get_User_Info:
 Get_User_Location:
 {
 	Subroutine_Running := "Get_User_Location"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(76,1200) ; Tap World/home button
@@ -4747,6 +4843,7 @@ Get_User_Location:
 Base_Search_World_Map:
 {
 	Subroutine_Running := "Base_Search_World_Map"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Gosub Initialize_Variables
@@ -4847,7 +4944,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX1%, %PixelSearch_UpperY1%, %PixelSearch_LowerX1%, %PixelSearch_LowerY1%, *145 *Trans0xF0F0F0 %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC ",A," Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 1 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4857,7 +4954,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX2%, %PixelSearch_UpperY2%, %PixelSearch_LowerX2%, %PixelSearch_LowerY2%, *145 *Trans0xF0F0F0 %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC ",A," Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 2 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4867,7 +4964,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX1%, %PixelSearch_UpperY1%, %PixelSearch_LowerX1%, %PixelSearch_LowerY1%, *145 *Trans0xFFFFFF %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC ",A," Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 3 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4877,7 +4974,7 @@ Base_Search_World_Map:
 			ImageSearch, FoundPictureX, FoundPictureY, %PixelSearch_UpperX2%, %PixelSearch_UpperY2%, %PixelSearch_LowerX2%, %PixelSearch_LowerY2%, *145 *Trans0xFFFFFF %Base_Picture%
 			if !ErrorLevel ; (ErrorLevel = 0)
 			{
-				stdout.WriteLine(A_NowUTC "A " Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
+				stdout.WriteLine(A_NowUTC ",A," Base_Picture " was found at X"FoundPictureX " Y" FoundPictureY )
 				Mouse_Click(FoundPictureX,FoundPictureY) ; Tap Found Base
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 				MsgBox, 4 ErrorLevel: %ErrorLevel% - A %Base_Picture% found at X%FoundPictureX% Y%FoundPictureY%.
@@ -4971,7 +5068,7 @@ Base_Search_World_Map:
 				Found_City_Location := StrReplace(Found_City_Location, ",", ":")
 				; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
-				stdout.WriteLine(A_NowUTC "Found_City_Info1," Found_City_Info1 " Found_City_Info2," Found_City_Info2 ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
+				stdout.WriteLine(A_NowUTC ",Found_City_Info1," Found_City_Info1 " Found_City_Info2," Found_City_Info2 ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
 
 				if (Found_City_Location = "") ; if location blank, skip
 					goto Next_Coord_Search
@@ -4984,7 +5081,7 @@ Base_Search_World_Map:
 				Last_City_Name_Found := Found_City_Name2
 				Last_City_Loc_Found := Found_City_Location
 
-				stdout.WriteLine(A_NowUTC "Found_City_Info," Found_City_Info ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
+				stdout.WriteLine(A_NowUTC ",Found_City_Info," Found_City_Info ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
 
 				Next_Coord_Search:
 				; goto End_Of_Color_Search
@@ -5072,9 +5169,10 @@ Check_For_Zombie_Popup()
 Elivate_program:
 {
 	Subroutine_Running := "Elivate_program"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; ([Subroutine_Running,A_ThisLabel])
 
-	; stdout.WriteLine(A_NowUTC " Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC ",Elivate_program, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
 
 	; PERC := Chr(37)
 	; wmic process where "Name like '%PERC%MEmu%PERC%' OR Name like '%PERC%MEmu%PERC%'" CALL setpriority "above normal"
@@ -5291,9 +5389,10 @@ Elivate_program_old:
 Get_Window_Geometry:
 {
 	Subroutine_Running := "Get_Window_Geometry"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle%
 
-	; stdout.WriteLine(A_NowUTC " Get_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC ",Get_Window_Geometry," image_name ",Main_Loop_Counter:," Main_Loop_Counter ",Restart_Loops:," Restart_Loops ",Reset_App_Yes:," Reset_App_Yes)
 
 	LEWZGeo := Win_GetInfo(FoundAppTitle)
 	; FoundAppTitle := LEWZGeo.Title
@@ -5313,21 +5412,23 @@ Get_Window_Geometry:
 	LowerX := FoundAppWidth + UpperX ; compute lower right X coord of app window
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
-	; stdout.WriteLine(A_NowUTC "Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
-	; stdout.WriteLine(A_NowUTC " Calculated UpperX,UpperY " UpperX ", " UpperY " and LowerX, LowerY " LowerX ", " LowerY)
+	; stdout.WriteLine(A_NowUTC ",Sub:""" Subroutine_Running """ Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+ stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+	; stdout.WriteLine(A_NowUTC ",Calculated UpperX,UpperY," UpperX "," UpperY ",LowerX,LowerY," LowerX "," LowerY)
 	return
 }
 
 ; check and Reposition window according to predefined settings
 Check_Window_Geometry:
 {
-	Subroutine_Running := "Check_Window_Geometry"
+	; Subroutine_Running := "Check_Window_Geometry"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; stdout.WriteLine(A_NowUTC " Check_Window_Geometry, " image_name " Main_Loop_Counter: " Main_Loop_Counter " Restart_Loops: " Restart_Loops " Reset_App_Yes: " Reset_App_Yes)
+	; stdout.WriteLine(A_NowUTC ",Check_Window_Geometry," image_name ",Main_Loop_Counter:," Main_Loop_Counter ",Restart_Loops:," Restart_Loops ",Reset_App_Yes:," Reset_App_Yes)
 	; if !WinActive(FoundAppTitle), WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	; stdout.WriteLine(A_NowUTC " Inside Check_Window_Geometry, image_name: " image_name)
+	; stdout.WriteLine(A_NowUTC ",Inside Check_Window_Geometry image_name:," image_name)
 
 	LEWZGeo := Win_GetInfo(FoundAppTitle)
 	FoundAppTitle := LEWZGeo.Title
@@ -5341,7 +5442,8 @@ Check_Window_Geometry:
 	LowerY := FoundAppHeight + UpperY ; compute lower right X coord of app window
 
 	; WinGetPos, FoundAppX, FoundAppY, FoundAppWidth, FoundAppHeight, %FoundAppTitle%
-	; stdout.WriteLine(A_NowUTC "Sub:" Subroutine_Running " Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+	; stdout.WriteLine(A_NowUTC ",Sub:," Subroutine_Running ", Found App info: (X1:" FoundAppX ",Y1:" FoundAppY ",X2:" LowerX ",Y2:" LowerY ") Dimensions:" FoundAppWidth "x" FoundAppHeight " Title:" FoundAppTitle)
+ stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	if FoundAppX = App_Win_X
 		if FoundAppY = App_Win_Y
@@ -5422,6 +5524,7 @@ Check_Window_Geometry:
 Click_Middle_Screen:
 {
 	Subroutine_Running := "Click_Middle_Screen"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click((LowerX-UpperX)/2+UpperX,(LowerY-UpperY)/2+(UpperY-100)) ; Tap in the middle of the screen
 }
 
@@ -5494,6 +5597,7 @@ F6::
 Reload_Script:
 {
 	Subroutine_Running := "Reload_Script"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 	Gui, Status:new, , Status
 	Gui, Status:Margin, 0, 0
