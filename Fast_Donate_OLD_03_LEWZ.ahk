@@ -15,10 +15,7 @@ SetKeyDelay -1
 SetMouseDelay -1
 SetBatchLines -1
 
-; global App_Title := "(OLD_03_LEWZ)"
-;global App_Title := "(LEWZ001)"
-;global App_Title := "(LEWZ002)"
-global App_Title := "(LEWZ003)"
+global App_Title := "(OLD_03_LEWZ)"
 global App_Control := "Qt5QWindowIcon19"
 	
 ; F3::
@@ -26,15 +23,15 @@ global App_Control := "Qt5QWindowIcon19"
 Loop
 {
     Loop, 2
-        Tap(420,970)
+        Tap("420","970")
 
     Loop, 2
-        Tap(250,970)
+        Tap("250","970")
 		
     Loop, 2
     {
-        Tap(100,970)
-        Tap(340,750)
+        Tap("100","970")
+        Tap("340","750")
     }
 }
 
