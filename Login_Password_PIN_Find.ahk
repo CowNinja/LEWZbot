@@ -9,7 +9,6 @@
 ; SendInput is the fastest send method. SendEvent (the default one) is 2nd place, SendPlay a far 3rd place (it's the most compatible one though). SendInput does not obey to SetKeyDelay, SetMouseDelay, SetDefaultMouseSpeed; there is no delay between keystrokes in that mode.
 
 ;OPTIMIZATIONS START
-; #NoTrayIcon				; if you don't want a tray icon for this AutoHotkey program.
 #SingleInstance force	; Skips the dialog box and replaces the old instance automatically
 #NoEnv					; Recommended for performance and compatibility with future AutoHotkey releases.
 						; disables environment variables

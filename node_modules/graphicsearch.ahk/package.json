@@ -1,0 +1,33 @@
+{
+  "name": "graphicsearch.ahk",
+  "version": "0.3.3",
+  "description": "A fast, super powerful, and flexible screen searching library for AHK",
+  "main": "export.ahk",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chunjee/graphicsearch.ahk.git"
+  },
+  "keywords": [
+    "ahk",
+    "findtext",
+    "imagesearch"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "unit-testing.ahk": "github:chunjee/unit-testing.ahk"
+  },
+  "contributors": [
+    {
+      "name": "FeiYue"
+    }
+  ],
+  "author": "Shawn Brooker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chunjee/graphicsearch.ahk/issues"
+  },
+  "homepage": "https://chunjee.github.io/graphicsearch.ahk"
+}
