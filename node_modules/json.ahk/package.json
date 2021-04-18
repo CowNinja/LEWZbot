@@ -1,0 +1,25 @@
+{
+	"name": "json.ahk",
+	"version": "0.1.0",
+	"description": "JSON for ahk",
+	"main": "export.ahk",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Chunjee/json.ahk"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"unit-testing.ahk": "^0.6.1"
+	},
+	"contributors": [
+		{
+			"name": "Philip Taylor",
+			"url": "https://github.com/G33kDude"
+		},
+		{
+			"name": "Shawn Brooker",
+			"url": "https://github.com/chunjee"
+		}
+	],
+	"license": "MIT"
+}
