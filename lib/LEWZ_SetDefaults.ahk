@@ -174,6 +174,20 @@ MsgMonitor(wParam, lParam, msg)
 	Global LowerY := 0 ; initialize lower right Y coord of app window
 	Global WinWidth := 0 ; initialize Width of app window
 	Global WinHeight := 0 ; initialize Height of app window
+	/*
+	Default Window search
+	optionsObj := { x1: UpperX
+                , y1: UpperY
+                , x2: LowerX
+                , y2: LowerY
+                , err1: 0
+                , err0: 0
+                , screenshot: 1
+                , findall: 1
+                , joinqueries: 1
+                , offsetx: 1
+                , offsety: 1 }
+	*/
 
 	; Define desired window position and size	
 	Global App_Win_X := 0
