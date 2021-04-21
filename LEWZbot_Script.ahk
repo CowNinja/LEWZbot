@@ -107,7 +107,7 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			Pause_Script := False
-			CSB_Event := True ; True ; True if CSB Event is going on
+			CSB_Event := False ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
@@ -2397,7 +2397,7 @@ Active_Skill:
 		
 		loop, 2
 		{
-			Skill_Titles := Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [Button_OCR_X, Button_OCR_Y], Size: [Button_OCR_W, Button_OCR_H]})
+			Skill_Titles := Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [180, 445], Size: [330, 36]})
 			if Skill_Titles.Found
 					goto Active_Skill_Skill_Opened
 		}
