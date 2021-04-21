@@ -36,22 +36,22 @@ optionsObjOne := {   x1: 1
 
 WinActivate, LEWZ003 ahk_class Qt5QWindowIcon
 oGraphicSearch := new graphicsearch()			
-allQueries_Example := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
+allQueries_Depot := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
 
-gosub Find_Single_Instance
+gosub Find_Rewards_FREE
 
 SendEvent {Click, 340,150} ; Tap Tab 2 My Treasures
-gosub Find_ALL_Instances
+gosub Find_Rewards_ALL
 
 SendEvent {Click, 570,150} ; Tap Tab 3 Help_List
-gosub Find_ALL_Instances
+gosub Find_Rewards_ALL
 
 MsgBox, Done ski!
 return
 
 
-Find_Single_Instance:
-; Find single occurence of image
+Find_Rewards_FREE:
+; check if Free graphic was found
 loop, 8
 {
 	resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
@@ -65,12 +65,12 @@ loop, 8
 }
 return
 
-Find_ALL_Instances:
-; All occuring images, sort by closest to bottom of App, do it X number of times it loops
+Find_Rewards_ALL:
+; check if any graphic was found
 
 loop, 8
 {
-	resultObj := oGraphicSearch.search(allQueries_Example, optionsObjAll)
+	resultObj := oGraphicSearch.search(allQueries_Depot, optionsObjAll)
 	if (resultObj)
 	{
 		sortedResults := oGraphicSearch.resultSortDistance(resultObj, 300, 1216)

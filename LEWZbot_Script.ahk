@@ -42,8 +42,6 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #Include graphicsearch.ahk\export.ahk
 
 oGraphicSearch := new graphicsearch()
-result := oGraphicSearch.search("|<HumanReadableTag>*165$22.03z")
-; => [{1: 1215, 2: 407, 3: 22, 4: 10, id: "HumanReadableTag", x: 1226, y: 412}]
 
 ; #include lib\WindowListMenu_mod_004.ahk
 ; #include lib\LEWZ_Functions.ahk
@@ -378,26 +376,24 @@ Launch_LEWZ()
 		
 		Select_App()
 		Gosub Check_Window_Geometry
-		
-		LL_Icon01 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [410, 536], Size: [140, 42]})
-		if LL_Icon01.Found
+
+		loop
 		{
-			Gui, Status:add,text,, LEWZ icon found
-			Mouse_Click(480,500, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
-			Gui, Status:show, x731 y0 w300 h500
-			GUI_Count++
-			Icon_Found := True ; Goto Launch_LEWZ_Continue
+			resultObj := oGraphicSearch.search(0_Icon_LEWZ_Graphic, optionsObjOne)
+			if (resultObj)
+			{
+				Click_X := resultObj[A_Index].x
+				Click_Y := resultObj[A_Index].y
+				Gui, Status:add,text,, LEWZ icon found (%Click_X%,%Click_Y%)
+				Mouse_Click(Click_X,Click_Y, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
+				Gui, Status:show, x731 y0 w300 h500
+				GUI_Count++
+				Icon_Found := True ; Goto Launch_LEWZ_Continue
+			}
+			else
+				break
 		}
 
-		LL_Icon02 := Search_Captured_Text_OCR(["Last Empire"], {Pos: [7, 880], Size: [140, 42]})
-		if LL_Icon02.Found
-		{
-			Gui, Status:add,text,, LEWZ icon found
-			Mouse_Click(67,844, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
-			Gui, Status:show, x731 y0 w300 h500
-			GUI_Count++
-			Icon_Found := True ; Goto Launch_LEWZ_Continue
-		}
 		
 		Login_Password_PIN_Enter()
 	}
@@ -447,25 +443,25 @@ Go_Back_To_Home_Screen()
 	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Go back
+	/*
 	loop, 10
 	{
 		Text_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(rand_wait+0))
 	}
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	*/
 	
 	Go_Back_To_Home_Screen_OCR_Quit:
-	loop, 80
+	oGraphicSearch := new graphicsearch()	
+	loop, 160
 	{
-		loop, 2
-		{
-			Quit_OCR := Search_Captured_Text_OCR(["Quit"], {Pos: [150, 523], Size: [50, 26]})
-			if Quit_OCR.Found
+			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjOne)
+			if (resultObj)
 				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
-		}
-
+				
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 		Gosub Check_Window_Geometry
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
@@ -474,16 +470,12 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
 	loop, 10
 	{
-		loop, 2
-		{
-			Quit_OCR := Search_Captured_Text_OCR(["Quit"], {Pos: [150, 523], Size: [50, 26]})
-			if !Quit_OCR.Found
+			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjOne)
+			if !(resultObj)
 				return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
-		}
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 		Gosub Check_Window_Geometry
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
