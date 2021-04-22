@@ -19,7 +19,7 @@
 [ ] Collect_Chips_Underground
 [ ] Adventure_Missions
 [ ] Train_Daily_Requirement
-[ ] Activity_Center_Wonder
+[ ] Desert_Wonder
 [ ] Golden_Chest
 
 ### NOT position Dependant subroutines:
