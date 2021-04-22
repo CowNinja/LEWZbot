@@ -38,20 +38,31 @@ WinActivate, LEWZ003 ahk_class Qt5QWindowIcon
 oGraphicSearch := new graphicsearch()			
 allQueries_Example := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
 
-gosub Find_Single_Instance
+gosub Click_Single_Instance
 
 SendEvent {Click, 340,150} ; Tap Tab 2 My Treasures
-gosub Find_ALL_Instances
+gosub Click_ALL_Instances
 
 SendEvent {Click, 570,150} ; Tap Tab 3 Help_List
-gosub Find_ALL_Instances
+gosub Click_ALL_Instances
 
 MsgBox, Done ski!
 return
 
 
-Find_Single_Instance:
-; Find single occurence of image
+Find_Single_Instance()
+{
+	; Find single occurence of image, return true or false
+	oGraphicSearch := new graphicsearch()	
+	resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
+	if (resultObj)
+		return 1
+	Else
+		return 0
+}
+
+Click_Single_Instance:
+; Click single occurence of image
 loop, 8
 {
 	resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
@@ -65,7 +76,7 @@ loop, 8
 }
 return
 
-Find_ALL_Instances:
+Click_ALL_Instances:
 ; All occuring images, sort by closest to bottom of App, do it X number of times it loops
 
 loop, 8
