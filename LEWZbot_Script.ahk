@@ -154,9 +154,9 @@ while WinExist(FoundAppTitle)
 				; MsgBox, 0, Pause, Press OK to start (No Timeout)
 				; Gosub Benefits_Center
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
-				Gosub Benefits_Center
+				; Gosub Benefits_Center
 				; Gosub Mail_Collection
-				; Gosub Desert_Oasis
+				; Gosub Depot_Rewards
 				; Gosub Donate_Tech
 				; Gosub Peace_Shield
 				; Gosub BruteForcePIN
@@ -164,7 +164,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Golden_Chest
 				; Gosub Reserve_Factory
 				; Login_Password_PIN_BruteForce()
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
@@ -371,16 +371,16 @@ Launch_LEWZ()
 	Select_App()
 	Gosub Check_Window_Geometry
 	
-	oIcon_LEWZ_Search := new graphicsearch()	
+	oGraphicSearch := new graphicsearch()	
 	loop, 30
 	{
-		resultIcon_LEWZ := oIcon_LEWZ_Search.search(0_Icon_LEWZ_Graphic, optionsObjCoords)
-		if (resultIcon_LEWZ)
+		resultObj := oGraphicSearch.search(0_Icon_LEWZ_Graphic, optionsObjCoords)
+		if (resultObj)
 		{
-			loop, % resultIcon_LEWZ.Count()
+			loop, % resultObj.Count()
 			{
-				Click_X := resultIcon_LEWZ[A_Index].x
-				Click_Y := resultIcon_LEWZ[A_Index].y
+				Click_X := resultObj[A_Index].x
+				Click_Y := resultObj[A_Index].y
 				Gui, Status:add,text,, LEWZ icon found #%A_Index% (%Click_X%,%Click_Y%)
 				Mouse_Click(Click_X,Click_Y, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
 				Gui, Status:show, x731 y0 w300 h500
@@ -449,11 +449,11 @@ Go_Back_To_Home_Screen()
 	*/
 	
 	Go_Back_To_Home_Screen_OCR_Quit:
-	oBack_To_HomeSearch := new graphicsearch()	
+	oGraphicSearch := new graphicsearch()	
 	loop, 200
 	{
-			resultBack_To_Home := oBack_To_HomeSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
-			if (resultBack_To_Home)
+			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
+			if (resultObj)
 				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
 				
 		Text_To_Screen("{F5}")
@@ -466,8 +466,8 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
 	loop, 10
 	{
-			resultBack_To_Home := oBack_To_HomeSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
-			if !(resultBack_To_Home)
+			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
+			if !(resultObj)
 				return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
 
 		Text_To_Screen("{F5}")
@@ -616,15 +616,15 @@ Switch_Account:
 	}
 	*/
 	
-	oSwitch_AccountSearch := new graphicsearch()	
-	loop, 39
+	oGraphicSearch := new graphicsearch()	
+	loop, 30
 	{
 		
-		resultSwitch_Account := oSwitch_AccountSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
-		if (resultSwitch_Account)
+		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
+		if (resultObj)
 		{
-			Click_X := resultSwitch_Account[1].x
-			Click_Y := resultSwitch_Account[1].y
+			Click_X := resultObj[1].x
+			Click_Y := resultObj[1].y
 			Mouse_Click(Click_X,Click_Y, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap "OK"
 		}
 		
@@ -682,9 +682,9 @@ Login_Password_PIN_Find()
 	;	If true, continue
 	; 	If False, return 0
 	
-	oLogin_PINSearch := new graphicsearch()	
-	resultLogin_PIN := oLogin_PINSearch.search(1A123730_EnterPIN_Title_Graphic, optionsObjCoords)
-	if (resultLogin_PIN)
+	oGraphicSearch := new graphicsearch()	
+	resultObj := oGraphicSearch.search(1A123730_EnterPIN_Title_Graphic, optionsObjCoords)
+	if (resultObj)
 		return 1 ; true if PIN text found
 
 	Text_Found := False
@@ -815,19 +815,19 @@ Peace_Shield:
 
 		loop, 3
 		{
-			oShieldSearch := new graphicsearch()	
-			resultShield := oShieldSearch.search(B2240_CityBuffs_Title_Graphic, optionsObjCoords)
-			if (resultShield)
+			oGraphicSearch := new graphicsearch()	
+			resultObj := oGraphicSearch.search(B2240_CityBuffs_Title_Graphic, optionsObjCoords)
+			if (resultObj)
 				Goto, Shield_Search_Buttons
 			
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
-			oShieldSearch := new graphicsearch()	
-			resultShield := oShieldSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
-			if (resultShield)
+			oGraphicSearch := new graphicsearch()	
+			resultObj := oGraphicSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
+			if (resultObj)
 			{
-				Click_X := resultShield[1].x
-				Click_Y := resultShield[1].y
+				Click_X := resultObj[1].x
+				Click_Y := resultObj[1].y
 				Mouse_Click(Click_X,Click_Y) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 			}
@@ -843,19 +843,20 @@ Peace_Shield:
 	Goto, Shield_Open_Base
 	
 	Shield_Search_Buttons:	
-	oShieldSearch := new graphicsearch()
-	loop, 30
+	oGraphicSearch := new graphicsearch()
+	loop, 10
 	{
-		resultShield := oShieldSearch.search(B2241_Shield_Button_Graphic, optionsObjCoords)
-		if (resultShield)
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		resultObj := oGraphicSearch.search(B2241_Shield_Button_Graphic, optionsObjCoords)
+		if (resultObj)
 		{
-			Click_X := resultShield[1].x
-			Click_Y := resultShield[1].y
+			Click_X := resultObj[1].x
+			Click_Y := resultObj[1].y
 			Mouse_Click(Click_X,Click_Y) ; Click to open shield menu
 			Goto Shield_Search_Title
 		}
 	}
-	MsgBox, Shield_Search_Buttons Failed
+	; MsgBox, Shield_Search_Buttons Failed
 	goto Peace_Shield_END
 	
 	Shield_Search_Title:
@@ -863,9 +864,9 @@ Peace_Shield:
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	loop, 30
 	{
-		oShieldSearch := new graphicsearch()			
-		resultShield := oShieldSearch.search(B22410_Shield_Title_Graphic, optionsObjCoords)
-		if (resultShield)
+		oGraphicSearch := new graphicsearch()			
+		resultObj := oGraphicSearch.search(B22410_Shield_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			Goto Shield_Search_Ends
 	}
 	; MsgBox, Shield_Search_Title Failed
@@ -1031,12 +1032,12 @@ Peace_Shield:
 
 	loop, 30
 	{
-		oShieldSearch := new graphicsearch()	
-		resultShield := oShieldSearch.search(B22412_Replace_OK_Button_Graphic, optionsObjCoords)
-		if (resultShield)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(B22412_Replace_OK_Button_Graphic, optionsObjCoords)
+		if (resultObj)
 		{
-			Click_X := resultShield[1].x
-			Click_Y := resultShield[1].y
+			Click_X := resultObj[1].x
+			Click_Y := resultObj[1].y
 			Mouse_Click(Click_X,Click_Y) ;  Left, 1} ; Tap Get & Use button, to confirm buying shield
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		}
@@ -1068,9 +1069,9 @@ Collect_Collisions:
 		Mouse_Click(515,375) ; Tap Collision
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 			
-		oCollectSearch := new graphicsearch()	
-		resultCollect := oCollectSearch.search(B3450_Collision_Title_Graphic, optionsObjCoords)
-		if (resultCollect)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(B3450_Collision_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			goto Collect_Collisions_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1121,9 +1122,9 @@ Collect_Equipment_Crafting:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(430,390) ; Tap Craft
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-		oCollectSearch := new graphicsearch()	
-		resultCollect := oCollectSearch.search(B3440_Craft_Title_Graphic, optionsObjCoords)
-		if (resultCollect)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(B3440_Craft_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			goto Collect_Equipment_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1174,9 +1175,9 @@ Collect_Recruits:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(350,375) ; Tap Recruit
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-		oCollectSearch := new graphicsearch()	
-		resultCollect := oCollectSearch.search(B3430_Recruit_Title_Graphic, optionsObjCoords)
-		if (resultCollect)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(B3430_Recruit_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			goto Collect_Recruits_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1230,9 +1231,9 @@ Collect_Runes:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(570,340) ; Rune Extraction
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-		oCollectSearch := new graphicsearch()	
-		resultCollect := oCollectSearch.search(B3460_RuneExtract_Title_Graphic, optionsObjCoords)
-		if (resultCollect)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(B3460_RuneExtract_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			goto Collect_Runes_Found
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -1419,7 +1420,7 @@ Desert_Wonder_old:
 
 Activity_Center_Open()
 {
-	oActivityCtrSearch := new graphicsearch()
+	oGraphicSearch := new graphicsearch()
 	loop, 3
 	{
 		loop, 3
@@ -1436,8 +1437,8 @@ Activity_Center_Open()
 			Loop, 5
 			{
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-				resultActivityCtr := oActivityCtrSearch.search(910_ActivityCtr_Title_Graphic, optionsObjCoords)
-				if (resultActivityCtr)
+				resultObj := oGraphicSearch.search(910_ActivityCtr_Title_Graphic, optionsObjCoords)
+				if (resultObj)
 					return 1
 			}
 		}
@@ -1456,12 +1457,12 @@ Desert_Wonder:
 	loop, 10
 	{
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		oWonderSearch := new graphicsearch()			
-		resultWonder := oWonderSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
-		if (resultWonder)
+		oGraphicSearch := new graphicsearch()			
+		resultObj := oGraphicSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
+		if (resultObj)
 		{
-			Click_X := resultWonder[1].x
-			Click_Y := resultWonder[1].y
+			Click_X := resultObj[1].x
+			Click_Y := resultObj[1].y
 			Mouse_Click(Click_X,Click_Y) ; Tap activity tab
 			goto Desert_Wonder_Continue_Tab
 		}
@@ -1475,9 +1476,9 @@ Desert_Wonder:
 	{
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		; Find single occurence of image, return true or false
-		oWonderSearch := new graphicsearch()	
-		resultWonder := oWonderSearch.search(9170_DesertWonder_Title_Graphic, optionsObjCoords)
-		if (resultWonder)
+		oGraphicSearch := new graphicsearch()	
+		resultObj := oGraphicSearch.search(9170_DesertWonder_Title_Graphic, optionsObjCoords)
+		if (resultObj)
 			goto Desert_Wonder_Continue_Claim
 	}
 	goto Desert_Wonder_END
@@ -1573,15 +1574,15 @@ Benefits_Center:
 	Benefits_Center_Reload:
 	Subroutine_Running := "Benefits_Center_Reload"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	oBenefitsSearch := new graphicsearch()	
+	oGraphicSearch := new graphicsearch()	
 	loop, 5
 	{
 		loop, 5
 		{
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			; Find single occurence of image, return true or false
-			resultBenefits := oBenefitsSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
-			if (resultBenefits)
+			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
+			if (resultObj)
 				return
 		}
 
@@ -1611,13 +1612,13 @@ Benefits_Center:
 
 			If (Value[2])
 			{
-				oBenefitsSearch := new graphicsearch()	
-				resultBenefits := oBenefitsSearch.search(Value[1], optionsObjCoords)
-				if (resultBenefits)
+				oGraphicSearch := new graphicsearch()	
+				resultObj := oGraphicSearch.search(Value[1], optionsObjCoords)
+				if (resultObj)
 				{
-					Click_X := resultBenefits[1].x
-					Click_Y := resultBenefits[1].y
-					; MsgBox, %  "x:" resultBenefits.x " y:" resultBenefits.y "`n0 x:" resultBenefits[0].x " y:" resultBenefits[0].y "`n1 x:" resultBenefits[1].x " y:" resultBenefits[1].y "`n2 x:" resultBenefits[2].x " y:" resultBenefits[2].y "`n3 x:" resultBenefits[3].x " y:" resultBenefits[3].y
+					Click_X := resultObj[1].x
+					Click_Y := resultObj[1].y
+					; MsgBox, %  "x:" resultObj.x " y:" resultObj.y "`n0 x:" resultObj[0].x " y:" resultObj[0].y "`n1 x:" resultObj[1].x " y:" resultObj[1].y "`n2 x:" resultObj[2].x " y:" resultObj[2].y "`n3 x:" resultObj[3].x " y:" resultObj[3].y
 					loop, 3
 						Mouse_Click(Click_X,Click_Y) ; Tap found Heading
 					
@@ -2632,76 +2633,75 @@ Depot_Rewards:
 	Subroutine_Running := "Depot_Rewards"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
-	; set variables
-	Depot_Rewards_Button_Text_Array := ["Free","Reward","Request","Help"]
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-
+	; set variables 
+	oGraphicSearch := new graphicsearch()
 	loop, 5
 	{
 		Mouse_Click(140,662, {Timeout: 1*Delay_Long+0}) ; Tap depot
 		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
-		
-		loop, 3
-			if Search_Captured_Text_OCR(["Treasures"]).Found
+		loop, 20
+		{
+			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
+			resultObj := oGraphicSearch.search(B350_Depot_Title_Graphic, optionsObjOne)
+			if (resultObj)
 				goto Continue_Depot_Treasures
+		}
+		Go_Back_To_Home_Screen()
 	}
 	goto Depot_Rewards_END
 
-	Continue_Depot_Treasures:
-
-	Mouse_Click(105,150) ; Tap Tab 1 Treasure list
-	Gosub Depot_Click_Button
+	Continue_Depot_Treasures:	
+	gosub Find_Rewards_FREE
 
 	Mouse_Click(340,150) ; Tap Tab 2 My Treasures
-	Gosub Depot_Click_Button
+	gosub Find_Rewards_ALL
 
 	Mouse_Click(570,150) ; Tap Tab 3 Help_List
-	Gosub Depot_Click_Button
+	gosub Find_Rewards_ALL
 
 	Depot_Rewards_END:
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
 	return
 
-	Depot_Click_Button:
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	; set variables
-	Max_X := Min_X := 510	; 515
-	Max_Y := (Min_Y + 3*OCR_Y_Delta) ; 1200
-	; Min_X := 500
-	Min_Y := 415	; 400
-	OCR_X := Min_X ; delta 71-276-481 = 205
-	OCR_Y := Min_Y ; delta 600-815 = 215
-	OCR_W := 130	; 150 ; X = 510-650
-	OCR_H := 30	; 50 ; Y = 400-450
-	OCR_X_Delta := 0
-	OCR_Y_Delta := 202	; 200
-	Click_X_Delta := 75
-	Click_Y_Delta := 25
-	Click_X := (OCR_X + Click_X_Delta)
-	Click_Y := (OCR_Y + Click_Y_Delta)
-
-	; loop, 8
-	loop, 6
+	Find_Rewards_FREE:
+	DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
+	oGraphicSearch := new graphicsearch()			
+	; check if Free graphic is found
+	loop, 8
 	{
-		; Looking for Rewards Button titles that match list
-		if !Search_Captured_Text_OCR(Depot_Rewards_Button_Text_Array, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
-			goto Next_Depot_Button
-
-		Depot_Rewards_Click_Found_Item:
-		Mouse_Click(Click_X,Click_Y, {Timeout: 1*Delay_Medium+0}) ; Tap found button
-		Mouse_Click(320,70) ; Tap top title bar
-		; Mouse_Click(340,70, {Timeout: 1*Delay_Short+0}) ; Tap Outside Rewards Box
-		; DllCall("Sleep","UInt",rand_wait + (4*Delay_Short))
-
-		Next_Depot_Button:
-		if (OCR_Y >= Max_Y)
-			OCR_Y := Min_Y
-		else
-			OCR_Y += OCR_Y_Delta
-		Click_Y := (OCR_Y + Click_Y_Delta)
+		resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
+		if (resultObj)
+		{
+			Click_X := resultObj[1].x
+			Click_Y := resultObj[1].y
+			Mouse_Click(Click_X,Click_Y)
+			; msgbox, % "count:" A_Index "`nx: " Click_X ", y: " Click_Y
+		}
 	}
 	return
+
+	Find_Rewards_ALL:
+	DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
+	; check if any graphic was found
+	oGraphicSearch := new graphicsearch()			
+	allQueries_Depot := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
+	loop, 8
+	{
+		resultObj := oGraphicSearch.search(allQueries_Depot, optionsObjAll)
+		if (resultObj)
+		{
+			sortedResults := oGraphicSearch.resultSortDistance(resultObj, 300, 1216)
+			loop, % sortedResults.Count()
+			{
+				Click_X := resultObj[A_Index].x
+				Click_Y := resultObj[A_Index].y
+				Mouse_Click(Click_X,Click_Y)
+				DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
+				Mouse_Click(320,70) ; Tap top title bar
+			}
+		}
+	}
 	return
 }
 
@@ -4806,7 +4806,7 @@ Base_Search_World_Map:
 
 				stdout.WriteLine(A_NowUTC ",Found_City_Info," Found_City_Info ",Found_City_Name," Found_City_Name ",Found_City_Location," Found_City_Location ",")
 
-				Next_Coord_Search:
+				Next_CoGraphicSearch:
 				; goto End_Of_Color_Search
 
 				if (PixelSearch_UpperX1 < Px)
