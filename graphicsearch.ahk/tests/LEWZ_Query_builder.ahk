@@ -65,6 +65,7 @@ Click_Single_Instance:
 ; Click single occurence of image
 loop, 8
 {
+	oGraphicSearch := new graphicsearch()			
 	resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
 	if (resultObj)
 	{
