@@ -155,7 +155,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
 				; Gosub Benefits_Center
-				; Gosub Mail_Collection
+				; Gosub Desert_Wonder
 				; Gosub Depot_Rewards
 				; Gosub Donate_Tech
 				; Gosub Peace_Shield
@@ -164,8 +164,8 @@ while WinExist(FoundAppTitle)
 				; Gosub Golden_Chest
 				; Gosub Reserve_Factory
 				; Login_Password_PIN_BruteForce()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
 				; Gosub Game_Start_popups
 				; Gosub Shield_Warrior_Trial_etc
 				; ******************************************
@@ -632,6 +632,17 @@ Switch_Account:
 			Mouse_Click(340,870, {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap Yes
 
 		Login_Password_PIN_Enter()
+	}
+	
+	if Search_Captured_Text_OCR(["0","1","2","3","4","5","6","7","8","9","%"], {Pos: [260, 1060], Size: [180, 50]}).Found
+		break
+		
+			
+	while (Search_Captured_Text_OCR(["0","1","2","3","4","5","6","7","8","9","%"], {Pos: [260, 1060], Size: [180, 50]}).Found)
+	{
+		Gui, Status:add,text,, Account Loading
+		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
 	}
 
 	; gosub BruteForcePIN
@@ -1453,19 +1464,22 @@ Desert_Wonder:
 		goto Desert_Wonder_END
 
 	Desert_Wonder_Continue:
-	
-	loop, 10
+	oGraphicSearch := new graphicsearch()	
+	loop, 3
 	{
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		oGraphicSearch := new graphicsearch()			
-		resultObj := oGraphicSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
-		if (resultObj)
+		loop, 15
 		{
-			Click_X := resultObj[1].x
-			Click_Y := resultObj[1].y
-			Mouse_Click(Click_X,Click_Y) ; Tap activity tab
-			goto Desert_Wonder_Continue_Tab
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			resultObj := oGraphicSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
+			if (resultObj)
+			{
+				Click_X := resultObj[1].x
+				Click_Y := resultObj[1].y
+				Mouse_Click(Click_X,Click_Y) ; Tap Desert Wonder
+				goto Desert_Wonder_Continue_Tab
+			}
 		}
+		Mouse_Drag(350, 1100, 350, 600, {EndMovement: T, SwipeTime: 500})
 	}
 	goto Desert_Wonder_END
 
@@ -1474,7 +1488,7 @@ Desert_Wonder:
 
 	Loop, 10
 	{
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		; Find single occurence of image, return true or false
 		oGraphicSearch := new graphicsearch()	
 		resultObj := oGraphicSearch.search(9170_DesertWonder_Title_Graphic, optionsObjCoords)
@@ -1485,7 +1499,15 @@ Desert_Wonder:
 
 	Desert_Wonder_Continue_Claim:
 	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
+	Mouse_Click(259, 144) ; Tap Activity Tab
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	
+	loop, 2
+	{
+		gosub Wonder_Reward_Boxes
+		gosub Receive_Rewards
+	}
+	goto Desert_Wonder_END
 	
 	Wonder_Reward_Boxes:
 	Min_X := 240
@@ -1502,13 +1524,14 @@ Desert_Wonder:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Mouse_Click(330,1000) ; Tap Collect Rewards
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(330,70) ; Tap to clear reward	
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		loop, 2
+			Mouse_Click(330,70, {Clicks: 2,Timeout: Delay_Medium+0})
 		if ((Click_X <= Max_X) && (Click_X >= Min_X))
 			Click_X += Click_X_Delta
 		else
 			Click_X := Min_X
 	}
+	return
 	
 	Receive_Rewards:
 	Min_X := 600
@@ -1525,13 +1548,14 @@ Desert_Wonder:
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 		Mouse_Click(330,1000) ; Tap Collect Rewards
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		Mouse_Click(330,70) ; Tap to clear reward	
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		loop, 2
+			Mouse_Click(330,70, {Clicks: 2,Timeout: Delay_Medium+0})
 		if ((Click_Y <= Max_Y) && (Click_Y >= Min_Y))
 			Click_Y += Click_Y_Delta
 		else
 			Click_Y := Min_Y
 	}
+	return
 	
 	Desert_Wonder_END:
 	; MsgBox, 0, Pause, All rewards claimed? Press OK to return home (No Timeout)
@@ -2641,7 +2665,7 @@ Depot_Rewards:
 		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
 		loop, 20
 		{
-			DllCall("Sleep","UInt",rand_wait + (1*Delay_Short))
+			DllCall("Sleep","UInt",rand_wait + (2*Delay_Short))
 			resultObj := oGraphicSearch.search(B350_Depot_Title_Graphic, optionsObjOne)
 			if (resultObj)
 				goto Continue_Depot_Treasures
@@ -2665,11 +2689,11 @@ Depot_Rewards:
 	return
 
 	Find_Rewards_FREE:
-	DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
 	oGraphicSearch := new graphicsearch()			
 	; check if Free graphic is found
 	loop, 8
 	{
+		DllCall("Sleep","UInt",rand_wait + (2*Delay_Short))
 		resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjOne)
 		if (resultObj)
 		{
@@ -2677,6 +2701,7 @@ Depot_Rewards:
 			Click_Y := resultObj[1].y
 			Mouse_Click(Click_X,Click_Y)
 			; msgbox, % "count:" A_Index "`nx: " Click_X ", y: " Click_Y
+			break
 		}
 	}
 	return
@@ -2686,7 +2711,7 @@ Depot_Rewards:
 	; check if any graphic was found
 	oGraphicSearch := new graphicsearch()			
 	allQueries_Depot := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
-	loop, 8
+	loop, 32
 	{
 		resultObj := oGraphicSearch.search(allQueries_Depot, optionsObjAll)
 		if (resultObj)
