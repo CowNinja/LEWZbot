@@ -187,7 +187,7 @@ MsgMonitor(wParam, lParam, msg)
 	Default Window search:
 	[options.x1:=0] (number), [options.y1:=0] (number) ; the search scope's upper left corner coordinates
 	[options.x2:=A_ScreenWidth] (number), [options.y2:=A_ScreenHeight] (number) ; the search scope's lower right corner coordinates
-	[options.err1:=1] (number), [options.err0:=0] (number) ; Fault tolerance of graphic and background (0.1=10%)
+	[options.err1:=1], [options.err0:=0] ; A number between 0 and 1 (0.1=10%) for fault tolerance of foreground (err1) and background (err0)
 	[options.screenshot:=1] (boolean) ; Wether or not to capture a new screenshot or not. If the value is 0, the last captured screenshot will be used
 	[options.findall:=1] (boolean) ; Wether or not to find all instances or just one.
 	[options.joinqueries:=1] (boolean) ; Join all GraphicsSearch queries for combination lookup.
@@ -196,7 +196,9 @@ MsgMonitor(wParam, lParam, msg)
 	Global optionsObjCoords := {   x1: 1
                 , y1: 32
                 , x2: 689
-                , y2: 1216}
+                , y2: 1216
+                , err1: 0.1
+                , err0: 0.1}
 	Global optionsObjALL := {   x1: 1
                 , y1: 32
                 , x2: 689
@@ -212,7 +214,10 @@ MsgMonitor(wParam, lParam, msg)
                 , err1: 0
                 , err0: 0
                 , screenshot: 1
-                , findall: 0 }
+                , findall: 1
+                , joinqueries: 1
+                , offsetx: 1
+                , offsety: 1 }
 
 	Global MEmu_Operation_Recorder_X := App_Win_X
 	Global MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
@@ -431,26 +436,25 @@ loop
 */
 Select_App()
 
-; Load  graphic variables
-; Title/Tag (Manual), Renamed query (auto)
 
+; Renamed GraphicSearch_query (auto)
 Global 0_Icon_LEWZ_Graphic := "|<0_Icon_LEWZ>*200$48.Dzzzzzz0DzzzzbzDDzzzzbzDDzjyzbzDDy1sC3zDDwtnbbzDDxtnrjz0Dzxnzjz0Dz1szjzDDw9wDjzDDwxz7jzDDxxzbjzDDxtnrbzD0AFlbbz00C5sDXz0U"
 Global 1_Quit_OK_Button_Graphic := "|<1_Quit_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
 Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzzzw7zjbttUDzDDnntTySTbbmzwwzDDZzttyST/znnwwyLzbbttwjzTDnntTwyTbbmTlwzDDaT7twSTC0Ts0wyC0zsNtyE"
   Global 10_Commander_Title_Graphic := "|<10_Commander_Title>*200$48.7zzzszzz7zzztzzz7zzztzzz7zzztzzz7zzzlzzz7nUz0Dw77m0T0Dk17kyDlzXt7lzDlz7w7nzDlzDw7nzDlzDy7nzDlyDy7nzDlyDy7nzDlyTy7nzDlyDy7nzDlzDy7nzDlzDw7nzDlz7w7nzDlzXs7nzDlzk1U"
-  Global 1A_Settings_Button_Graphic := "|<1A_Settings_Button>*100$66.07zzttxzzzzDnzzttzzzzzTvzzttzzzzzTvzzUkzz3zzTzw3kkxsFw0Dzttttxtwts0znwttxvwvws7rwttxvwnyzXnwttxvwnyztk0ttxvwnyztrzttxnwnyztrzttxnwnwTtnxttxnwvwDntttwxnwtsU7w3wwRvww6U"
-    Global 1A0_Settings_Title_Graphic := "|<1A0_Settings_Title>*200$50.U0zzzyzvlzDzzz7yQztzzzlzbDyTzzwTlnzby3w1k4zzy0T0807zz7XwTlkTznwT7yT1ztzblzbw3yTtwTtzsDbyT7yTzVk07lzbzyQ01wTtzzX7zz7yRzstzzlzbTyCTzwTtnzbXzz7yQTlwTblzbU0zU3y3s8"
-    Global 1A1_Account_Button_Graphic := "|<1A1_Account_Button>*200$40.w000007U00000A00000000000000000000000000000000000000000000000000000000000000000000Dzz0003zzzw00zzzzs07zzzzk0TDzzzU3wTzsy0Tlzzbw1z7znzk7U7zDDU"
-      Global 1A10_Account_Title_Graphic := "|<1A10_Account_Title>*200$64.w7zzzzzzzzzkTzzzzzzzzyNzzzzzzzzztXzzzzzTzzzbDzk3z0DzXwwTyD7swTk1ntzlyD7syDXTbzDwwznlz9yDtzvbzjDybwzbzyTzwzsznyTztzzbzUy7tzzbzyTz00TbzyTztzwztyTztzzbzrzXtzvbziTyTzDbzDDwtzvzwTDswzXnzjzlwT7tyTDwzzbsEzVXyTXzyDsDzUzw8M"
-      Global 1A12_Switch_Button_Graphic := "|<1A12_Switch_Button>*200$59.U3zzzyTTzyDnzzzzyzzwzbzzzzxzztzbzzzzlzvnzwzDra0y0XzxwTDD7ssXztsSSTTXtUTnkwwyzDvsTbhntxyTzwDaPbnvwzzyTAnDbrtzzySPazDjnzTwy7dyTTbyTtwD3wyzDszbsy7twzDYADlyTnsyAM"
+  Global 1A_Settings_Button_Graphic := "|<1A_Settings_Button>#1474@0.38$66.z6Tzztzznzzsszzztyjnzztzzzxty7zzznzzzytyDrzzrzzzzszzrzzjzzzzszzbzzrzzzzwzzbzznzzzzwTzDzzzzzzzz7yDzwXzzTzzUkzztTzzzzzk1zzzzzznzzzzzzrzzzvzvzzzzrzzzvzvzzzzvzzzvzvzzzztzzzvzvzzzzxzyzvzvzzzzxTzzrzvzzzzx7zbjz7zzzztzzsTyzzzzzbvzzzyzzzzzjrzzzzVzzkzTjzzzz0zzaSzbzzzzTTzjdzrzzzzTTzDnzU"
+    Global 1A0_Settings_Title_Graphic := "|<1A0_Settings_Title>*240$56.ntzzzzzzz/zjzzzjyzxztzzzvzjzTyTzzyzvzrzzz7z7wTxzzz0T0Q1wjzzjryzvz9zznyzjyznXzxzbvzjwy3yTtyzvzDwTbyTjyznzns07vzjwzySTzyzvzDzbjzzjyznztvzzvzjwTyTTzyzvz7zbnzzjyzmzvwzjvzbwlVznbz7szD1zy3zlzbm"
+    Global 1A1_Account_Button_Graphic := "|<1A1_Account_Button>*240$48.0000000000Dzz00000zzzy0003zzzzU007zzzzk00Dzzzzs00Dzzzzw00Tzzzzw00zvzzzy00zvzzzz00zzzzzz00zzzzzz00zvzzzz00zvzzzz00zzzzzz01zzzzzz01zzzzzzU1zzzzzzU1zzzzzzU1zzzzzzU1zzzzzzU1zzzzzzU3zzzzzzU3zy00DzU3zs00DzkU"
+      Global 1A10_Account_Title_Graphic := "|<1A10_Account_Title>*240$67.zXzzzzzzzzzzlzzzzzzzzzzqzzzzzzzzzzvjzzzzzzzzzzrzzzzzzzzzxvzzAzwnzzzyyzzTjxyTtnyzTzTvxzjvyzTbzTyxzvvzjjvzjzyzzvznjxzrzzTzxzxryTnzzDzyzyvzDvzzjzyzzMz3xzzrzzTzhztyTztzzjzozyzjzyzznzuzzTrzjTyxzxTzbvzjjyyzxDzvyzjvyTDyjzwzjjySTryrzzTwTztzwyw"
+      Global 1A12_Switch_Button_Graphic := "|<1A12_Switch_Button>*240$59.wTzzzyzzzz77zzzxzzzyzbzzzzxzztzjzzzzvzznzTzzzzrzzbztyzjQ1w3DzvwzSzTnnDzrlxxyzjv1zbVvvxyTrkzjPrrvwzzwzTrDjrvzzwyPizTjrzzxyrhyzTjyzvxjPxyzDxzrsyDvxyTlzDlyTrvyz8wzXwzjnyQw7zjzzTly7U"
         Global 1A120_Switch_Title_Graphic := "|<1A120_Switch_Title>*200$55.XwDzzzzzlXzbzzzzzsnzlzzzzzwPzwzzzzzyBzzzTnzTw0TzzDszjC0DzzrwTbblUzztw7nnss1zwyHvtwT03zT9twyDz0zjgwyT7zwDnbSTDXzzXtnbTblzzlyvnDnsrzwzRtbtwPzyTYyrwyBzyDsT3yT6TzDwTVzDX3z7yDkzbss0Dz7wzny8"
-        Global 1A123_WarZ_Button_Graphic := "|<1A123_WarZ_Button>*200$62.TtznzzzzU07yDwzzzzzzVz3yTzzzzzwTkzbzzzzzy3xbtzzzyzz4yNyzUDqDzXDbTDllw7ztvtnntyT7zwyywwyznnzyDbDjTzwwzz7tnvbzyDDzXzRyNzk3nztzrTaTlwwzwzwbtjtzDDyTz9z3wznnz7zszkzDswzXzyDwDlyDDszzXzbyCHnw00U"
+        Global 1A123_WarZ_Button_Graphic := "|<1A123_WarZ_Button>#407@0.25$23.k7kDkDUTUz1z1y3z3y7y7wDwDszsxlvtvnnrbbbjDTDSCwSsTsTkzkzVzVz1y3y3w3s7s7k7V"
           Global 1A1230_WarZ_Accounts_Title_Graphic := "|<1A1230_WarZ_Accounts_Title>*200$44.DzwTzzznzzDzzzQzzzzzzXDzzzzzsnzzzzzyAzznz1w0Dzwz0703zzDXtyAzzntyDXDzwyTnsnzzDbzyAzznsTzXDzwz0zsnzzDy3yAzznzwDXDzwzznsnzzDDwyAzznlzDX7zwyDXsk0DDk1z003ny0zsU"
-          Global 1A1232_OtherAccount_Button_Graphic := "|<1A1232_OtherAccount_Button>*200$38.UTyzzznnrjzzxyxvzzzTY61sC7xrbQvZzRvnTNTrSynartrjg1hyxvvTvTjSyrytXrjgtj3wPvkvU"
+          Global 1A1232_OtherAccount_Button_Graphic := "|<1A1232_OtherAccount_Button>*240$39.qTyzzzxzvrzzzTjSzzzzzVoDVkzrSxzyTyvryzrzrSzrqzzvryzrTjSzryvxvryzrjTSzvyz7xrzXrU"
           Global 1A1234_Email_Box_Button_Graphic := "|<1A1234_Email_Box_Button>*200$42.000001b000003b000001b30MM307DrzyDlbTzzyTvbsz77Mvbzz777vbzz77Tvbzz77TvbsL77svbwz77RvbTz77Tvb7X26DtaU"
-          Global 1A1235_PW_Box_Button_Graphic := "|<1A1235_PW_Box_Button>*200$65.zVwDlyslnszzbwTnznnzvzzTtzjxbazzyC0vXQPjRlyAAzrsz3yv3wMPzbwzbza7slr7PvTDzCDlniStrCSSQzXzTxzjwwwzr7wTtyDklkzC8"
-          Global 1A1237_UseEmailLog_Button_Graphic := "|<1A1237_UseEmailLog_Button>*200$34.Ttw7w5zbbDb7yQywyTtnzrtzbbyTbyT3s0TtzXbxzbzaTnyxyQz7nnvnu0TWDUC7z1z1U"
-            Global 1A12371_OK_Button_Graphic := "|<1A12371_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
+          Global 1A1235_PW_Box_Button_Graphic := "|<1A1235_PW_Box_Button>*200$50.zVwDlyslzwzXyTySTzTtzjxbalk7QPXRvgAzrsz3yv3Twzbwzwlr7PvTDzCRnrCtnnnzTxzjwwwzXzDly6CA0000000300000000k00000008"
+          Global 1A1237_UseEmailLog_Button_Graphic := "|<1A1237_UseEmailLog_Button>*240$35.TtzzzyznzzzxzbzzzvzDzzzryT1z1jwxtxtTtnvruznbzjpzbbzTXzDny07yTsxzjwzxvzTvrvrzTbbrbzCzbDrD3zlzls"
+            Global 1A12371_OK_Button_Graphic := "|<1A12371_OK_Button>*240$24.sDvyrbvwjvvxTtvvTxvrTxvjTxvDTxsDTxsbTxtnTxvvTtvxjvvwrrvysDvzU"
             ; 1A12372_Yes_Button
               Global 1A123730_EnterPIN_Title_Graphic := "|<1A123730_EnterPIN_Title>*200$69.00Dzzz7zzzzvzzzzzszzzzzTzzzzz7zzzzvzzzzzszzzzzTzzzVw1zzzznzzwk7UDs3yMTzzUwT7y67k3zzwTlszbwy700TXzD7tznls01wztszDySDTzzbzD7tznlvzzwztsyDyCTTzzbzD7k01nvzzwztsyDzyTTzzbzD7lzznvzzwztsyDzyTTzzbzD7tzznvzzwztszDySTDzzbzDXwzbns00wztwDVlyTU"
               Global 1A123731_ForgotLoginPW_Button_Graphic := "|<1A123731_ForgotLoginPW_Button>*137$68.03zzzzzzzzyLzzzzzzzzzzVzzzzzzzzzzsTzsDt7kny3s7zw0y1k0y0S1zyC7VwQD3XsTz7lsyDXlwSE1lyCTbwsz7Y0QzXbtzCDttTzDstyTnXyS7znyCTbwszbVzwzXbtzCDtsTz7styTnXwS7zlwSTXswT7VzyC7bwQD3XsTzk3tz03s1y7zy3yTw8zUznzzzzzzyDzzzzzzzzzzXzzzzzzzzznlzzzzzzzzzw0TzzzU"
@@ -465,18 +469,18 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
   Global 50_ControlDesk_Title_Graphic := "|<50_ControlDesk_Title>*240$51.0DzzzzzbtwzzzzzwzDnzzzzzbtzDzzzzwzDwzzzzzbtzbsbyFwyDyyTTjbbVzrrxtywtDywzjDzaNzrbxwzwbDyw0DkzUtzbbzzlwHDwxzzzbb9zjbzzyQxDtyzzTnblwTnxtwwy0Dz6TXDbw"
     Global 501_ControlDeskExpand_Button_Graphic := "|<501_ControlDeskExpand_Button>*240$47.7k003zzyDU007zrwT000DzbzzzzzzzjzzzzzzzDzzzzzzzDzzzzzzyDzzzzzzyTzzzzzzwTzzzzzzwTzzzzzzszzzzzzzk7k003zzUDU007zz3zz1tzzy7zzzzzzwTzzzzzzszzzzzzzXzzzzzzzDzzzzzzwTzzzzzztzzzzzzzblw000zzTXs001zwzU"
     Global 502_ControlDeskCollapse_Button_Graphic := "|<502_ControlDeskCollapse_Button>*240$41.7s00DzyDU007zsT000DzrzzzzzzTzzzzzyzzzzzzvzzzzzzbzzzzzzTzzzzzwzzzzzzlzzzzzzbzzzzzyD7k003wyDU007tzzk7zTlzzzzzznzzzzzzXzzzzzzbzzzzzzjzzzzzzDzzzzzzTzzzzzzHw000zybs001zzU"
-  ; 60_Quest_Title
-  ; 70_Speaker_Title
-  Global 71_Speaker_Claim_Button_Graphic := "|<71_Speaker_Claim_Button>*148$66.w3yDzzwzzzzk0yDzzszzzzUkSDzzwzzzzXwCDzzzzzzz7yCDzzzzzzz7yCDwDzzsT3DzCDk3ww040DzyDV1ww000DzyD7lwwDVwDzyDDlwwTXwDzyDztwwTXwDzyDw1wwTXwDzyDk1wwTXwDzyDXlwwTXwDzCD7twwTXw7yCDDtwwTXw7yCDDlwwTXwXwSD7lwwTXwU0SD00wwTXws0yDU0wwTXwU"
-    Global 821_World_Button_Graphic := "|<821_World_Button>*132$54.Ebtzw0Nz0M3lzs1ty0A3lzk3ts8C3ny0KNk8C0Hs0kM00C03l1kE0k6M1X1nUFs6M000U0nsYNU0001nsYw6000tnsUw7403tnsUw7btntnslyDXlntlslyDlXntsUlyDk7nts0U"
+  Global 60_Quest_Title_Graphic := "|<60_Quest_Title>*240$64.w3zzzzzzzzzDnzzzzzzzztzbzzzzzzzzjzDzzzzzzzwzyzzzzzzzzrzvzzzzXzyDTzbnzTttzDhzyTDxzDrxzLzxwzrxzDbwTzrnzTjyyTxzzTDxyzvtzrzxwzrnzjlzTzbnzT00zlxzyTDxwzzzwrzvwzrnzzzxDzjnzTjzzzkzwzDxyTzzz9zrwzbxzzbwnwztwTvwzTrU3zkBzX7y8s"
+  Global 70_Speaker_Title_Graphic := "|<70_Speaker_Title>*240$61.01zzzzzzzzbzjzzzzzzzrzvzzzzzzzvzwzzzzzzzxzzTzzzzzzyzzjzzzYTzzTzbxnzTryvjzrzyzjvxzLzrxzjjyzzlzbxzzrzyzszlyzxvzzTwzyTTytzzDyTzj7wRzzbyDzrbzyzznzrzvvzzjzvzvzxxzzrzSzxzyyzzvzTTyzzDjxyzjjyTzbnxzjTvyjzvyxzzzzzs"
+  Global 71_Speaker_Claim_Button_Graphic := "|<71_Speaker_Claim_Button>*240$65.k3yzzztzzzzDnxzzzzzzzwTnvzzzzzzztzrrzzzzzzzrzbjzzzzzzzjzzTs7wyEC1TzyzDbtwS/kzzxyzbntyDnzzvzzDbnwTrzzrzyTDbxzjzzjzwyTDvzDzzTs1wyTryTzyzDntwzjwzzxyzbntzTtztvtzDbnyzlzrrnyTDbxzVzDjbsyTDvzHwzTbVwyTrys3yzUntwzjx"
+    Global 821_World_Button_Graphic := "|<821_World_Button>*240$53.Trxzz3xzwTjnzwDvzuyDbztzrzpwTTzjzjzfuSz1ybT1LqxwtwSywbRnnlvstxivbjvrnrvRvSTHDrjqrqyzaTjTijhxzQzSzQTbvyxyxytzDntvxtxnyTrrrvvnbwzkTjrsI"
     Global 822_Home_Button_Graphic := "|<822_Home_Button>*136$56.DwzzzzzzznzDzzzzzzwznzzzzzzzDwz7zntzlnzDUT087s4znlXlUkwM00swQwSCT00CTbDbnbkzn7tntws0DwlyQyTA03zATbDbn7wznbtntwtzDwswQyTCTXzD6CDbnVUznk7Xlsw0U"
-  Global 83_ActiveSkill_Button_Graphic := "|<83_ActiveSkill_Button>*125$52.yTzzyTzzzkzzwtzzzz3zznzzzzsDwCDzzzzYTUENDbUyNwsnaSQ1nbXnCNtbbDCTwtbCTA0tznbAk0U1bzCQr02TaTAtmQTlyQsnbVtxDsk76SDXYznUwNwz0zzzzzzzzDU"
-    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>**50$45.T7sa0Nfj074k3BBnyQa0TdgztYk1xBa3AaDjdgkBYnZxBbVwattdgTk4yTBBkzkbbNdjUT4tnBBTUQaQNdczlo3XBBwTaXANdjUQownBBA1abbNdhkAoyPBBbzaaltdiTtonDBBs0QaQtdg"
-    Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>**50$36.A4k000A4U000A4U000A4Xy3yA4z77bA4w1g1A4dsttA4dgtgA4tznwA4wTFwA4i3k0A4blnzAAzwnzaQvgtbbttwtyk3g1w1s7C3i3U"
-    Global 832_Green_Use_Button_Graphic := "|<832_Green_Use_Button>**50$36.A4k000A4k000A4ny1wA4rz7zA4w3i3A4wtwtA4twtwA4tzvAA4cznwA4g7E0A4b1k0AAzsnzYAzQn7bttwtznlsswws3A1g1U"
+  Global 83_ActiveSkill_Button_Graphic := "|<83_ActiveSkill_Button>*240$42.DzzzzzzbzzzzzwrzTzzzksDzzzzUw7zzzzVw3tzzy7z1xzzw7z0zTzsDzUDjzkTzs7rzUzzw3uz1zzy1zw3zzz0Ts7zU"
+    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>*240$45.tnzTzrrpzbvzzyyjyTTzzrnzvvzzyyTzzTzzrnzzvzyyyjzzTjrrqTzvzyyywDzSzrrrzDvjyyyzyT0zrrrzvtryyyzzTTTrrnzvvxyyyTzTTjrrnzvvyyyyjyzTrrrq0DvzSyyU"
+    Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>*240$35.TzzzzyzvzzzxzrzzzvzjzzzrzTzzzjyw3w3TxvvvmzvbrjpzrDzTnzjDwz7zT3s0DyztnzTxzvbyTrznjyzDDjDwQzCTCT7zXzXk"
+    Global 832_Green_Use_Button_Graphic := "|<832_Green_Use_Button>*240$35.TxzzzyzvzzzxzrzzzvzjnzvrzSNzNjyxxxtTxnvruzvbzjtzrbyTXzjlw07zTwtzjyzxnzDvrtrzTbbrbzCTbDbD1zUzUs"
       Global 8331_Instructor_Title_Graphic := "|<8331_Instructor_Title>**50$69.y00000B00000k00001w00006000008U0000k000014000060z000Mk7jUsnzy7zb7Tzw76H0tkCU+QMUUm03Q0w1E7446EyDDnsu3sUUmCtti/4Ft446H3CAT8WA8UUmMNtzt4F1446H1D1y8WM8UUmM9w1t4H1446H1Bw38WM8UUmM9lyB4H14A6H1DttcWM8VUmM9n3BAH17s6H1CStcuMAS0mM9syB1H1U4aH1D03A+M71rnsDi1kzT0TzU"
       Global 8332_Magic_Title_Graphic := "|<8332_Magic_Title>**50$69.y0Ts00000z00k37000004s060ss00000r00M67000007s730ksDk0S0y7vQCr7zkTzrlxNVatwz7nyzQ3ABrQ0tk4ozDRnivDnAz6bnvaNrPz/bwoyMQnSvwNNlabb3rvrTz/AAowkSSStzlFUqba3nrrS0+86owkTSyz3tF0qba3Narnz+AAowkPBqySNNVabr3ACrn7/CQoyTNVayTlwz6btvAQqlsDXUoz0Nn6r0MT0abS4"
-      Global 8333_WildHarvest_Title_Graphic := "|<8333_WildHarvest_Title>**50$55.y3w3vvw07n3b35Ba03NVlVban01gkkknTNU0qAMMNjgk0PaRaMrqMTxnAnAnvAzytaRaNBaw3QzSvAanMw/DjD6HNwz5bbba9gwtmnrvn4qSMNNvhtWPCA6itaQVBb43HAnAkana1dasqMHNl0otMNANgskmAAAAAqSQN6C762PD7wX71X1BalsFn0lUanQ1cTUTUTTbVy"
+      Global 8333_WildHarvest_Title_Graphic := "|<8333_WildHarvest_Title>*240$53.TyzwzyzzyzwztzxzzszszrzvzzpzhzjzrzzfzPzTzjzzLzzyzzTzyjvzvzyzzxjrjrtxzTvTjzjnvxzazzSzbrrzBxyxzDjjzRvxvyTTTyvrzrwywzxrTzjtxvzvizrznvnzrhzxzbrrzjTzfzDjjySDzDyTTTwyTyTwyzTtxzyztxzDvzzzzzzzbw"
       Global 8341_Bumper_Title_Graphic := "|<8341_Bumper_Title>**50$69.zz00000000000Q000000000T1k000000007z6000000000kQnsDjTbwDzq1aT1xzzzlzzkAmM9dUw7BkS7aH1B1XARVsztmM9cT3tgTXwQH1B7szBbC03mM9dnCNgkrz7H1BANXBg6zwOM9dXANhUS1nH3BANXBg3k6OMNdXANhUK0nH3BANXBi6kCOQtdXANglrzXNyBANXBbwzsvDVdXANgTU0CM1BANXBU107VkzdXANhkTzs7zxwTXxjzU"
       Global 8351_AbilityRsrch_Title_Graphic := "|<8351_AbilityRsrch_Title>**50$69.CA1A04SODw01VU9U0bnHtU0QC1A07qPzA03Ak9zkynTtzUNa1DzbqPzDy7Ss9UCznTUAknn11soyOT7a6SQ8TbbnHtwMrlV7CQyOTAnAnA9knbnHtaNjtlA6QyOTANcz69UHbnHtXD00lA2QyOTANs079UnbnHtVbTyNA6QyOTAAnzn8lnbnFtVas6B7wwyODC660NcT6bnFswkk3B81oyOBVb60MjkwbnHiANU1xzz7zvxzXA"
       Global 8352_FirstRiches_Title_Graphic := "|<8352_FirstRiches_Title>**50$69.zzwz007s000003qM00n0000006r006M0001zwzs7Un0000A3ny7zaTs0S1U6TtyynzkTyA0nzQ0yQD7ntUCSP7Xm8Rk3DzbnlyS7nwz9zsqSQtlzDDx00Cnn3yQNtXU01qQMTn3DTwDz6na06MNnzVzwqQk0n3C00A1qna3yMNlztUCqQMTn3CTzA0rnn7SMNnVtU6SSTnn3DQQA0nntwSMNtzdU6SPU7n3DblA0nnD3qMNi0TU7zszwz3wsDU"
@@ -521,20 +525,20 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
     Global 902_Menu_Collapse_Button_Graphic := "|<902_Menu_Collapse_Button>*200$36.zzwTzzzzs7zzzzU1zzzz00zzzw00Dzzk007zzU1U1zy0Ds0zw0Ty0Dk3zzU30Dzzw10zzzy03zzzzkDzzzzwU"
   Global 91_ActivityCtr_Button_Graphic := "|<91_ActivityCtr_Button>0xFCFCF4@0.29$23.0000000000001w00Ty00zz07zzkTznozz3vzz6rzz7jzzTzzwzzXw3z7w7yzs7zzkDvzs7vz17rk/zy67wFk8"
     Global 910_ActivityCtr_Title_Graphic := "|<910_ActivityCtr_Title>*200$63.y7zzzzTtzzzkzzzzlzzzzy3zzzyDzzzzaTzzzlzzzzwnzy3s3tnzbbDz0C0DCDtstzlsyDttzDD7wTXlzDDtlwzbySDtsySTXwzzlzDbnnwT7zyDtwyQTntzzlzDnbU0TDzyDtyQw01szzlzDnb7zDbzyDtz9tzswznlzDtDDzbXwSDtz1vzwyTblzDwTTzXs1z1tzXw"
-    Global 917_DesertWonder_Button_Graphic := "|<917_DesertWonder_Button>*200$59.DXzDzzzzzkzbzzzzzzzkzDzzzzzzzVzDzzzzzzz/yTzzzzzzyHwzzzzzzzwbszzTDC7zljtzzzSTDjXDnzvyQzSzaTnzrwtyxzCzbzjwnxvyQzjzTtbvrwtzDyznDrjttyDxziTjTnnwTtyQzSTbbxzvxtywS8"
+    Global 917_DesertWonder_Button_Graphic := "|<917_DesertWonder_Button>#537@0.27$46.vy7s00037kD0000AD0s0000ky3U00031sA1s00C7VkTsxwsy73zrzvnwsSDzrjDvVkSyCxri71vkzrTkQ3j3rtz1kCwDTXw70vkxyDUS3j3nky1sCwDD1s7lnkwQ70DzD3s"
       Global 9170_DesertWonder_Title_Graphic := "|<9170_DesertWonder_Title>*200$68.TsznzzzzzzzryDwzzzzzzzxz1yDzzzzzzzTkTXzzzzzzznwbtzUztUzy4z9yTk3wE7y0DbDblwT1sz7ntnlwTXkzDnwSQwyDwwTlszbj7DbzD7wSDtntntztlz7byAyMyTyQTltzXDaTbzb7wSTwbxbtztlz7bz1z1yTwQTltzkTkTXzD7wSDwDwDwzXlz7nzXzXz7lwTlwTszszs0z7wTU8"
     ; 91A_GoldenChest_Button
       ; 91A0_GoldenChest_Title
       ; 91A1_Free_title
   Global 92_Benefits_Button_Graphic := "|<92_Benefits_Button>*200$59.zzzzzzsTzytzzzzzjzzxtzzzzzTxzvvzzzzyznzrrVs7ksvXkCSxrjSvrjS0xvjQxrjSywnrStvjSyRxXyxnzSxz/vDxvjyxvzbrTvrjxvrjDCRrjzzrjC1z7jzzzz73"
     Global 920_Benefits_Title_Graphic := "|<920_Benefits_Title>*200$63.DwTzzzzzzztznzzzzzzzzDyTzzzzzzztzlzUzrVzw7DyTk3yE7z09znwTDkwTnt7szbsyDnwzU0DtzbnyD7w00zDwyTlszVzXtzXnyD7wDyD00STls01zts07nyD00DzDDzyTltztzttzznyDDzDzDDzyTlsztzlszznyDby7wTXwyTlwTU07y0DnyDk1U"
-    Global 921_BattleHonor_Button_Graphic := "|<921_BattleHonor_Button>0xEEC4A9@0.40$36.TzzzzyTzzzzyTzzzzyTzzzzyTzwDzyTzk3zyTzU1zyTy00Dyzs003yz0000TM00007000000000001U00007s0000Tzy001zzy007zzs00zzztzwzzU"
+    Global 921_BattleHonor_Button_Graphic := "|<921_BattleHonor_Button>*200$42.zzzVzzzzzzVzzzzzz0zzzzzz0zzzzzz0zzzzzy0zzzzzw0zzzzzs0zzzzzk0Tzzzzk0Tzzzzk0TzzzzU0Tzzzs00Tzzz000TkT0000TU00000T070000y0Tk000w03y000s0DU"
     ; 922_Claim_Button
-    Global 923_DailySignin_Button_Graphic := "|<923_DailySignin_Button>0xFFFFFF@0.40$36.y1zzzzsyzzzznzzzzzbzbyDwjbnY7sDXvbbzTnvzbzTnvyDzTnvwzzTnvlzxDnzVXsjnzUbzU||<>*90$49.0tzzzznzaCzzzztzrbzzzzwzvvD0k7yM5zb0M1zA07nbAQzaSktbaSTnDSAnnDDtbjaNtbbwnrnCwnnyNttbCNtzAw1nkAwzaSU"
-    Global 924_MonthlyPackage_Button_Graphic := "|<924_MonthlyPackage_Button>0xFFFEEC@0.40$26.z3zzznzzzzzzzzzzyTzzznzzzz0DzzkDzzw7zzz3zzzkzzz6DXzkXsDkAz1w3jwTUszXsC7z4DsTsDD3zDnsDzwy0zz7kDzUy3yk7lzg0zzns"
-    Global 925_MonthlySignin_Button_Graphic := "|<925_MonthlySignin_Button>0xFFFFEF@0.40$35.zU00tzy001kzs00XkzU00DVy000S1w300w3k601s3U007k7k00DUDU00y0M001w0k007s1U00Dk3000T07001y0C003w0yz0Ds1zzzzlbzzzzUTzzzy0zyzzw7zw3zsTzw03Xzjy00TzU"
+    Global 923_DailySignin_Button_Graphic := "|<923_DailySignin_Button>*200$36.00s07100M07300M07300M07LDwMD7LTwszbTTwtzaTTsvzbTTwvzjTTyvzzTDzzzzyQDzzzwTzvzztTznzrlTsk7bn01k0Dr01k0Dr01k0Dz01k0TzU"
+    Global 924_MonthlyPackage_Button_Graphic := "|<924_MonthlyPackage_Button>*200$44.zzy7yzVzzz1zrzTzzUDzzzzzs0zxzzzzVzwTzzkTzyDzzk0zzbzzsC7zzzzyDszzzzzXy7zzzzwTkzzzzzXyDzzzzwTzzzzzzlzzzzzzy7zzzzzzsTzzzzlz7zzzzwTzzzzzzbzzzzzzwzzzzzy"
+    Global 925_MonthlySignin_Button_Graphic := "|<925_MonthlySignin_Button>*200$20.zzzjzzvzzwzzzDzzXzzszzwTzz7zzVzzsTzy7zzVzzkkzsA003k00zy0S"
     Global 926_SelectReward_Button_Graphic := "|<926_SelectReward_Button>0xDDC35E@0.40$54.1zzzU01zz0zzs0003z3zy00000T7zs000003DzU1U0001zy07zk000zs0zzzk00zk3zzzz00z07zzzzy0w0zzzzzzws3zzzzzzzkDzzzzzzzUzzzzzzzz3zzzzzzzzDzzzzzzzzU"
-    Global 927_SelectionChest_Button_Graphic := "|<927_SelectionChest_Button>*90$43.sCTzzzzk3DzzzyNtbzzzz9yE7ky70zs1kC1UTwQnqQtDySNt7wbzDA0kyHzba0y79yHnDznaSNtbgtnUAws70ssTTS7kyE"
+    Global 927_SelectionChest_Button_Graphic := "|<927_SelectionChest_Button>*170$35.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzUTsDzw0zUTzs1zUzznVz1zzb3y3zzCDw7zyQTsTzwxznzzxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzs"
     Global 928_SingleCumulation_Button_Graphic := "|<928_SingleCumulation_Button>0xEFF3F5@0.40$59.000001s000000001w00000C0k1w000003tk1s000007s03s000007w07s00000Ts0Ty00004zs3Tzk300/z0Dzzk6007zADzzsBUM7ywDzzwGDn3zwTvzysTjzzzzrzxzvzzzzzrTtzrzzzzzwznzDzzjzzszbyDzzjzzvyDyDzzDzzzczwDzzTzzzlzxzzyzzzyBzzzzzzzzsvzzzzzzzzrs"
     Global 929_WarriorTrial_Button_Graphic := "|<929_WarriorTrial_Button>*200$46.zzU00TzzzU0007zzs00003zy00zw03zU0zzy03w1zzzzk3UTzzzzs2DzzzzzwDzzzzzzyTtzzzzTvzzzzzyTzjzzzzwzvzzyzzzzzzznzzwzzzzDzzzU"
       Global 929A_Steel250k_Title_Graphic := "|<929A_Steel250k_Title>*200$19.zxzzwzzwzzyzzw1twUNwk1w01w01w01w01z01zw0zzUzzwzw"
@@ -547,7 +551,7 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
     Global 93F_WarZArena_Button_Graphic := "|<93F_WarZArena_Button>0xFBC8CA@0.32$32.Tvyvv7yzyylzjTjgTznvv3zwSzkzz7jsDzlzy3zwTzUzz7zsDztzy3zyzzUzzjzs7zvzy1zyzz0Tzjzk7zvzw1zyzz0Tzjzk7zvzw0zzzz0Dzzzk3zzzs0zzzy0DzzzU3zzzs8"
       Global B224_CityBuffs_Button_Graphic := "|<B224_CityBuffs_Button>*200$41.0TzyCDySTzwwzwyzzttytttvVVn07nrjjjbbbjTTDDbDSyz0TCQxxjkyQtvvTk1s3rqn8"
         Global B2240_CityBuffs_Title_Graphic := "|<B2240_CityBuffs_Title>*200$67.03zzzzXz7zzU0Tzzznzbzznz7zzzlzbzztznzzztznzzwztzzzwztzzyTwyTts1k7y3DyTDww0k1w0byDbyTXzDwS3yDnzDnzbyTU0DtzbtznyDs03wznwztzbyTsyTtyTwzkzDyTDwzDyTw3bz7byTbzDzkHzXnzDnzbzz1zltzbtznzzkzswznwztzDwTwyTlyTwzXyDsT7kzDyTty00Tk0TbzDw08"
-        Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*190$58.sTzzvzzrzyyTjzzzzTzrwyzzzzxzzTvvzzzzrzzzziTzzzTzrzyiSzNxy6Dzvxvvvrrn7zjrjTrSzjVyzyxzRvyznvzvbxrjzzbjziTzSzzzSzyvzxvyzxvzvrzrjtzjjzjTrSzXwyzyyyxxwU"
+        Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*200$38.UTjzDznvvzzzxzSzzzzzrjzzzrzv7rwAzySwyxbzjbDTyDvxnzvwyzQtwzbjrCTzxvxnjzzSzQvzzrjrDTnvvxnvq1yzQz3U"
           Global B22410_Shield_Title_Graphic := "|<B22410_Shield_Title>*200$70.00zzzzzzzzzxzlzzzzzzzzzrzbzzzzzzzzzTyDzzzzzzzzxzszkzy3zw7zrzXw0zk3z07wTyDXlyT7syTVztwTblyTbwwLz7nyDzswznn00yDwzzXnzyA07sznzyDDzsnzzU0Dk0wzzUTzy00yDXnzy1zztzzlyDDztrzzXzzDswzzXTzzDzwzXnzjBzzwTrnyD7wwLzzsyT7kyDXsTzzk1y03w0TW"
           Global B22411_Shield_Ends_Title_Graphic := "|<B22411_Shield_Ends_Title>0xF5F5F5@0.21$40.zw003U3zk00C0A09s0sMk1zlzbv07zDyzzySCtvXztkz3iD073wCzg0QDktzk1kz3Vz073wCkzzQCxvbzxkvzjy"
           Global B22412_Replace_OK_Button_Graphic := "|<B22412_Replace_OK_Button>*138$25.k7lyE1sy1wQS9zCCAzb6CTlWDDwkDbyM7nzA1tz6AQzX76TnXn7llsllsyA1wTY"
@@ -557,14 +561,14 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
         Global B3440_Craft_Title_Graphic := "|<B3440_Craft_Title>*133$54.U0Tzzzzzt00Dzzzzzs00Dzzzzzs7zzzzzzzz7zzzzzzzz7zzzzzzzz7zzUNwzXs7zz01szXs7zy7VszXs7zyDlszXs00wDtszXs00wTtszXs7zwTtszXs7zwTtszXs7zwTtszXs7zwTtszXs7zwTtwzXs7zwTtwzXs7zyDlwTXs7zy7VwC3s00D01y03s00DU1z0XsU"
         Global B3450_Collision_Title_Graphic := "|<B3450_Collision_Title>*130$47.z0zzzzXls0Tzzz7XU0TzzyD67sTzzwSATszzzswFzlzzzlsXzly0zXl7zzs0z7UTzzVkyD0zzy7swS1zzwTlsw3zzszlls7zzXzXXkDzz7z77UDzyDyCD4TyATwQS8zwQTsswEzlszXlslzXlz7XlUwDksT7XU0Tk0yD7k3zk7wS8"
         Global B3460_RuneExtract_Title_Graphic := "|<B3460_RuneExtract_Title>*129$65.U7zzzzzzzzy01zzzzzzzzw01zzzzzzzzszVzzzzzzzzlzVzzzzzzzzXzXzzzzzzzz7z77wTA3zkCDyCDsw03y0ATwQTls63sQ8zkszXkz7lw1z3lz7VyD7w00DXyD7wSDs00z7wSDswDU03yDswTls00TXwTlszXk00z7szXlz7Xzlz7lz7XyD7zXy7XyD7wSDz7yDXwSDsyDuDwD3UwTlwD0TwS01szXw08zsS0Xlz7w0s"
-      Global B350_Depot_Title_Graphic := "|<B350_Depot_Title>*200$67.00TzzzzzzzzyTzzzzzzzzzzDzzzzzzzzzzbzzzzzzzzzznzrDsDzUzy3tzk7k3z07w0wzsDlwz7nwSSTwTtyDbsyTjDyDszbzyTDzbzDwznzzDbznzbyTszz7kztznz00TU3w3wztzU0T3tzkSTwznzzbwzzDDyTtzzbyTzrbzDwzznzDDznzbyDztz7XztznzXwwT3tywztzs0z01w0E"
-      Global B351_Free_Button_Graphic := "|<B351_Free_Button>*200$37.0DzzzzjzzzzzrzzzzzvzzzzzxzsC1y2zwSSSQTyzTiT0DTDrDbzjXnXXzrk1k1zvtztyzxwzwzTyzTyTjzTXbbbzjs7s4"
-      Global B352_Help_Button_Graphic := "|<B352_Help_Button>*200$40.TtzznzxzbzzDzryTzwzzTtw7nU5zbbDCC3wQywtw01rtnbtzb07CTbyQ0QtyTtrznbtzbTzCTbyQzwtwTttvnXW"
-      Global B353_Request_Button_Graphic := "|<B353_Request_Button>*200$67.0DzzzzzzzzzbXzzzzzzzzzrwzzzzzzzzzvyTzzzzzzzzxzD0z0SzT1y0zbDDCDTjCSQTbjbDbjrDbD07bvbnrvbnbk7ltntvxk1kvts0twxys0y5wwzwySzQzzszCTyTDTiTzyTbbzDbjbDyTDtlnnXnXnrbbww3w1w1w3s4"
-      Global B354_Reward_Button_Graphic := "|<B354_Reward_Button>*200$68.0Dzzzzzzzzz3lzzzzzzzzzlzDzzzzzzzzwTnzzzzzrzzz7ww3brnkD1k1zCQNswtllssTbjbCDSyQyT03nxnfbzbDjk1w0SmNy1nnwTT07hqyAQwz7nnzvRjDbDDlywzy73ntnvwTbjznswyQyT7wttwyT67DnVzD0zDbs9nw0U"
-      Global B361_Click_Button_Graphic := "|<B361_Click_Button>*200$49.s1ySzzyzlwTDzzzTtzbbzzzjtznnzzzrxzxtzw3vyzzwxwwxwTzySwzCwjzzDSzbQrzzbiTzgvzznrDzkRzztvbzs6zywxnzwnTzSSxzCwbzDDSTbT3zjbjDbjYT7nrk7rvUDvvyDvz"
+      Global B350_Depot_Title_Graphic := "|<B350_Depot_Title>*240$53.00TzzzzzzkzzzzzzzznzzzzzzzzbzzzzzzzzDzzzzzzzyTztzXzyDwzxXw1zk7tzszrtzTbnznzDvxzjbzjyzvzzDDzTtzrzzSTyznzjzwwzxzU0Ts1tzvzDzzDnnzryTzxzrbzjwzzvzjDzTtzzbySTyztzzDwwzxzvzzDltzvzsnz0nnzrzsDz3o"
+      Global B351_Free_Button_Graphic := "|<B351_Free_Button>*200$38.07zzzznzzzzzwzzzzzzDzzzzznzkQ3w4zwSSSQDzTjrDU3rnxnszxwSQQDzT0703zrnznwzxwzwzDzTjzDnzrsttszxz0z0U"
+      Global B352_Help_Button_Graphic := "|<B352_Help_Button>#307@0.44$40.k700C030Q00s0A1k03U0k70wCBv0QDsszw1llnXnzz67CA7zwsAskQ1nznX1k7DzCA70Qs0skQ1nU3X1k772CA70QTwszw1kzXXzU"
+      Global B353_Request_Button_Graphic := "|<B353_Request_Button>#424@0.30$36.U003U0U003U0U003U0j0S3aSzVzXbzvlnXbblnVnb3VnVnb3Vrznb1Vrznb1VrU3b1VnU3b3VnVXb3VnznbzVlzXbzUkz37yU"
+      Global B354_Reward_Button_Graphic := "|<B354_Reward_Button>*200$48.T7zzzzzzTbzzzzzzTrzzzzzzTrkSSTS1TrbCSTQQTbDbSCRy0DDbSiTy0T07AizUST07BayATDTzdowyTDDzVkxyTbDzXlwwTbbjntwMTnkDrty2U"
+      Global B361_Click_Button_Graphic := "|<B361_Click_Button>#322@0.27$34.TwDC03zsws0D7nl00kDD00X0QwsTw1nXXzk0CCTT00stkw03Xj1k0CCw300svkA1nXj0k7CCw7UwstkzjXXbrTwCCDwzUssTs"
       Global BD01_Desert_building_Title_Graphic := "|<BD01_Desert_building_Title>*127$69.01zzzzzzzzzs07zzzzzzzzz7sTzzzzzzzzszlzzzzzzzzz7yDzzzzzzzzszszUDy0zs3w7z7s0TU3y0DUzsy7XswDXkw7z7lyD7lsz7UzwQTllzD7ww7zXXyD7zkzXUzsw01s7y00Q7z7U0DU7k03Uzsw01zUC00Q7z7XzzzVlzzUzkwTzzyC7zw7yDVzyDsszzUz3yDlkyD3ww00zkQD3VwC7U0Dz03w0Tk1w07zy1zk7z0TY"
-        Global WD111_Steal_Button_Graphic := "|<WD111_Steal_Button>*139$45.UDzzzzzUswzzzzwDXXzzzzVyQTzzzwDy0s7k7UzwSAQQQVzXnnbXa1wQyDyQy7XU1s3bwQQ0C0QznXbzXnXyQQzwyQDXXXvbXUMSSCQMQU7ks3k3Y"
+        Global WD111_Steal_Button_Graphic := "|<WD111_Steal_Button>*200$40.UDzzzzwyTTzzzrwxzzzzTn1yDwQzw7UT0FzxwwxsVzrrvznUzSTbzDlxs0T0zXrU3nnzDSTyT7wxxztwDnrnvbUQTDbDAA3wT1w4U"
     Global WNC_Coord_Button_Graphic := "|<WNC_Coord_Button>#458@0.67$27.7zzz1zzzyTzzznzsDzTw0Tzz01zzk0Dzy00zzU07zw00zzU07zw00zzU07zw01zzk0Dvy03zTs1zvzszzDzzzszzzy3zzzUTzzwU"
       Global WNC0_Coord_Title_Graphic := "|<WNC0_Coord_Title>*50$64.zzzzzzzzzz3zzzzzzzzzwDzzzzzzzzzkUDyDzVzATz00TUDw1s0w400s0T03U3007300s060A00w4D1VsM7Uk3s0y4DkUw7UTy7s0z27kz1zsTk7w8T3w7zVz0TkVwDkTq7w1z27kz1y0TU7w8T3w3kVy4DkVwDk623sEy67kS00A03U0MTU001s0C03Vy00UTU1w0T7w03zzUTw3zzw6M"
       Global WNC1_GoTo_Button_Graphic := "|<WNC1_GoTo_Button>*141$52.w7zzzzzzzU7zzzzzzwSDzzzbzzXwzzzyTzyTlzzztzzlzzUDy0w37zy8Ts7U4TznsztwS3zyDnzbnwDUMzDySDkS1bwztsz1z6TnzbXw7wNzDySDmTlXwztwz8z7DXzbnsksQQTyD37U3s3zsC0T0zkTzly7U"
