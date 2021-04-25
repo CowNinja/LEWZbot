@@ -183,6 +183,12 @@ MsgMonitor(wParam, lParam, msg)
 	; ClassNN: Qt5QWindowIcon19
 	; Text: RenderWindowWindow
 	; Client: x: 1 y: 32 w: 689 h: 1216
+	Global Client_Area_X := 1
+	Global Client_Area_Y := 32
+	Global Client_AreaWidth := 689
+	Global Client_AreaHeight := 1216
+	Global Client_Area_X2 := (Client_Area_X + Client_AreaWidth)
+	Global Client_Area_Y2 := (Client_Area_Y + Client_AreaHeight)
 	/*
 	Default Window search:
 	[options.x1:=0] (number), [options.y1:=0] (number) ; the search scope's upper left corner coordinates
@@ -193,26 +199,26 @@ MsgMonitor(wParam, lParam, msg)
 	[options.joinqueries:=1] (boolean) ; Join all GraphicsSearch queries for combination lookup.
 	[options.offsetx:=1] (number), [options.offsety:=0] (number) ; Set the Max offset for combination lookup
 	*/
-	Global optionsObjCoords := {   x1: 1
-                , y1: 32
-                , x2: 689
-                , y2: 1216
+	Global optionsObjCoords := {   x1: Client_Area_X
+                , y1: Client_Area_Y
+                , x2: Client_Area_X2
+                , y2: Client_AreaHeight
                 , err1: 0.1
                 , err0: 0.1}
 	Global optionsObjALL := {   x1: 1
                 , y1: 32
                 , x2: 689
                 , y2: 1216
-                , err1: 0
-                , err0: 0
+                , err1: 0.1
+                , err0: 0.1
                 , screenshot: 1
                 , findall: 1 }
 	Global optionsObjONE := {   x1: 1
                 , y1: 32
                 , x2: 689
                 , y2: 1216
-                , err1: 0
-                , err0: 0
+                , err1: 0.1
+                , err0: 0.1
                 , screenshot: 1
                 , findall: 1
                 , joinqueries: 1
