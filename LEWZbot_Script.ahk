@@ -153,8 +153,8 @@ while WinExist(FoundAppTitle)
 				; for testing routines
 				; MsgBox, 0, Pause, Press OK to start (No Timeout)
 				; Gosub Benefits_Center
-				; Message_To_The_Boss := User_Name . " " . Routine . " Routine`,"
-				; Gosub Benefits_Center
+				; Gosub Active_Skill
+				; Gosub Peace_Shield
 				; Gosub Desert_Wonder
 				; Gosub Depot_Rewards
 				; Gosub Donate_Tech
@@ -175,8 +175,8 @@ while WinExist(FoundAppTitle)
 				; ****************************
 				; ** Position dependant **
 				; ****************************
-				if Peace_Shield_Needed
-					Gosub Peace_Shield
+				; if Peace_Shield_Needed
+				; 	Gosub Peace_Shield
 				; Gosub Reset_Posit
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
@@ -1903,6 +1903,8 @@ Speaker_Help:
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		}
 	}
+	
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
@@ -1962,25 +1964,22 @@ Active_Skill:
 	Subroutine_Running := "Active_Skill"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
+	
+	OfficerSkills := 8331_Instructor_Title_Graphic 8332_Magic_Title_Graphic 8333_WildHarvest_Title_Graphic 8341_Bumper_Title_Graphic 8351_AbilityRsrch_Title_Graphic 8352_FirstRiches_Title_Graphic 8353_FullofStrength_Title_Graphic 8354_Promotion_Title_Graphic 8355_SkillfulWork_Title_Graphic 8356_SpecTrain_Title_Graphic 
 
 	Mouse_Click(195,1195) ; Tap Activate Skills
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+	; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 
 	Gosub Active_Skill_Reload
-
-	; if !Active_Skill_Detected
-
-	Continue_Active_Skill:
-
 	loop, 2
 		Mouse_Click(215,425) ; Active Skill tab #2 - Officer
 	Gosub Active_Skill_Click_Button
 	
 	/*
-
-	; loop, 2
-	; Mouse_Click(340,425) ; Active Skill tab #3 - Combat
-	; Gosub Active_Skill_Click_Button
+	loop, 2
+		Mouse_Click(340,425) ; Active Skill tab #3 - Combat
+	Gosub Active_Skill_Click_Button
+	*/
 
 	loop, 2
 		Mouse_Click(470,425) ; Active Skill tab #4 - Develop
@@ -1989,116 +1988,79 @@ Active_Skill:
 	loop, 2
 		Mouse_Click(600,425) ; Active Skill tab #5 - Support
 	Gosub Active_Skill_Click_Button
-	*/
-
+	
 	goto Active_Skill_END
-
-	; Capture_Screen_Text := OCR([70, 600, 124, 60], "eng") ; Button 01
-	; Capture_Screen_Text := OCR([275, 600, 124, 60], "eng") ; Button 02
-	; Capture_Screen_Text := OCR([480, 600, 124, 60], "eng") ; Button 03
-	; Capture_Screen_Text := OCR([70, 815, 124, 60], "eng") ; Button 04
-	; Capture_Screen_Text := OCR([275, 815, 124, 60], "eng") ; Button 05
-	; Capture_Screen_Text := OCR([480, 815, 124, 60], "eng") ; Button 06
-
+	
 	Active_Skill_Click_Button:
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-	; set variables
-	Button_Max_X := 510 ; 480 ; 500 ; 480
-	Button_Max_Y := 830 ; 815
-	Button_Min_X := 100 ; 90 ; 70 ; 75 ; 70
-	Button_Min_Y := 620 ; 610 ; 600 ; 610 ; 600
-
-	Button_OCR_X := Button_Max_X ; delta 71-276-481 = 205
-	Button_OCR_Y := Button_Max_Y ; delta 600-815 = 215
-	Button_OCR_W := 100 ; 130 ; 100 ; 130
-	Button_OCR_H := 40 ; 50 ; 60 ; 40 ; 60
-	Button_OCR_X_Delta := 205 ; 203 ; 100, 305 to 510 = 205
-	Button_OCR_Y_Delta := 210 ; 215 ; 217 ; 215 ; 620 to 830 = 210
-	Click_X_Delta := 60 ; 50 ; 60
-	Click_Y_Delta := 15 ; 15 ; 30
-	Click_X := (Button_OCR_X + Click_X_Delta)
-	Click_Y := (Button_OCR_Y + Click_Y_Delta)
-
-	Active_Skills_Text := ["Harvest", "Special", "Skillful", "Workman", "Ability", "First", "Riches", "Magic", "Clown", "Promotion", "Instructor"]
-	Active_Skill_Button_text := ["Use"]
-	loop, 6
+	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	oUse_ButtonSearch := new graphicsearch()
 	{
-		; Looking for green use buttons on main active skill interface
-		Use_Button := Search_Captured_Text_OCR(Active_Skill_Button_text, {Pos: [Button_OCR_X, Button_OCR_Y], Size: [Button_OCR_W, Button_OCR_H]})
-		
-		Look_For_Use_Button:
-		if !Use_Button.Found
-			Goto Active_Skill_Click_Button_Next
-
-		Active_Skill_Click_Button_NOW:
-		Mouse_Click(Click_X,Click_Y) ; Tap Use button found
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		; Looking for Skill titles that match list
-		/*
-		Match_OCR_X := 180
-		Match_OCR_Y := 445
-		Match_OCR_W := 330
-		Match_OCR_H := 36
-		Skill_Titles := Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [Match_OCR_X, Match_OCR_Y], Size: [Match_OCR_W, Match_OCR_H]})
-		*/
-		
-		loop, 2
+		resultUse_Button := oUse_ButtonSearch.search(832_Green_Use_Button_Graphic, optionsObjCoords)
+		if (resultUse_Button)
 		{
-			Skill_Titles := Search_Captured_Text_OCR(Active_Skills_Text, {Pos: [180, 445], Size: [330, 36]})
-			if Skill_Titles.Found
-					goto Active_Skill_Skill_Opened
+			sortedUse_Button := oUse_ButtonSearch.resultSortDistance(resultUse_Button, Client_Area_X2, Client_Area_Y2)
+			loop, % sortedUse_Button.Count()
+			{
+				Mouse_Click(sortedUse_Button[A_Index].x,sortedUse_Button[A_Index].y)
+				gosub Active_Skill_Titles
+				Mouse_Click(350,350, {Timeout: (1*Delay_Long+0)}) ; Tap Active skill title bar
+			}
 		}
-
-		goto Active_Skill_Click_Button_Next ; No matching title found, examin next button
-
-		Active_Skill_Skill_Opened:
-		loop, 3
-			Mouse_Click(340,780) ; Tap "Use" button
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-
-		Active_Skill_Click_Button_Next:
+		
 		Gosub Active_Skill_Reload
-		Mouse_Click(333,355) ; Tap title bar
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-
-		if (Button_OCR_X <= Button_Min_X)
-		{
-			Button_OCR_X := Button_Max_X
-			if (Button_OCR_Y <= Button_Min_Y)
-				Button_OCR_Y := Button_Max_Y
-			else
-				Button_OCR_Y -= Button_OCR_Y_Delta
-		}
-		else
-			Button_OCR_X -= Button_OCR_X_Delta
-		/*
-		if (Button_OCR_X <= 0)
-			Button_OCR_X := Button_Max_X
-
-		if (Button_OCR_Y <= 0)
-			Button_OCR_Y := Button_Max_Y
-		*/
-
-		Click_X := (Button_OCR_X + Click_X_Delta)
-		Click_Y := (Button_OCR_Y + Click_Y_Delta)
+		return
 	}
-	return
+	
+	Active_Skill_Titles:
+	{
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		oTitlesSearch := new graphicsearch()
+		loop, 4
+		{
+			resultTitles := oTitlesSearch.search(831_Blue_Use_Button_Graphic, optionsObjCoords)
+			if (resultTitles)
+				Goto Active_Skill_Titles_Continue ; break
+			Else
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		}
+		return
+		
+		Active_Skill_Titles_Continue:
+		oTitlesSearch := new graphicsearch()
+		resultTitles := oTitlesSearch.search(OfficerSkills, optionsObjCoords)
+		if (resultTitles)
+			Mouse_Click(340,780, {Timeout: (3*Delay_Long+0)}) ; Tap Blue "Use" button
+
+		; Mouse_Click(350,350, {Timeout: (1*Delay_Long+0)}) ; Tap Active skill title bar
+
+		Gosub Active_Skill_Reload
+		return
+	}
 
 	Active_Skill_Reload:
-	loop, 5
+	loop, 2
 	{
 		; check to see if active skill is properly displayed x times
-		loop, 5
-			if Search_Captured_Text_OCR(["Active Skill"], {Pos: [280, 350], Size: [140, 25]}).Found
+		
+		oSkill_TitleSearch := new graphicsearch()
+		loop, 6
+		{
+			resultSkill_Title := oSkill_TitleSearch.search(830_ActiveSkill_Title_Graphic, optionsObjCoords)
+			if (resultSkill_Title)
+			{
+				Mouse_Click(resultSkill_Title[1].x,resultSkill_Title[1].y, {Clicks:2})
 				return
+			}
+			Else
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		}
 
 		; Gosub Get_Window_Geometry
 		Gosub Check_Window_Geometry
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
 		Mouse_Click(195,1195) ; Tap Activate Skills
-		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
+		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 	}
 	return
 
@@ -2688,7 +2650,7 @@ Mail_Collection:
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,445) ; Tap Activities
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Subroutine_Running := "Single Player Arms Race"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
