@@ -750,12 +750,12 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 ; example: Search_Pixels("OxFf4B2C", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
 ; example: Search_Pixels(ArrayOfColors, {X1: 115, Y1: 30, X2: 259, Y2: 60, Timeout: 1})
 Search_Pixels(Search_Pixels_Array, Options := "") {
-	X1 := (Options.HasKey("X1")) ? Options.X1 : GameArea_X1
-	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : GameArea_W1
-	W := (Options.HasKey("W")) ? Options.W : GameArea_W
-	H := (Options.HasKey("H")) ? Options.H : GameArea_H
-	X2 := (Options.HasKey("X2")) ? Options.X2 : GameArea_X2
-	Y2 := (Options.HasKey("Y2")) ? Options.Y2 : GameArea_Y2
+	X1 := (Options.HasKey("X1")) ? Options.X1 : Client_Area_X1
+	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : Client_Area_W1
+	W := (Options.HasKey("W")) ? Options.W : Client_Area_W
+	H := (Options.HasKey("H")) ? Options.H : Client_Area_H
+	X2 := (Options.HasKey("X2")) ? Options.X2 : Client_Area_X2
+	Y2 := (Options.HasKey("Y2")) ? Options.Y2 : Client_Area_Y2
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
 	CoordModeTargetType := (Options.HasKey("TargetType")) ? Options.TargetType : "Pixel"
@@ -772,12 +772,12 @@ Search_Pixels(Search_Pixels_Array, Options := "") {
 ; example: Search_Images("OK_Button.jpg", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
 ; example: Search_Images(ArrayOfImages, {X1: 115, Y1: 30, X2: 259, Y2: 60, Timeout: 1})
 Search_Images(Search_Images_Array, Options := "") {
-	X1 := (Options.HasKey("X1")) ? Options.X1 : GameArea_X1
-	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : GameArea_W1
-	W := (Options.HasKey("W")) ? Options.W : GameArea_W
-	H := (Options.HasKey("H")) ? Options.H : GameArea_H
-	X2 := (Options.HasKey("X2")) ? Options.X2 : GameArea_X2
-	Y2 := (Options.HasKey("Y2")) ? Options.Y2 : GameArea_Y2
+	X1 := (Options.HasKey("X1")) ? Options.X1 : Client_Area_X1
+	Y1 := (Options.HasKey("Y1")) ? Options.Y1 : Client_Area_W1
+	W := (Options.HasKey("W")) ? Options.W : Client_Area_W
+	H := (Options.HasKey("H")) ? Options.H : Client_Area_H
+	X2 := (Options.HasKey("X2")) ? Options.X2 : Client_Area_X2
+	Y2 := (Options.HasKey("Y2")) ? Options.Y2 : Client_Area_Y2
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	CoordModeRelativeTo := (Options.HasKey("RelativeTo")) ? Options.RelativeTo : "Client" ; "Window"
 	CoordModeTargetType := (Options.HasKey("TargetType")) ? Options.TargetType : "Pixel"
