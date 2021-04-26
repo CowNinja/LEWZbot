@@ -72,3 +72,14 @@ GraphicSearch_query := "|<Dialog_Quit>**50$46.1z0007U0Tz000z03kC003BwAAQ00AqlXws
      graphicsearch.mouseTip(resultObj[i].x, resultObj[i].y)
 
 
+	
+/*
+Network failure:
+OK button:
+GraphicSearch_query := "|<>*90$24.U7lw03ls7VlkDllVDsl3Dsl7TskDTsk7Tsk7DslXDsllDllk7lls03lwU7lyU"
+
+Feedback button:
+GraphicSearch_query := "|<>*90$22.03zw0DzlzzzDzzwzzUnzw1DzV00wS01lw0700zw03zk0Dz7wzwTnzkwDzU0zz08"
+
+
+*/
