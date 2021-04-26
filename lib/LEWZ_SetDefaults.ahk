@@ -185,10 +185,11 @@ MsgMonitor(wParam, lParam, msg)
 	; Client: x: 1 y: 32 w: 689 h: 1216
 	Global Client_Area_X := 1
 	Global Client_Area_Y := 32
-	Global Client_AreaWidth := 689
-	Global Client_AreaHeight := 1216
-	Global Client_Area_X2 := (Client_Area_X + Client_AreaWidth)
-	Global Client_Area_Y2 := (Client_Area_Y + Client_AreaHeight)
+	Global Client_Area_W := 689
+	Global Client_Area_H := 1216
+	Global Client_Area_X2 := (Client_Area_X + Client_Area_W)
+	Global Client_Area_Y2 := (Client_Area_Y + Client_Area_H)
+	
 	/*
 	Default Window search:
 	[options.x1:=0] (number), [options.y1:=0] (number) ; the search scope's upper left corner coordinates
@@ -202,7 +203,7 @@ MsgMonitor(wParam, lParam, msg)
 	Global optionsObjCoords := {   x1: Client_Area_X
                 , y1: Client_Area_Y
                 , x2: Client_Area_X2
-                , y2: Client_AreaHeight
+                , y2: Client_Area_H
                 , err1: 0.1
                 , err0: 0.1}
 	Global optionsObjALL := {   x1: 1
@@ -235,12 +236,6 @@ MsgMonitor(wParam, lParam, msg)
 	Global MsgWinMove_X := (App_Win_X + App_WinWidth + 1) ; initialize location upper left X coord of MSg Window
 	Global MsgWinMove_Y := (App_Win_Y + 1000) ; initialize location upper left Y coord of MSg Window
 
-	Global GameArea_X1 := App_Win_X
-	Global GameArea_Y1 := (App_Win_Y + 33)
-	Global GameArea_X2 := (App_Win_X + 688)
-	Global GameArea_Y2 := App_WinHeight
-	Global GameArea_H := (App_WinHeight - 33)
-	Global GameArea_W := (App_WinWidth - 43)
 
 	; OCR Variables
 	Global Capture2TextPATH := "C:\Users\CowNi\Desktop\MEmu\lib\Capture2Text\"
@@ -481,19 +476,19 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
     Global 821_World_Button_Graphic := "|<821_World_Button>*240$53.Trxzz3xzwTjnzwDvzuyDbztzrzpwTTzjzjzfuSz1ybT1LqxwtwSywbRnnlvstxivbjvrnrvRvSTHDrjqrqyzaTjTijhxzQzSzQTbvyxyxytzDntvxtxnyTrrrvvnbwzkTjrsI"
     Global 822_Home_Button_Graphic := "|<822_Home_Button>*136$56.DwzzzzzzznzDzzzzzzwznzzzzzzzDwz7zntzlnzDUT087s4znlXlUkwM00swQwSCT00CTbDbnbkzn7tntws0DwlyQyTA03zATbDbn7wznbtntwtzDwswQyTCTXzD6CDbnVUznk7Xlsw0U"
   Global 83_ActiveSkill_Button_Graphic := "|<83_ActiveSkill_Button>*240$42.DzzzzzzbzzzzzwrzTzzzksDzzzzUw7zzzzVw3tzzy7z1xzzw7z0zTzsDzUDjzkTzs7rzUzzw3uz1zzy1zw3zzz0Ts7zU"
-    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>*240$45.tnzTzrrpzbvzzyyjyTTzzrnzvvzzyyTzzTzzrnzzvzyyyjzzTjrrqTzvzyyywDzSzrrrzDvjyyyzyT0zrrrzvtryyyzzTTTrrnzvvxyyyTzTTjrrnzvvyyyyjyzTrrrq0DvzSyyU"
-    Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>*240$35.TzzzzyzvzzzxzrzzzvzjzzzrzTzzzjyw3w3TxvvvmzvbrjpzrDzTnzjDwz7zT3s0DyztnzTxzvbyTrznjyzDDjDwQzCTCT7zXzXk"
-    Global 832_Green_Use_Button_Graphic := "|<832_Green_Use_Button>*240$35.TxzzzyzvzzzxzrzzzvzjnzvrzSNzNjyxxxtTxnvruzvbzjtzrbyTXzjlw07zTwtzjyzxnzDvrtrzTbbrbzCTbDbD1zUzUs"
-      Global 8331_Instructor_Title_Graphic := "|<8331_Instructor_Title>**50$69.y00000B00000k00001w00006000008U0000k000014000060z000Mk7jUsnzy7zb7Tzw76H0tkCU+QMUUm03Q0w1E7446EyDDnsu3sUUmCtti/4Ft446H3CAT8WA8UUmMNtzt4F1446H1D1y8WM8UUmM9w1t4H1446H1Bw38WM8UUmM9lyB4H14A6H1DttcWM8VUmM9n3BAH17s6H1CStcuMAS0mM9syB1H1U4aH1D03A+M71rnsDi1kzT0TzU"
-      Global 8332_Magic_Title_Graphic := "|<8332_Magic_Title>**50$69.y0Ts00000z00k37000004s060ss00000r00M67000007s730ksDk0S0y7vQCr7zkTzrlxNVatwz7nyzQ3ABrQ0tk4ozDRnivDnAz6bnvaNrPz/bwoyMQnSvwNNlabb3rvrTz/AAowkSSStzlFUqba3nrrS0+86owkTSyz3tF0qba3Narnz+AAowkPBqySNNVabr3ACrn7/CQoyTNVayTlwz6btvAQqlsDXUoz0Nn6r0MT0abS4"
-      Global 8333_WildHarvest_Title_Graphic := "|<8333_WildHarvest_Title>*240$53.TyzwzyzzyzwztzxzzszszrzvzzpzhzjzrzzfzPzTzjzzLzzyzzTzyjvzvzyzzxjrjrtxzTvTjzjnvxzazzSzbrrzBxyxzDjjzRvxvyTTTyvrzrwywzxrTzjtxvzvizrznvnzrhzxzbrrzjTzfzDjjySDzDyTTTwyTyTwyzTtxzyztxzDvzzzzzzzbw"
-      Global 8341_Bumper_Title_Graphic := "|<8341_Bumper_Title>**50$69.zz00000000000Q000000000T1k000000007z6000000000kQnsDjTbwDzq1aT1xzzzlzzkAmM9dUw7BkS7aH1B1XARVsztmM9cT3tgTXwQH1B7szBbC03mM9dnCNgkrz7H1BANXBg6zwOM9dXANhUS1nH3BANXBg3k6OMNdXANhUK0nH3BANXBi6kCOQtdXANglrzXNyBANXBbwzsvDVdXANgTU0CM1BANXBU107VkzdXANhkTzs7zxwTXxjzU"
-      Global 8351_AbilityRsrch_Title_Graphic := "|<8351_AbilityRsrch_Title>**50$69.CA1A04SODw01VU9U0bnHtU0QC1A07qPzA03Ak9zkynTtzUNa1DzbqPzDy7Ss9UCznTUAknn11soyOT7a6SQ8TbbnHtwMrlV7CQyOTAnAnA9knbnHtaNjtlA6QyOTANcz69UHbnHtXD00lA2QyOTANs079UnbnHtVbTyNA6QyOTAAnzn8lnbnFtVas6B7wwyODC660NcT6bnFswkk3B81oyOBVb60MjkwbnHiANU1xzz7zvxzXA"
-      Global 8352_FirstRiches_Title_Graphic := "|<8352_FirstRiches_Title>**50$69.zzwz007s000003qM00n0000006r006M0001zwzs7Un0000A3ny7zaTs0S1U6TtyynzkTyA0nzQ0yQD7ntUCSP7Xm8Rk3DzbnlyS7nwz9zsqSQtlzDDx00Cnn3yQNtXU01qQMTn3DTwDz6na06MNnzVzwqQk0n3C00A1qna3yMNlztUCqQMTn3CTzA0rnn7SMNnVtU6SSTnn3DQQA0nntwSMNtzdU6SPU7n3DblA0nnD3qMNi0TU7zszwz3wsDU"
-      Global 8353_FullofStrength_Title_Graphic := "|<8353_FullofStrength_Title>**50$68.TzsDU000000D0D7s0000003XUta0000000nz6NU0000009ktiSxw7UDTmM7TbzzDz3zza1zUSwrvsj1tsDwDYDk796CDw7bsTlwu7lkzsNaDwzaXyT0z6Nb6QNdlZy0taNVbz+MNDy7NaMNzna2SDsqNa400tUbkDBaNV7zyM9g0nNaMFzya2HUAqNa6MDdUaQ7BbNVb7OM9XzbNyMMzaa2QTlr7a37ndUbU1tltUs1mM9S1wDzs7Vsy3s"
-      Global 8354_Promotion_Title_Graphic := "|<8354_Promotion_Title>**50$66.00w0000000000A00000000DzC00000000A7bzsDkTzjwA1bzwzwTzzyA1biDsyPUwDA3bgTU7MAF3DzDVzDnsy7nDzBbyTttzDv40RbCsttXAN01xaAsRtXANDztiAkRvX8NDzViAkBv38NA01iAkBv38NA01iAkRv38NA01iAsNv38NA01iCstv38NA01i6Tnv38NA01i7DXP38NA01g3U7P38Pw01w3kST3sTU"
-      Global 8355_SkillfulWork_Title_Graphic := "|<8355_SkillfulWork_Title>**50$61.w0wP03DBakwQ79U1janNwzlYk0znNgwswmMDTNgyOM6NATzwqSDA3waSTyPA1bUyHSTDBa0lzU9wRbanlwDy4wQnnNwzUTWQQNtgqFy0tgQAwqP8TwCkC6SPBYszXMX3DBamS1tgtlbanN30AqyQnnNgVk6PT6NtgqGQ7BBngwqP9DzCaQySPBYlz6H6DDBamQ0DBXbbanN7UT7kzzzTjVzy1kDCD73W"
-      Global 8356_SpecTrain_Title_Graphic := "|<8356_SpecTrain_Title>**50$65.Dzs00000001s1s00000003Vks00000006Tsk000001w9stbzw0S0TyH0vDzw7z1yya0yPUQzDbUDD1wkwRk7iTCDw1XwTDXtyC7z3CQwzbbCT0z6MNnXbADjk7AktbzCMDDy7PUnDyQU1lz6r1a00t03kDBi3Azzn1tU6PAAtzza7lUAqQNn1zCQnUtgznb7SDlXzXMzDbwqTbXyCk0v7li0TU0ta3b07D3nkDXDy7UwDz8"
+    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>#177@0.25$15.DzXzyzzzkTw1zUDy0zw0zy3zy7zs7z03z07s0zU7y1zzzTztzwU"
+    Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>*60$12.7s7s7s7s7s7s7s7s7s7s7s7s7s7s3k1U0000U"
+    Global 832_Green_Use_Button_Graphic := "|<832_Green_Use_Button>*50$12.7s7s7s7s7s7s7s7s7s7s7s7s7s3k000000U"
+      Global 8331_Instructor_Title_Graphic := "|<8331_Instructor_Title>*117$15.1k0MM0Q0w84C0S467060730303U01k1y0zk7z2zwrzw"
+      Global 8332_Magic_Title_Graphic := "|<8332_Magic_Title>*130$26.01k001u000z000D01kC004300F1U00ks0kwQ1zzDyzzrvrzzzzzzU"
+      Global 8333_WildHarvest_Title_Graphic := "|<8333_WildHarvest_Title>*108$17.000000007zkDzU1l03U0r03zw7zwDzsTzszzlkTnszrzzwzrt7jzzz"
+      Global 8341_Bumper_Title_Graphic := "|<8341_Bumper_Title>*126$18.zU3zU3z03y23U030010U1001001001U01c00y00zU0zw0U"
+      Global 8351_AbilityRsrch_Title_Graphic := "|<8351_AbilityRsrch_Title>*138$23.00400M2040103ztUTzwXzzyC00CrU7zTzzrzzzs"
+      Global 8352_FirstRiches_Title_Graphic := "|<8352_FirstRiches_Title>*153$14.zwCzXDw2jXCNbXHkIMVVA6/0GtwrENrCy"
+      Global 8353_FullofStrength_Title_Graphic := "|<8353_FullofStrength_Title>*93$16.k1y87sUHm1bs7k000000000000284HkT31wA7kkT31y"
+      Global 8354_Promotion_Title_Graphic := "|<8354_Promotion_Title>*89$12.bszyl6tbtbtbtbtbtbtbt7k6Tw7sU"
+      Global 8355_SkillfulWork_Title_Graphic := "|<8355_SkillfulWork_Title>*118$20.rUDys3zm0zyU/rs2wy0jjUDk0000000000000000000000000TzUDkM3y"
+      Global 8356_SpecTrain_Title_Graphic := "|<8356_SpecTrain_Title>*80$24.0E030E2308260828E4000400800UQ000y000y100z008zW00zkE4zks4zsE0U"
   Global 84_Officer_Button_Graphic := "|<84_Officer_Button>*120$55.w7ssbzzzzs0wMnzzzzsyAQzzzzzszWCTy7zzwzs02Q1sD0Tw376QM3VDyFnWT9wnbz8tlDwyNnzYQsby0AtzmCQHz06Qzl7C9wbzDDtXb4QHtbVllnX0Mtns1xtnkS0tzXzzzzzlzw"
   Global 85_Items_Button_Graphic := "|<85_Items_Button>*130$44.DzzzzzznbzzzzzwtzzzzzzCTzzjjzn3kS01s4tsX33AMCQwFlnD3bDYwwlwtk1DDC3CQ0Hnnk3bDwwwzktntDDAwCAQnnnD3nUSwws6"
   Global 86_Mail_Button_Graphic := "|<86_Mail_Button>*123$33.7yDztUTVzzA3wDzzUTVzzw1tC1tVD9X7A9tAwtVaNzbAAnD0tVaNU7AC7AwtVktbbAD7AstVttUHAzzzDTw"
@@ -556,9 +551,9 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
     Global 938_EliteDual_Button_Graphic := "|<938_EliteDual_Button>*117$41.sTzzzzz0SzzvzySQzzbzwwlyz7vtz1kA71lzbCQQtkTDyttvsST1nk3yQw3bUBwtnrDDntnbCSTlXb4SQNkD70wQ7"
     Global 93F_WarZArena_Button_Graphic := "|<93F_WarZArena_Button>0xFBC8CA@0.32$32.Tvyvv7yzyylzjTjgTznvv3zwSzkzz7jsDzlzy3zwTzUzz7zsDztzy3zyzzUzzjzs7zvzy1zyzz0Tzjzk7zvzw1zyzz0Tzjzk7zvzw0zzzz0Dzzzk3zzzs0zzzy0DzzzU3zzzs8"
       Global B224_CityBuffs_Button_Graphic := "|<B224_CityBuffs_Button>*200$41.0TzyCDySTzwwzwyzzttytttvVVn07nrjjjbbbjTTDDbDSyz0TCQxxjkyQtvvTk1s3rqn8"
-        Global B2240_CityBuffs_Title_Graphic := "|<B2240_CityBuffs_Title>*200$67.03zzzzXz7zzU0Tzzznzbzznz7zzzlzbzztznzzztznzzwztzzzwztzzyTwyTts1k7y3DyTDww0k1w0byDbyTXzDwS3yDnzDnzbyTU0DtzbtznyDs03wznwztzbyTsyTtyTwzkzDyTDwzDyTw3bz7byTbzDzkHzXnzDnzbzz1zltzbtznzzkzswznwztzDwTwyTlyTwzXyDsT7kzDyTty00Tk0TbzDw08"
-        Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*200$38.UTjzDznvvzzzxzSzzzzzrjzzzrzv7rwAzySwyxbzjbDTyDvxnzvwyzQtwzbjrCTzxvxnjzzSzQvzzrjrDTnvvxnvq1yzQz3U"
-          Global B22410_Shield_Title_Graphic := "|<B22410_Shield_Title>*200$70.00zzzzzzzzzxzlzzzzzzzzzrzbzzzzzzzzzTyDzzzzzzzzxzszkzy3zw7zrzXw0zk3z07wTyDXlyT7syTVztwTblyTbwwLz7nyDzswznn00yDwzzXnzyA07sznzyDDzsnzzU0Dk0wzzUTzy00yDXnzy1zztzzlyDDztrzzXzzDswzzXTzzDzwzXnzjBzzwTrnyD7wwLzzsyT7kyDXsTzzk1y03w0TW"
+        Global B2240_CityBuffs_Title_Graphic := "|<B2240_CityBuffs_Title>*131$27.01zzty7zzTszzvz3zzTwSTnz7XyTswTlwDXy03wTk0DXyDkwTnz3XyTwQTnzXXyTwQTnzXlyTsSDlw7ks01z04"
+        Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*102$29.U1tzsDnnzwzXbztzb07Vzy060zwSAU7syNs3nwnz3btbzbDn3zCTa7yQzA7styM33nwn0Dbto"
+          Global B22410_Shield_Title_Graphic := "|<B22410_Shield_Title>*133$34.01wTzsT3lzznz77zzTwQTzxzllUzXzz00y7zw33s7zky7c3z7wSk3wTlvs7lz7jwD7wSzsQTlvzllz7bz77wSTwQTlszllz7VwD7wS00wTlu"
           Global B22411_Shield_Ends_Title_Graphic := "|<B22411_Shield_Ends_Title>0xF5F5F5@0.21$40.zw003U3zk00C0A09s0sMk1zlzbv07zDyzzySCtvXztkz3iD073wCzg0QDktzk1kz3Vz073wCkzzQCxvbzxkvzjy"
           Global B22412_Replace_OK_Button_Graphic := "|<B22412_Replace_OK_Button>*138$25.k7lyE1sy1wQS9zCCAzb6CTlWDDwkDbyM7nzA1tz6AQzX76TnXn7llsllsyA1wTY"
     Global B34_CommandCtr_Button_Graphic := "|<B34_CommandCtr_Button>*100$69.zrzjTzzzzw5DzrzXzzzzz0QSnNkzzzzzU3rxskTzzzzk02ywMDzzzzs827mQ3zzzU63k0za/zyzw00607z9zzfzs0000zwzzujzk0007znzzqzzXk00zy0zzvzzzU07zc2jzzzzw00zzU0zxzzz007zw03zrzzs00zzk0DzTzzU07zx00zzzzw00zz403zzzzU27zwk0Dzzzw0Ezzz01zzzzU07zzs07zzzw00zzzU0TzzzU07zzy03zzzw0Czzzs0DzzzU6I"
@@ -568,11 +563,11 @@ Global 1_Quit_Title_Graphic := "|<1_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzz
         Global B3450_Collision_Title_Graphic := "|<B3450_Collision_Title>*130$47.z0zzzzXls0Tzzz7XU0TzzyD67sTzzwSATszzzswFzlzzzlsXzly0zXl7zzs0z7UTzzVkyD0zzy7swS1zzwTlsw3zzszlls7zzXzXXkDzz7z77UDzyDyCD4TyATwQS8zwQTsswEzlszXlslzXlz7XlUwDksT7XU0Tk0yD7k3zk7wS8"
         Global B3460_RuneExtract_Title_Graphic := "|<B3460_RuneExtract_Title>*129$65.U7zzzzzzzzy01zzzzzzzzw01zzzzzzzzszVzzzzzzzzlzVzzzzzzzzXzXzzzzzzzz7z77wTA3zkCDyCDsw03y0ATwQTls63sQ8zkszXkz7lw1z3lz7VyD7w00DXyD7wSDs00z7wSDswDU03yDswTls00TXwTlszXk00z7szXlz7Xzlz7lz7XyD7zXy7XyD7wSDz7yDXwSDsyDuDwD3UwTlwD0TwS01szXw08zsS0Xlz7w0s"
       Global B350_Depot_Title_Graphic := "|<B350_Depot_Title>*240$53.00TzzzzzzkzzzzzzzznzzzzzzzzbzzzzzzzzDzzzzzzzyTztzXzyDwzxXw1zk7tzszrtzTbnznzDvxzjbzjyzvzzDDzTtzrzzSTyznzjzwwzxzU0Ts1tzvzDzzDnnzryTzxzrbzjwzzvzjDzTtzzbySTyztzzDwwzxzvzzDltzvzsnz0nnzrzsDz3o"
-      Global B351_Free_Button_Graphic := "|<B351_Free_Button>*200$38.07zzzznzzzzzwzzzzzzDzzzzznzkQ3w4zwSSSQDzTjrDU3rnxnszxwSQQDzT0703zrnznwzxwzwzDzTjzDnzrsttszxz0z0U"
-      Global B352_Help_Button_Graphic := "|<B352_Help_Button>#307@0.44$40.k700C030Q00s0A1k03U0k70wCBv0QDsszw1llnXnzz67CA7zwsAskQ1nznX1k7DzCA70Qs0skQ1nU3X1k772CA70QTwszw1kzXXzU"
-      Global B353_Request_Button_Graphic := "|<B353_Request_Button>#424@0.30$36.U003U0U003U0U003U0j0S3aSzVzXbzvlnXbblnVnb3VnVnb3Vrznb1Vrznb1VrU3b1VnU3b3VnVXb3VnznbzVlzXbzUkz37yU"
-      Global B354_Reward_Button_Graphic := "|<B354_Reward_Button>*200$48.T7zzzzzzTbzzzzzzTrzzzzzzTrkSSTS1TrbCSTQQTbDbSCRy0DDbSiTy0T07AizUST07BayATDTzdowyTDDzVkxyTbDzXlwwTbbjntwMTnkDrty2U"
-      Global B361_Click_Button_Graphic := "|<B361_Click_Button>#322@0.27$34.TwDC03zsws0D7nl00kDD00X0QwsTw1nXXzk0CCTT00stkw03Xj1k0CCw300svkA1nXj0k7CCw7UwstkzjXXbrTwCCDwzUssTs"
+      Global B351_Free_Button_Graphic := "|<B351_Free_Button>*136$8.07xzTrxz0E5zTrxzTk2"
+      Global B352_Help_Button_Graphic := "|<B352_Help_Button>*200$10.TtzbyTtzU001zbyTtzbyTu"
+      Global B353_Request_Button_Graphic := "|<B353_Request_Button>*200$10.0Ay3wDszXyDk0E3DAyHtDkzXyU"
+      Global B354_Reward_Button_Graphic := "|<B354_Reward_Button>*200$9.0PsTXyTnyTU10PnT/tTXwTo"
+      Global B361_Click_Button_Graphic := "|<B361_Click_Button>*200$12.s1XsbyDyTzTzTzTzTzTzTzTzTzDyDyXss3U"
       Global BD01_Desert_building_Title_Graphic := "|<BD01_Desert_building_Title>*127$69.01zzzzzzzzzs07zzzzzzzzz7sTzzzzzzzzszlzzzzzzzzz7yDzzzzzzzzszszUDy0zs3w7z7s0TU3y0DUzsy7XswDXkw7z7lyD7lsz7UzwQTllzD7ww7zXXyD7zkzXUzsw01s7y00Q7z7U0DU7k03Uzsw01zUC00Q7z7XzzzVlzzUzkwTzzyC7zw7yDVzyDsszzUz3yDlkyD3ww00zkQD3VwC7U0Dz03w0Tk1w07zy1zk7z0TY"
         Global WD111_Steal_Button_Graphic := "|<WD111_Steal_Button>*200$40.UDzzzzwyTTzzzrwxzzzzTn1yDwQzw7UT0FzxwwxsVzrrvznUzSTbzDlxs0T0zXrU3nnzDSTyT7wxxztwDnrnvbUQTDbDAA3wT1w4U"
     Global WNC_Coord_Button_Graphic := "|<WNC_Coord_Button>#458@0.67$27.7zzz1zzzyTzzznzsDzTw0Tzz01zzk0Dzy00zzU07zw00zzU07zw00zzU07zw01zzk0Dvy03zTs1zvzszzDzzzszzzy3zzzUTzzwU"
