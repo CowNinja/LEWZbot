@@ -155,7 +155,7 @@ while WinExist(FoundAppTitle)
 				; Gosub Benefits_Center
 				; Gosub Active_Skill
 				; Gosub Peace_Shield
-				; Gosub Desert_Wonder
+				; Gosub Mail_Collection
 				; Gosub Depot_Rewards
 				; Gosub Donate_Tech
 				; Gosub Peace_Shield
@@ -178,11 +178,13 @@ while WinExist(FoundAppTitle)
 				; if Peace_Shield_Needed
 				; 	Gosub Peace_Shield
 				; Gosub Reset_Posit
+				/*
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
 				Gosub Collect_Equipment_Crafting
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
+				*/
 				; ******************************************
 				; DEBUG / Troubleshooting block - BEGIN
 				; ******************************************
@@ -1918,15 +1920,17 @@ Drop_Zone:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(285,200) ; Tap On Drop Zone
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	oGraphicSearch := new graphicsearch()
 		
-	loop, 20
+	loop, 10
 	{
-		resultObj := oGraphicSearch.search(allQueries_Account, optionsObjCoords)
+		resultObj := oGraphicSearch.search(B361_Click_Button_Graphic, optionsObjCoords)
 		if (resultObj)
-			loop, 20
+			loop, 5
 				Mouse_Click(410,1050, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
+		Else
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
 	if !Go_Back_To_Home_Screen()
@@ -2172,39 +2176,28 @@ Reserve_Factory:
 		{
 			Mouse_Click(610,1200) ; Tap Alliance Menu
 			DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-			loop, 4
-				if Search_Captured_Text_OCR(["Alliance"]).Found
-					break
-
-			; Alliance_Menu_01 := OCR([150, 480, 216, 33], "eng")
-			; Alliance_Menu_02 := OCR([150, 590, 216, 33], "eng")
-			; Alliance_Menu_03 := OCR([150, 705, 216, 33], "eng")
-			; Alliance_Menu_04 := OCR([150, 815, 216, 33], "eng")
-			; Alliance_Menu_05 := OCR([150, 925, 216, 33], "eng")
-			; Alliance_Menu_06 := OCR([150, 1040, 216, 33], "eng")
-
-			Min_Y := 480
-			Max_Y := 1040
-			Min_X := Max_X := OCR_X := Click_X := 150
-			OCR_Y := Min_Y
-			OCR_W := 216
-			OCR_H := 33
-			OCR_Y_Delta := 110
-
-			loop, 6
+			oGraphicSearch := new graphicsearch()
+					
+			Loop, 8
 			{
-				Alliance_Menu := Search_Captured_Text_OCR(["Alliance Help"], {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]})
-				; Capture_Screen_Text := OCR([OCR_X, OCR_Y, OCR_W, OCR_H], "eng")
-				; MsgBox, % A_Index ". (" OCR_X "," OCR_Y ") " Alliance_Menu.Text
-				if Alliance_Menu.Found
+				resultObj := oGraphicSearch.search(870_AllianceMenu_Title_Graphic , optionsObjCoords)
+				if (resultObj)
+					break
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			}
+				
+			oGraphicSearch := new graphicsearch()
+			Loop, 4
+			{
+				resultObj := oGraphicSearch.search(874_Help_Button_Graphic, optionsObjCoords)
+				if (resultObj)
 				{
-					; MsgBox, % A_Index ". (" OCR_X "," OCR_Y ") " Alliance_Menu.Text
-					Mouse_Click(OCR_X,OCR_Y) ; Tap To open Alliance Help
-					goto Alliance_Help_Continue ; break
+					Mouse_Click(resultObj[1].x,resultObj[1].y) ; Mouse_Click(355,825) ; Tap Alliance Help
+					goto Alliance_Help_Continue
 				}
-				OCR_Y += OCR_Y_Delta
-				if (OCR_Y > Max_Y)
-					OCR_Y := Min_Y
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 			}
 			if !Go_Back_To_Home_Screen()
 				Reload_MEmu()
@@ -2463,13 +2456,14 @@ Depot_Rewards:
 	loop, 5
 	{
 		Mouse_Click(140,662, {Timeout: 1*Delay_Long+0}) ; Tap depot
-		Mouse_Click(250,722, {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
-		loop, 20
+		Mouse_Click(250,722) ; , {Timeout: 1*Delay_Long+0}) ; Tap Alliance Treasures
+		loop, 10
 		{
-			DllCall("Sleep","UInt",rand_wait + (2*Delay_Short))
 			resultObj := oGraphicSearch.search(B350_Depot_Title_Graphic, optionsObjCoords)
 			if (resultObj)
 				goto Continue_Depot_Treasures
+			Else
+				DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
 		}
 		Go_Back_To_Home_Screen()
 	}
@@ -2494,7 +2488,7 @@ Depot_Rewards:
 	; check if Free graphic is found
 	loop, 8
 	{
-		DllCall("Sleep","UInt",rand_wait + (2*Delay_Short))
+		; DllCall("Sleep","UInt",rand_wait + (2*Delay_Short))
 		resultObj := oGraphicSearch.search(B351_Free_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
@@ -2514,13 +2508,10 @@ Depot_Rewards:
 		resultObj := oGraphicSearch.search(allQueries_Depot, optionsObjCoords)
 		if (resultObj)
 		{
-			sortedResults := oGraphicSearch.resultSortDistance(resultObj, 300, 1216)
-			loop, % sortedResults.Count()
-			{
-				Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y)
+				Mouse_Click(resultObj[1].x,resultObj[1].y)
 				DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
 				Mouse_Click(320,70) ; Tap top title bar
-			}
+				DllCall("Sleep","UInt",rand_wait + (1*Delay_Medium))
 		}
 	}
 	return
@@ -2608,12 +2599,8 @@ Mail_Collection:
 {
 	Subroutine_Running := "Mail_Collection"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; if !Go_Back_To_Home_Screen()
-		; Reload_MEmu()
 
-	Mail_Keyword_Array := ["Mail","Activities","Alliance","Last Empire","System"]
-	Mail_BACK2_Array := ["Alliance Arms","Cross-State","Desert Conflict","Other Event","Single Player","Arms Race"]
+	Mail_Buttons := 8602_Read_Mark_Button_Graphic 8601_Read_Confirm_Button_Graphic
 
 	Gosub Mail_Collection_Open
 
@@ -2687,55 +2674,53 @@ Mail_Collection:
 	return
 
 	Mark_All_As_Read:
-	Subroutine_Running := "Mark_All_As_Read"
-	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	Loop, 2
 	{
-		if Search_Captured_Text_OCR(["MARK","READ"], {Pos: [273, 1185], Size: [142, 26]}).Found ; Is the Mark as Read button displayed?
+		Subroutine_Running := "Mark_All_As_Read"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+		oMail_ButtonsSearch := new graphicsearch()
+		loop, 10
 		{
-			Mouse_Click(340,1200) ; Tap "MARK AS READ" button
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Mouse_Click(202,705) ; Tap "CONFIRM" button
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-			Mouse_Click(340,70) ; Tap header to clear message
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			resultMail_Buttons := oMail_ButtonsSearch.search(Mail_Buttons, optionsObjCoords)
+			if (resultMail_Buttons)
+				Mouse_Click(resultMail_Buttons[1].x,resultMail_Buttons[1].y, {Clicks:2})
+			Else
+				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
-	}
-	; Tap Message back
-	; loop, 2
-	; {
-	; 	Mouse_Click(50,60) ; Tap Message back
-	; 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	; }
-	gosub Mail_Collection_Open
-	return
-
+		
+		Mouse_Click(340,70) ; Tap header to clear message
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(50,60) ; Tap Message back
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		gosub Mail_Collection_Open
+		return
+	}	
+	
 	Mail_Collection_Open:
 	Subroutine_Running := "Mail_Collection_Open"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+	oMail_TitleSearch := new graphicsearch()
 	loop, 2
 	{
-		loop, 5
+		; check to see if 860_Mail_Title_Graphic is loaded
+		
+		loop, 2
 		{
-			; if mail loaded, return
-			if Search_Captured_Text_OCR(["Mail"], {Pos: [309, 46], Size: [76, 50]}).Found
-				return ; Gosub, Read_Mail_Open
-
-			; if mail not loaded, tap on mail icon
-			if Search_Captured_Text_OCR(["Mail"], {Pos: [466, 1222], Size: [56, 24]}).Found
+			loop, 4
 			{
-				Mouse_Click(500,1200) ; Tap Mail
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-				Goto, Mail_Collection_Open
+				resultMail_Title := oMail_TitleSearch.search(860_Mail_Title_Graphic, optionsObjCoords)
+				if (resultMail_Title)
+					return
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 			}
-
-			; if mail not loaded and mail icon not available, go back
 			Mouse_Click(50,60) ; Tap Message back
-			Text_To_Screen("{F5}")
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		}
+
+		; Gosub Get_Window_Geometry
+		Gosub Check_Window_Geometry
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
+		Mouse_Click(500,1200) ; Tap Mail Icon
 	}
 	return
 }
