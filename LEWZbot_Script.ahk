@@ -103,7 +103,7 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			Pause_Script := False
-			CSB_Event := False ; True ; True if CSB Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
@@ -178,13 +178,13 @@ while WinExist(FoundAppTitle)
 				; if Peace_Shield_Needed
 				; 	Gosub Peace_Shield
 				; Gosub Reset_Posit
-				/*
+				
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
 				Gosub Collect_Equipment_Crafting
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
-				*/
+				
 				; ******************************************
 				; DEBUG / Troubleshooting block - BEGIN
 				; ******************************************
@@ -441,11 +441,13 @@ Go_Back_To_Home_Screen()
 	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Go back
+	/*
 	loop, 3
 	{
 		Text_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
+	*/
 	
 	Go_Back_To_Home_Screen_OCR_Quit:
 	oGraphicSearch := new graphicsearch()	
@@ -2600,73 +2602,74 @@ Mail_Collection:
 	Subroutine_Running := "Mail_Collection"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
-	Mail_Buttons := 8602_Read_Mark_Button_Graphic 8601_Read_Confirm_Button_Graphic
+	
 
+	Mouse_Click(500,1200) ; Tap Mail Icon
 	Gosub Mail_Collection_Open
 
 	Mouse_Click(200,272) ; Tap Alliance
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,545) ; Tap Last Empire - War Z Studios
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,633) ; Tap System
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,760) ; Tap reports 01 - RSS gathering
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,860) ; Tap reports 02 - Zombies
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,960) ; Tap reports 03 - Missile attack
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,1060) ; Tap reports 04 - Transport
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,1160) ; Tap reports 05 - Other
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Mouse_Click(200,445) ; Tap Activities
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	Subroutine_Running := "Single Player Arms Race"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,170) ; Tap Activities - SPAR (Single Player Arms Race)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Alliance Arms Race"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,257) ; Tap Activities - AAR (Alliance Arms Race)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Cross-State Battle"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,360) ; Tap Activities - CSB (Cross-State Battle)
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Desert Conflict"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,445) ; Tap Activities - Desert Conflict
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	Subroutine_Running := "Other Event Mail"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	Mouse_Click(200,540) ; Tap Activities - Other Event Mail
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	Gosub Mark_All_As_Read
 
 	if !Go_Back_To_Home_Screen()
@@ -2677,20 +2680,28 @@ Mail_Collection:
 	{
 		Subroutine_Running := "Mark_All_As_Read"
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-		oMail_ButtonsSearch := new graphicsearch()
+		oMARK_READSearch := new graphicsearch()
+		oCONFIRMSearch := new graphicsearch()
 		loop, 10
-		{
-			resultMail_Buttons := oMail_ButtonsSearch.search(Mail_Buttons, optionsObjCoords)
-			if (resultMail_Buttons)
-				Mouse_Click(resultMail_Buttons[1].x,resultMail_Buttons[1].y, {Clicks:2})
+		{			
+			resultMARK_READ := oMARK_READSearch.search(8602_Read_Mark_Button_Graphic, optionsObjCoords)
+			if (resultMARK_READ)
+			{
+				Mouse_Click(resultMARK_READ[1].x,resultMARK_READ[1].y, {Timeout: Delay_Long+0})
+				resultCONFIRM := oCONFIRMSearch.search(8601_Read_Confirm_Button_Graphic, optionsObjCoords)
+				if (resultCONFIRM)
+					Mouse_Click(resultCONFIRM[1].x,resultCONFIRM[1].y, {Timeout: Delay_Medium+0})
+				
+				Break
+			}
 			Else
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+				DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		}
 		
 		Mouse_Click(340,70) ; Tap header to clear message
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(50,60) ; Tap Message back
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		; Mouse_Click(50,60) ; Tap Message back
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		gosub Mail_Collection_Open
 		return
 	}	
@@ -2705,13 +2716,13 @@ Mail_Collection:
 		
 		loop, 2
 		{
-			loop, 4
+			loop, 10
 			{
 				resultMail_Title := oMail_TitleSearch.search(860_Mail_Title_Graphic, optionsObjCoords)
 				if (resultMail_Title)
 					return
 				Else
-					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			}
 			Mouse_Click(50,60) ; Tap Message back
 		}
@@ -2881,31 +2892,21 @@ Alliance_Wages:
 
 		Mouse_Click(605,1212) ; Tap Alliance Menu
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-		Search_Captured_Text := ["Wages"]
-		OCR_X := 230
-		OCR_Y := 920
-		OCR_W := 100
-		OCR_H := 60
-		loop, 5
+		oGraphicSearch := new graphicsearch()
+		
+		loop, 2
 		{
-			loop, 3
+			loop, 20
 			{
-				OCR_Y := 920
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
+				resultObj := oGraphicSearch.search(875_Wages_Button_Graphic , optionsObjCoords)
+				if (resultObj)
 				{
-					Mouse_Click(405,932) ; Tap Alliance Wages button
+					Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Alliance Wages button
 					goto Found_Alliance_Wages_Menu
 				}
-
-				OCR_Y := 1020
-				if Search_Captured_Text_OCR(Search_Captured_Text, {Pos: [OCR_X, OCR_Y], Size: [OCR_W, OCR_H]}).Found
-				{
-					Mouse_Click(405,1044) ; Tap Alliance Wages button
-					goto Found_Alliance_Wages_Menu
-				}
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			}
-
 			if !Go_Back_To_Home_Screen()
 				Reload_MEmu()
 			Mouse_Click(605,1212) ; Tap Alliance Menu
