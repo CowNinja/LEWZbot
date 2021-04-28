@@ -7,7 +7,7 @@
 
 ![LEWZbot Main program FlowChart][]
 
-[LEWZbot Main program FlowChart]: /Diagrams/LEWZbot_Main_Program.jpg "LEWZbot Main program FlowChart"
+[LEWZbot Main program FlowChart]: /Documentation/Diagrams/LEWZbot_Main_Program.jpg "LEWZbot Main program FlowChart"
 
   - pseudo code outlining the idea in broad strokes:
 ```
@@ -38,7 +38,7 @@ Use_Available_VM(credentials)
 
 ![LEWZbot_Child_Process][]
 
-[LEWZbot_Child_Process]: /Diagrams/LEWZbot_Child_Process.jpg "LEWZbot_Child_Process"
+[LEWZbot_Child_Process]: /Documentation/Diagrams/LEWZbot_Child_Process.jpg "LEWZbot_Child_Process"
 
   - pseudo code outlining the idea in broad strokes:
 ```
@@ -54,19 +54,19 @@ Threaded_Routine_Execution.ahk
 
 ![LEWZbot_ScreenCap_and_OCR][]
 
-[LEWZbot_ScreenCap_and_OCR]: /Diagrams/LEWZbot_ScreenCap_and_OCR.jpg "LEWZbot_ScreenCap_and_OCR"
+[LEWZbot_ScreenCap_and_OCR]: /Documentation/Diagrams/LEWZbot_ScreenCap_and_OCR.jpg "LEWZbot_ScreenCap_and_OCR"
 
   - Flowchart of Go_Back_to_Home_Screen ideas (DRAFT):
 
 ![LEWZbot_Go_Back_to_Home_Screen][]
 
-[LEWZbot_Go_Back_to_Home_Screen]: /Diagrams/LEWZbot_Go_Back_to_Home_Screen.jpg "LEWZbot_Go_Back_to_Home_Screen"
+[LEWZbot_Go_Back_to_Home_Screen]: /Documentation/Diagrams/LEWZbot_Go_Back_to_Home_Screen.jpg "LEWZbot_Go_Back_to_Home_Screen"
 
   - Flowchart of Quit_LEWZ and Launch_Lewz ideas (DRAFT):
 
 ![LEWZbot_Quit_LEWZ_and_Launch_Lewz][]
 
-[LEWZbot_Quit_LEWZ_and_Launch_Lewz]: /Diagrams/LEWZbot_Quit_LEWZ_and_Launch_Lewz.jpg "LEWZbot_Quit_LEWZ_and_Launch_Lewz"
+[LEWZbot_Quit_LEWZ_and_Launch_Lewz]: /Documentation/Diagrams/LEWZbot_Quit_LEWZ_and_Launch_Lewz.jpg "LEWZbot_Quit_LEWZ_and_Launch_Lewz"
 
 ## Code to Flowchart progress:
 
