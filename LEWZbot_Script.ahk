@@ -40,6 +40,9 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #include lib\LEWZ_SetDefaults.ahk
 #Include %A_ScriptDir%\node_modules
 #Include graphicsearch.ahk\export.ahk
+; #Include %A_ScriptDir%\node_modules\json.ahk\export.ahk
+#Include json.ahk\export.ahk
+#Include unit-testing.ahk\export.ahk
 
 ; #include lib\WindowListMenu_mod_004.ahk
 ; #include lib\LEWZ_Functions.ahk
@@ -376,7 +379,7 @@ Launch_LEWZ()
 	oGraphicSearch := new graphicsearch()	
 	loop, 30
 	{
-		resultObj := oGraphicSearch.search(0_Icon_LEWZ_Graphic, optionsObjCoords)
+		resultObj := oGraphicSearch.search(011_Icon_LEWZ_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
 			loop, % resultObj.Count()
@@ -441,25 +444,29 @@ Go_Back_To_Home_Screen()
 	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Go back
-	/*
-	loop, 3
+
+	; loop, 3
 	{
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 	}
-	*/
-	
+
 	Go_Back_To_Home_Screen_OCR_Quit:
 	oGraphicSearch := new graphicsearch()	
+	oRebuildSearch := new graphicsearch()	
 	loop, 200
 	{
-			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
-			if (resultObj)
-				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
+		resultObj := oGraphicSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if (resultObj)
+			goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
 				
 		Text_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
 		Gosub Check_Window_Geometry
+	
+		resultRebuild := oRebuildSearch.search(023_Rebuild_Button_Graphic, optionsObjCoords)
+		if (resultRebuild)
+			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
 	return 0
@@ -467,9 +474,9 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
 	loop, 10
 	{
-			resultObj := oGraphicSearch.search(1_Quit_Title_Graphic, optionsObjCoords)
-			if !(resultObj)
-				return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
+		resultObj := oGraphicSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if !(resultObj)
+			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
 
 		Text_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(rand_wait + 3*Delay_Short+0))
@@ -550,18 +557,24 @@ Switch_Account:
 	oLoginSearch := new graphicsearch()			
 	allQueries_Account := 1A_Settings_Button_Graphic 1A1_Account_Button_Graphic 1A12_Switch_Button_Graphic 1A123_WarZ_Button_Graphic 1A1232_OtherAccount_Button_Graphic
 	allQueries_Login := 1A1234_Email_Box_Button_Graphic 1A1235_PW_Box_Button_Graphic 1A1237_UseEmailLog_Button_Graphic
-	loop, 32
+	loop, 3
 	{
-		resultObj := oAccountSearch.search(allQueries_Account, optionsObjCoords)
-		if (resultObj)
-			Mouse_Click(resultObj[1].x,resultObj[1].y) ;, {Timeout: (5*Delay_Medium+0)})
-		
-		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
-			Mouse_Click(340,870) ;  {Clicks: 1,Timeout: (5*Delay_Short+0)}) ; Tap Yes
-		
-		resultObj := oLoginSearch.search(allQueries_Login, optionsObjCoords)
-		if (resultObj)
-			goto Switch_Account_Dialog
+		loop, 7
+		{
+			resultObj := oAccountSearch.search(allQueries_Account, optionsObjCoords)
+			if (resultObj)
+				Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (3*Delay_Short+0)})
+			
+			if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
+				Mouse_Click(340,870, {Timeout: (3*Delay_Short+0)}) ; Tap Yes	
+				
+			resultLogin := oLoginSearch.search(allQueries_Login, optionsObjCoords)
+			if (resultLogin)
+				goto Switch_Account_Dialog
+		}
+			Mouse_Click(600,1200, {Timeout: 0}) ; "Settings" Button
+			Mouse_Click(480,1150, {Timeout: 0}) ; "Other Account" button
+			DllCall("Sleep","UInt",(3*Delay_Short+0))
 	}
 	goto Switch_Account_START
 
@@ -573,32 +586,26 @@ Switch_Account:
 	Switch_Account_User_Email:
 	{
 		loop, 3
-		{
 			Mouse_Click(220,382, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Email)
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(4*Delay_Short+0))
 		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		return
 	}
 
 	Switch_Account_User_Password:
 	{
 		loop, 3
-		{
 			Mouse_Click(209,527, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		}
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Pass)
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(4*Delay_Short+0))
 		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		return
 	}
 
@@ -607,7 +614,7 @@ Switch_Account:
 	Mouse_Click(455,739, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Tap Use your email to log in
 	
 	oGraphicSearch := new graphicsearch()	
-	Last_Game_Loading := 0
+	Last_Game_Loading := "0"
 	loop, 30
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
@@ -625,8 +632,9 @@ Switch_Account:
 		while (AccountLoading.Found)
 		{
 			Game_Loading_RAW := RegExReplace(AccountLoading.Text,"[^\d]")
-			RegExMatch(Game_Loading_RAW, "([\d]{1,2})",Game_Loading)
-			if (Game_Loading = Last_Game_Loading)
+			; RegExMatch(Game_Loading_RAW, "([\d]{1,2})",Game_Loading)
+			; if (Game_Loading = Last_Game_Loading)
+			if (Game_Loading_RAW = Last_Game_Loading)
 				sleep, 1
 			Else
 			{
@@ -634,10 +642,11 @@ Switch_Account:
 				Gui, Status:Margin, 0, 0
 				Gui, Status:add,text,, Account %User_Name%
 				GUI_Count := 0
-				Gui, Status:add,text,, Account Loading %Game_Loading%`%
+				Gui, Status:add,text,, Account Loading %Game_Loading_RAW%`%
 				Gui, Status:show, x731 y0 w300 h500
 				GUI_Count++
-				Last_Game_Loading = Game_Loading
+				Last_Game_Loading = Game_Loading_RAW
+				; Last_Game_Loading = Game_Loading
 			}
 			AccountLoading := Search_Captured_Text_OCR(["0","1","2","3","4","5","6","7","8","9","%"], {Pos: [319, 1067], Size: [54, 25]})
 		}
@@ -806,9 +815,7 @@ Peace_Shield:
 			resultObj := oGraphicSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
 			if (resultObj)
 			{
-				Click_X := resultObj[1].x
-				Click_Y := resultObj[1].y
-				Mouse_Click(Click_X,Click_Y) ;  Left, 1}  ; Tap City buffs
+				Mouse_Click(resultObj[1].x,resultObj[1].y) ;  Left, 1}  ; Tap City buffs
 				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 			}
 			
@@ -830,9 +837,7 @@ Peace_Shield:
 		resultObj := oGraphicSearch.search(B2241_Shield_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
-			Click_X := resultObj[1].x
-			Click_Y := resultObj[1].y
-			Mouse_Click(Click_X,Click_Y) ; Click to open shield menu
+			Mouse_Click(resultObj[1].x,resultObj[1].y) ; Click to open shield menu
 			Goto Shield_Search_Title
 		}
 	}
@@ -986,8 +991,8 @@ Peace_Shield:
 		goto Peace_Shield_END
 
 	Activate_Shield:
-	Mouse_Click(Click_X,Click_Y) ; Click first box to enable shield
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+	; Mouse_Click(Click_X,Click_Y) ; Click first box to enable shield
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
 	; change button text: "Yes" to "3Day", "No" to "24hour", and "Cancel" to "8hour"
 	MsgBox("Would you like to place a shield?`n(Esc) to cancel`n(10 second Timeout & skip)`,10", "Peace Shield", 3, "&3Day", "&24hour", "&8hour", 5)
@@ -1045,9 +1050,7 @@ Peace_Shield:
 		resultObj := oGraphicSearch.search(B22412_Replace_OK_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
-			Click_X := resultObj[1].x
-			Click_Y := resultObj[1].y
-			Mouse_Click(Click_X,Click_Y) ;  Left, 1} ; Tap Get & Use button, to confirm buying shield
+			Mouse_Click(resultObj[1].x,resultObj[1].y) ;  Left, 1} ; Tap Get & Use button, to confirm buying shield
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		}
 	}
@@ -1349,9 +1352,7 @@ Desert_Wonder:
 			resultObj := oGraphicSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
 			if (resultObj)
 			{
-				Click_X := resultObj[1].x
-				Click_Y := resultObj[1].y
-				Mouse_Click(Click_X,Click_Y) ; Tap Desert Wonder
+				Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Desert Wonder
 				goto Desert_Wonder_Continue_Tab
 			}
 		}
@@ -1520,11 +1521,8 @@ Benefits_Center:
 				resultObj := oGraphicSearch.search(Value[1], optionsObjCoords)
 				if (resultObj)
 				{
-					Click_X := resultObj[1].x
-					Click_Y := resultObj[1].y
-					; MsgBox, %  "x:" resultObj.x " y:" resultObj.y "`n0 x:" resultObj[0].x " y:" resultObj[0].y "`n1 x:" resultObj[1].x " y:" resultObj[1].y "`n2 x:" resultObj[2].x " y:" resultObj[2].y "`n3 x:" resultObj[3].x " y:" resultObj[3].y
 					loop, 3
-						Mouse_Click(Click_X,Click_Y) ; Tap found Heading
+						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (3*Delay_Short+0)}) ; Tap found Heading
 					
 					DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0)) ; wait for tab to load
 					if IsLabel(Subroutine)
