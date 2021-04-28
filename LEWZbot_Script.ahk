@@ -41,7 +41,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #Include %A_ScriptDir%\node_modules
 #Include graphicsearch.ahk\export.ahk
 ; #Include %A_ScriptDir%\node_modules\json.ahk\export.ahk
-#Include json.ahk\export.ahk
+; #Include json.ahk\export.ahk
 #Include unit-testing.ahk\export.ahk
 
 ; #include lib\WindowListMenu_mod_004.ahk
