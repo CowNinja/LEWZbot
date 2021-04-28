@@ -86,3 +86,20 @@ GraphicSearch_query := "|<>*90$22.03zw0DzlzzzDzzwzzUnzw1DzV00wS01lw0700zw03zk0Dz
 
 
 */
+
+/*
+; Default GraphicSearch_query Mouse clicks 
+(X,Y)  multi: resultObj[A_Index].x,resultObj[A_Index].y
+(X,Y) single: resultObj[1].x,resultObj[1].y
+
+(X,Y)  multi: Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y) ; Tap XXXXXXXXXXXXX
+(X,Y) single: Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap XXXXXXXXXXXXX
+
+(X,Y)  multi: Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y, {Timeout: (2*Delay_Short+0)}) ; Tap XXXXXXXXXXXXX
+(X,Y) single: Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (2*Delay_Short+0)}) ; Tap XXXXXXXXXXXXX
+
+
+Mouse_Click(600,1200) ; "Settings" Button
+
+Mouse_Click(469,1152) ; "Other Account" button
+*/
