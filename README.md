@@ -1,4 +1,7 @@
 - This is the current version of the code I'm presently running on my PC, which interacts with [MEMUplay android emulator](https://www.memuplay.com/download.html) running on a Windows PC. It reads in-game text using [Vis2](https://github.com/iseahound/Vis2) tesseract OCR to decide whether or not certain items have been loaded, and taps predefined coordinates accordingly.
+
+## Update: Currently implementing [graphicsearch.ahk] https://github.com/Chunjee/graphicsearch.ahk) functionality by [Chunjee](https://github.com/Chunjee) based on [FindText](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=17834).
+
 - I would like to rewrite the code such that with each set of account credentials, the main program initiates separate child processes to connect to separate remote VM (Virtual Machines) using [adb Platform Tools](https://developer.android.com/studio/releases/platform-tools) commands, and each child process spawned would specifically execute the desired subroutines for each account. That's why I want to use many Android VM (Virtual Machines) running LEWZ simultaneously to rewrite the app to effectively manage an infinite number of accounts. The only limit will be the amount at any given time of Android virtual devices running.
 
 ## Goals (for proposed multithread idea):
@@ -367,6 +370,8 @@ For User,Val in User_Logins
 ### Tools Used:
 1. [AutoHotkey](https://www.autohotkey.com/) in windows to interact with MEMUplay Android client. AutoHotKey is a free, open-source scripting language for Windows that allows users to easily create small to complex scripts for all kinds of tasks such as form fillers, auto-clicking, macros, etc.
    - [Vis2](https://github.com/iseahound/Vis2) Simple OCR using Tesseract by [iseahound](https://github.com/iseahound)
+   - [graphicsearch.ahk] https://github.com/Chunjee/graphicsearch.ahk) fast Image abstraction search by [Chunjee](https://github.com/Chunjee)
+   - [FindText](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=17834) by [FeiYue](https://www.autohotkey.com/boards/memberlist.php?mode=viewprofile&u=59812&sid=4d9235fb146f37b3350eb5f1c73a2552)
 2. [MEMUplay android client](https://www.memuplay.com/download.html) runs android in a virtual machine where games are loaded and played using AutoHotKey script.
 3. adb (Android debug bridge) will be utilized to remotely control Android VM (Virtual Machines) and is included in [Android SDK Platform Tools](https://developer.android.com/studio/releases/platform-tools).
 4. [Notepad++](https://notepad-plus-plus.org/downloads/) is a free (as in “free speech” and also as in “free beer”) source code editor and Notepad replacement that supports several languages. Running in the MS Windows environment.
