@@ -1,4 +1,103 @@
+Jack := {profession: "teacher"
+         , height: "tall"
+         , country: "USA"
+         , city: "New York"}
 
+Paul := {profession: "cook"
+         , height: "short"
+         , country: "UK"
+         , city: "London"}
+
+Bill := {profession: "designer"
+         , height: "short"
+         , country: "Canada"
+         , city: "Toronto"}
+
+Max := {profession: "driver"
+        , height: "tall"
+        , country: "USA"
+        , city: "Dallas"}
+
+Bill := {profession: "policeman"
+         , height: "tall"
+         , country: "Australia"
+         , city: "Canberra"}
+
+Person := {Jack: Jack
+           , Paul: Paul
+           , Bill: Bill
+           , Max: Max
+           , Bill: Bill}
+
+
+MsgBox, % Person.Jack.city
+
+
+
+
+
+
+
+arrayObj := [{"name": "bob", "age": 22}, {"name": "tom", "age": 51}]
+arrayObj.map(func("get_name")) 
+; => ["bob", "tom"]
+
+
+Examples:
+
+Retrieve a property:
+Value := Base_Array.email
+
+Set a property:
+Base_Array.email := Value
+
+Retrieve an item:
+Value := Base_Array[email]
+
+Assign an item:
+Base_Array[email] := Value
+
+Remove an item using the Delete method:
+RemovedValue := Base_Array.Delete(email)
+
+
+	Base_Array := [{"email": User_Email,
+	"user": User_Name, 
+	"email": User_Name_Captured, 
+	"routine": Routine, 
+	"location": User_City_Location_Array,
+	"alliance": User_Found_Alliance,
+	"state": User_Found_State,
+	"vip": User_VIP,
+	"power": User_Power,
+	"diamonds": User_Diamonds,
+	"fuel_out": Available_Fuel
+	"fuel_store": Inventory_Fuel
+	"food_out": Available_Food
+	"food_store": Inventory_Food
+	"steel_out": Available_Steel
+	"steel_store": Inventory_Steel
+	"alloy_out": Available_Alloy
+	"alloy_store": Inventory_Alloy}]
+	
+	
+	Base_Array := [ User_Email: {"user": User_Name, 
+	"email": User_Name_Captured, 
+	"routine": Routine, 
+	"location": User_City_Location_Array,
+	"alliance": User_Found_Alliance,
+	"state": User_Found_State,
+	"vip": User_VIP,
+	"power": User_Power,
+	"diamonds": User_Diamonds,
+	"fuel_out": Available_Fuel
+	"fuel_store": Inventory_Fuel
+	"food_out": Available_Food
+	"food_store": Inventory_Food
+	"steel_out": Available_Steel
+	"steel_store": Inventory_Steel
+	"alloy_out": Available_Alloy
+	"alloy_store": Inventory_Alloy}]
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
