@@ -461,6 +461,8 @@ Select_App()
               Global 1A123730_EnterPIN_Title_Graphic := "|<1A123730_EnterPIN_Title>*200$69.00Dzzz7zzzzvzzzzzszzzzzTzzzzz7zzzzvzzzzzszzzzzTzzzVw1zzzznzzwk7UDs3yMTzzUwT7y67k3zzwTlszbwy700TXzD7tznls01wztszDySDTzzbzD7tznlvzzwztsyDyCTTzzbzD7k01nvzzwztsyDzyTTzzbzD7lzznvzzwztsyDzyTTzzbzD7tzznvzzwztszDySTDzzbzDXwzbns00wztwDVlyTU"
               Global 1A123731_ForgotLoginPW_Button_Graphic := "|<1A123731_ForgotLoginPW_Button>*137$68.03zzzzzzzzyLzzzzzzzzzzVzzzzzzzzzzsTzsDt7kny3s7zw0y1k0y0S1zyC7VwQD3XsTz7lsyDXlwSE1lyCTbwsz7Y0QzXbtzCDttTzDstyTnXyS7znyCTbwszbVzwzXbtzCDtsTz7styTnXwS7zlwSTXswT7VzyC7bwQD3XsTzk3tz03s1y7zy3yTw8zUznzzzzzzyDzzzzzzzzzzXzzzzzzzzznlzzzzzzzzzw0TzzzU"
               Global 1A123732_StartNewGame_Button_Graphic := "|<1A123732_StartNewGame_Button>*57$70.D7lzzzzwTzzxyD7zzzzlzzzrwQTzzzz7zzzTl0TVy8k7zsRzw1s1s30Ty0HzwT7XUD7zlk1zlszC7wTyDW0z7zwszlzzzA1wTznXz7zzsw3lz0CDwTzk3y77lwszlzwTDwQS7nXz7zXwzllszCDwTyDnz77Xwszlzsz7wwSDXXz7zXsDXtwQCDwTz700zls0MzsTy08"
+          Global 1A1241_ArmsSupply_Title_Graphic := "|<1A1241_ArmsSupply_Title>*50$22.sDzzUTzw1zzk7zz4Ds8EzUVXy0C7sEsTV7lyAT3slwDX00SA01sk07XTwCBzkszzXXzy6DzsMs"
+          Global 1A1242_HotSale_Title_Graphic := "|<1A1242_HotSale_Title>*50$30.Dz7zzDz7zzDz7zzDz7y3Dz7s0Dz7k0007Uk0073w0073y0077yDz77yDz77yDz77yDz77yDz73yDz73wDz71sDz7U0Dz7k0U"
   Global 21_Fuel_Button_Graphic := "|<21_Fuel_Button>*97$29.Tzzzy7zzzy3zzzzlw03znk03zl0zbznXzDzq7yDzw7yTzsDwTzUDszz0D1xw001vk00HnU007rUQ0Tnk1zzU0TzzUDzzzDzkzzwTjzy0zTzyzizzzzxzU"
   Global 22_Food_Button_Graphic := "|<22_Food_Button>*103$28.zzw7zzy07zzU0Dzw00Ty000zU001k000200000000000000000000000000040000k0007000C4000lE013500AAQ00klk033bU"
   Global 23_Steel_Button_Graphic := "|<23_Steel_Button>*109$31.zzzXzzzz0Dzzz00zzz017zz01bzz00bzz003zz001zz003zz003zz003tz003sz001sz001sT001sT001sD001sD001sD001sDU01wDz01wDzk1wDzz0wDyTswDzU"
@@ -535,7 +537,7 @@ Select_App()
   Global 92_Benefits_Button_Graphic := "|<92_Benefits_Button>*200$59.zzzzzzsTzytzzzzzjzzxtzzzzzTxzvvzzzzyznzrrVs7ksvXkCSxrjSvrjS0xvjQxrjSywnrStvjSyRxXyxnzSxz/vDxvjyxvzbrTvrjxvrjDCRrjzzrjC1z7jzzzz73"
     Global 920_Benefits_Title_Graphic := "|<920_Benefits_Title>*200$63.DwTzzzzzzztznzzzzzzzzDyTzzzzzzztzlzUzrVzw7DyTk3yE7z09znwTDkwTnt7szbsyDnwzU0DtzbnyD7w00zDwyTlszVzXtzXnyD7wDyD00STls01zts07nyD00DzDDzyTltztzttzznyDDzDzDDzyTlsztzlszznyDby7wTXwyTlwTU07y0DnyDk1U"
     Global 921_BattleHonor_Button_Graphic := "|<921_BattleHonor_Button>*200$42.zzzVzzzzzzVzzzzzz0zzzzzz0zzzzzz0zzzzzy0zzzzzw0zzzzzs0zzzzzk0Tzzzzk0Tzzzzk0TzzzzU0Tzzzs00Tzzz000TkT0000TU00000T070000y0Tk000w03y000s0DU"
-    ; 922_Claim_Button
+    Global 922_Claim_Button_Graphic := "|<922_Claim_Button>*60$17.00s7UkTVVzX3zyDzwTzszzlzzVzX3z63wA3kM01m"
     Global 923_DailySignin_Button_Graphic := "|<923_DailySignin_Button>*200$36.00s07100M07300M07300M07LDwMD7LTwszbTTwtzaTTsvzbTTwvzjTTyvzzTDzzzzyQDzzzwTzvzztTznzrlTsk7bn01k0Dr01k0Dr01k0Dz01k0TzU"
     Global 924_MonthlyPackage_Button_Graphic := "|<924_MonthlyPackage_Button>*200$44.zzy7yzVzzz1zrzTzzUDzzzzzs0zxzzzzVzwTzzkTzyDzzk0zzbzzsC7zzzzyDszzzzzXy7zzzzwTkzzzzzXyDzzzzwTzzzzzzlzzzzzzy7zzzzzzsTzzzzlz7zzzzwTzzzzzzbzzzzzzwzzzzzy"
     Global 925_MonthlySignin_Button_Graphic := "|<925_MonthlySignin_Button>*200$20.zzzjzzvzzwzzzDzzXzzszzwTzz7zzVzzsTzy7zzVzzkkzsA003k00zy0S"
@@ -556,7 +558,8 @@ Select_App()
         Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*102$29.U1tzsDnnzwzXbztzb07Vzy060zwSAU7syNs3nwnz3btbzbDn3zCTa7yQzA7styM33nwn0Dbto"
           Global B22410_Shield_Title_Graphic := "|<B22410_Shield_Title>*133$34.01wTzsT3lzznz77zzTwQTzxzllUzXzz00y7zw33s7zky7c3z7wSk3wTlvs7lz7jwD7wSzsQTlvzllz7bz77wSTwQTlszllz7VwD7wS00wTlu"
           Global B22411_Shield_Ends_Title_Graphic := "|<B22411_Shield_Ends_Title>0xF5F5F5@0.21$40.zw003U3zk00C0A09s0sMk1zlzbv07zDyzzySCtvXztkz3iD073wCzg0QDktzk1kz3Vz073wCkzzQCxvbzxkvzjy"
-          Global B22412_Replace_OK_Button_Graphic := "|<B22412_Replace_OK_Button>*138$25.k7lyE1sy1wQS9zCCAzb6CTlWDDwkDbyM7nzA1tz6AQzX76TnXn7llsllsyA1wTY"
+          Global B22412_GetUse_Button_Graphic := "|<B22412_GetUse_Button>*50$34.U0TzyA30zzskz3zzX7yDUA0Tsw0E1zzU10DUAD64w0Ew8Hk100V7y4024TsE08Fz13kV1s4C0000M00801U1Uk170C2"
+          Global B22413_Replace_OK_Button_Graphic := "|<B22413_Replace_OK_Button>*70$24.U1ls3llk7llVDsl3Dsl7Dsk7Dsk7Dsk3DskXDslV7klk7lls01lwU3lwU"
     Global B34_CommandCtr_Button_Graphic := "|<B34_CommandCtr_Button>*100$69.zrzjTzzzzw5DzrzXzzzzz0QSnNkzzzzzU3rxskTzzzzk02ywMDzzzzs827mQ3zzzU63k0za/zyzw00607z9zzfzs0000zwzzujzk0007znzzqzzXk00zy0zzvzzzU07zc2jzzzzw00zzU0zxzzz007zw03zrzzs00zzk0DzTzzU07zx00zzzzw00zz403zzzzU27zwk0Dzzzw0Ezzz01zzzzU07zzs07zzzw00zzzU0TzzzU07zzy03zzzw0Czzzs0DzzzU6I"
         ; B3420_ActiveSkill_Title
         Global B3430_Recruit_Title_Graphic := "|<B3430_Recruit_Title>*118$57.01zzzzzzzs03zzzzzzz7sDzzzzzzszVzzzzzzz7yDzzzzzzszkzUzy3yM7z7k1z07k0zlw07kES07yD3syDVkszVsz3XyCD00T7wQTlls07kzXXzyD01y00QzzlsyDk037zyD7sy7zwzzlsz7lzzXzyD7wT7zwTtlszVszzXyCD7yD3wSDXlszkw07k0SD7z7k1z07ltzszUzy3yTU"
