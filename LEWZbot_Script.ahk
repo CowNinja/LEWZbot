@@ -105,8 +105,8 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			; Main DEBUG and event Variables - START
 			; ***************************************
-			Pause_Script := False
-			CSB_Event := True ; True ; True if CSB Event is going on
+			global Pause_Script := False ; Pause_Script := True
+			CSB_Event := False ; True ; True if CSB Event is going on
 			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
@@ -118,9 +118,14 @@ while WinExist(FoundAppTitle)
 			; vRet := MsgBoxGetResult()
 			; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
 			; Pause_Script := True
-
-			; if Pause_Script
-			; MsgBox, 0, Pause, Press OK to resume (No Timeout)
+				
+			if Pause_Script	
+			{
+				MsgBox, 4, Pause script, Pause script? (5 Second Timeout & skip), 5 ; 5
+				vRet := MsgBoxGetResult()
+				if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+					MsgBox, 0, Pause, Press OK to resume (No Timeout)
+			}
 
 			; Extract current UTC hour
 			Current_Hour_UTC := FormatTime(A_NowUTC, "HH")
@@ -179,7 +184,7 @@ while WinExist(FoundAppTitle)
 				; ** Position dependant **
 				; ****************************
 				; if Peace_Shield_Needed
-				; 	Gosub Peace_Shield
+				;	Gosub Peace_Shield
 				; Gosub Reset_Posit
 				
 				Gosub Collect_Collisions
@@ -782,31 +787,24 @@ Peace_Shield:
 	Shield_Found_3Day := False
 	Shield_Found_24hour := False
 	Shield_Found_8hour := False
+	oTitleSearch := new graphicsearch()	
+	oButtonSearch := new graphicsearch()	
 	Loop, 2
 	{
-		Mouse_Click(265,392) ;  Left, 1}  ; Tap Base
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(348,499) ;  Left, 1}  ; Tap City buffs
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Click(265,392, {Timeout: (Delay_Long+0)})  ; Tap Base=
+		Mouse_Click(348,499, {Timeout: (Delay_Long+0)})  ; Tap City buffs=
 
 		loop, 3
-		{
-			oGraphicSearch := new graphicsearch()	
-			resultObj := oGraphicSearch.search(B2240_CityBuffs_Title_Graphic, optionsObjCoords)
-			if (resultObj)
+		{	
+			resultTitle := oTitleSearch.search(B2240_CityBuffs_Title_Graphic, optionsObjCoords)
+			if (resultTitle)
 				Goto, Shield_Search_Buttons
 			
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-			oGraphicSearch := new graphicsearch()	
-			resultObj := oGraphicSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
-			if (resultObj)
-			{
-				Mouse_Click(resultObj[1].x,resultObj[1].y) ;  Left, 1}  ; Tap City buffs
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-			}
 			
-			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+			resultButton := oButtonSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
+			if (resultButton)
+				Mouse_Click(resultButton[1].x,resultButton[1].y, {Timeout: (Delay_Long+0)})  ; Tap City buffs=
 		}
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
@@ -818,28 +816,30 @@ Peace_Shield:
 	
 	Shield_Search_Buttons:	
 	oGraphicSearch := new graphicsearch()
-	loop, 10
+	loop, 20
 	{
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		resultObj := oGraphicSearch.search(B2241_Shield_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
 			Mouse_Click(resultObj[1].x,resultObj[1].y) ; Click to open shield menu
 			Goto Shield_Search_Title
 		}
+		Else
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
 	; MsgBox, Shield_Search_Buttons Failed
 	goto Peace_Shield_END
 	
 	Shield_Search_Title:
 	; Check for shield title banner
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
-	loop, 30
+	loop, 20
 	{
 		oGraphicSearch := new graphicsearch()			
 		resultObj := oGraphicSearch.search(B22410_Shield_Title_Graphic, optionsObjCoords)
 		if (resultObj)
 			Goto Shield_Search_Ends
+		Else
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
 	; MsgBox, Shield_Search_Title Failed
 	goto Peace_Shield_END
@@ -904,7 +904,7 @@ Peace_Shield:
 		EnvAdd, Shield_NOW_Plus_Duration, %Shield_HH%, HH
 		EnvAdd, Shield_NOW_Plus_Duration, %Shield_MM%, mm
 		EnvAdd, Shield_NOW_Plus_Duration, %Shield_SS%, ss
-		
+				
 		; MsgBox, % "3. Shield_Ends:" Shield_Ends "`nShield Duration D:" Shield_DD " hh:mm:ss:" Shield_HH ":" Shield_MM ":" Shield_SS "`nA_NowUTC:" A_NowUTC "`nShield_NOW_Plus_Duration:" Shield_NOW_Plus_Duration
 		
 		Shield_Expires_Day := Shield_NOW_Plus_Duration
@@ -915,53 +915,29 @@ Peace_Shield:
 		Shield_Expires_HH := FormatTime(Shield_Expires_HH, "h")
 		Shield_Expires_MM := FormatTime(Shield_Expires_MM, "m")
 		; Shield_Expires_DateTime := FormatTime(Shield_NOW_Plus_Duration)
-		Shield_Expires_DateTime := Shield_Expires_Day . " @ " Shield_Expires_HH ":" Shield_Expires_MM
+		
+		if (Shield_NOW_Plus_Duration = A_NowUTC)
+			Shield_Expires_DateTime := "Shield is Expired"
+		Else
+			Shield_Expires_DateTime := "Shield expires on " . Shield_Expires_Day . " @ " Shield_Expires_HH ":" Shield_Expires_MM
 
-		if (At_War && (Shield_DD < 1))
+		if (At_War && (Shield_DD <= 1)) ||  if (Shield_Expires_Day = "Thursday") || if (Shield_Expires_Day = "Friday") || if (Shield_Expires_Day = "Saturday")
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
+			MsgBox, 4, , %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_3Day
-		}
-		else if (Shield_Expires_Day = "Thursday")
-		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
-			vRet := MsgBoxGetResult()
-			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
-			Goto, Shield_for_3Day
-		}
-		else if (Shield_Expires_Day = "Friday")
-		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
-			vRet := MsgBoxGetResult()
-			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
-			Goto, Shield_for_3Day
-		}
-		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour <= 19)
-		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 3Day shield (5 sec Timeout & auto),5 ; 5
-			vRet := MsgBoxGetResult()
-			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
-			Goto, Shield_for_3Day
-		}
-		else if (Shield_Expires_Day = "Saturday" && Shield_Expires_Hour >= 19)
-		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_Day%`, recommend 24hour shield (5 sec Timeout & auto),5 ; 5
-			vRet := MsgBoxGetResult()
-			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
-			Goto, Shield_for_24hour
 		}
 		else if (Shield_Expires_Day = "Sunday" && Shield_Expires_Hour <= 19)
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5 ; 5
+			MsgBox, 4, , %Shield_Expires_DateTime%`, recommend 24hour shield (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout") ; || if (vRet = "No")
 			Goto, Shield_for_24hour
 		}
 		else
 		{
-			MsgBox, 4, ,Shield expires on %Shield_Expires_DateTime%`, No shield needed.`nPlace shield anyway? (5 sec Timeout & auto),5 ; 5
+			MsgBox, 4, , %Shield_Expires_DateTime%`, No shield needed.`nPlace shield anyway? (5 sec Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes")
 				goto Activate_Shield
@@ -996,8 +972,7 @@ Peace_Shield:
 	Shield_for_3Day:
 	{
 		Shield_Found_3Day := True
-		Mouse_Click(590,310) ;  Left, 1}  ; Tap Get & use 3-Day Peace Shield
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Mouse_Click(590,310, {Timeout: (Delay_Medium+0)})  ; Tap Get & use 3-Day Peace Shield
 		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
@@ -1005,8 +980,7 @@ Peace_Shield:
 	Shield_for_24hour:
 	{
 		Shield_Found_24hour := True
-		Mouse_Click(590,458) ;  Left, 1}  ; Tap Get & use 24-Hour Peace Shield
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Mouse_Click(590,458, {Timeout: (Delay_Medium+0)})  ; Tap Get & use 24-Hour Peace Shield
 		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
@@ -1014,8 +988,7 @@ Peace_Shield:
 	Shield_for_8hour:
 	{
 		Shield_Found_8hour := True
-		Mouse_Click(590,610) ;  Left, 1}  ; Tap Get & use 8-Hour Peace Shield
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+		Mouse_Click(590,610, {Timeout: (Delay_Medium+0)})  ; Tap Get & use 8-Hour Peace Shield
 		Goto, Shield_Purchase
 	}
 	Goto, Shield_Not_Selected
@@ -1029,26 +1002,30 @@ Peace_Shield:
 		Goto, Peace_Shield_END
 
 	Shield_Purchase:
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
-	loop, 30
+	 ; Tap "Get & Use" or "OK" button, to confirm buying shield
+	oGraphicSearch := new graphicsearch()	
+	Shield_Buttons := B22412_GetUse_Button_Graphic B22413_Replace_OK_Button_Graphic 
+	loop, 20
 	{
-		oGraphicSearch := new graphicsearch()	
-		resultObj := oGraphicSearch.search(B22412_Replace_OK_Button_Graphic, optionsObjCoords)
+		resultObj := oGraphicSearch.search(Shield_Buttons, optionsObjCoords)
 		if (resultObj)
-		{
-			Mouse_Click(resultObj[1].x,resultObj[1].y) ;  Left, 1} ; Tap Get & Use button, to confirm buying shield
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		}
+			Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (Delay_Medium+0)})
+		Else
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
 	; MsgBox, Shield_Purchase Failed
 	goto Peace_Shield_END
 
 	Peace_Shield_END:
-	MsgBox, 4, , Pause script to place shield? (5 Second Timeout & skip), 5 ; 5
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		MsgBox, 0, Pause, Activate Peace Shield, Press OK to resume (No Timeout)
+	if Pause_Script	
+	{
+		MsgBox, 4, Pause script, Pause script? (5 Second Timeout & skip), 5 ; 5
+		vRet := MsgBoxGetResult()
+		if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+			MsgBox, 0, Pause, Press OK to resume (No Timeout)
+	}
 
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
@@ -1066,15 +1043,18 @@ Collect_Collisions:
 		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(515,375) ; Tap Collision
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 			
 		oGraphicSearch := new graphicsearch()	
-		resultObj := oGraphicSearch.search(B3450_Collision_Title_Graphic, optionsObjCoords)
-		if (resultObj)
-			goto Collect_Collisions_Found
+		loop, 20
+		{
+			resultObj := oGraphicSearch.search(B3450_Collision_Title_Graphic, optionsObjCoords)
+			if (resultObj)
+				goto Collect_Collisions_Found
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}			
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	goto Collect_Collisions_END
 	Collect_Collisions_Found:
@@ -1120,14 +1100,18 @@ Collect_Equipment_Crafting:
 		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(430,390) ; Tap Craft
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+			
 		oGraphicSearch := new graphicsearch()	
-		resultObj := oGraphicSearch.search(B3440_Craft_Title_Graphic, optionsObjCoords)
-		if (resultObj)
-			goto Collect_Equipment_Found
+		loop, 20
+		{
+			resultObj := oGraphicSearch.search(B3440_Craft_Title_Graphic, optionsObjCoords)
+			if (resultObj)
+				goto Collect_Equipment_Found
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}			
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	goto Collect_Equipment_END
 	Collect_Equipment_Found:
@@ -1173,14 +1157,18 @@ Collect_Recruits:
 		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(350,375) ; Tap Recruit
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+			
 		oGraphicSearch := new graphicsearch()	
-		resultObj := oGraphicSearch.search(B3430_Recruit_Title_Graphic, optionsObjCoords)
-		if (resultObj)
-			goto Collect_Recruits_Found
+		loop, 20
+		{
+			resultObj := oGraphicSearch.search(B3430_Recruit_Title_Graphic, optionsObjCoords)
+			if (resultObj)
+				goto Collect_Recruits_Found
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}			
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	goto Collect_Recruits_END
 	Collect_Recruits_Found:
@@ -1229,14 +1217,18 @@ Collect_Runes:
 		Mouse_Click(430,280) ; Tap Command Center
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		Mouse_Click(570,340) ; Rune Extraction
-		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+			
 		oGraphicSearch := new graphicsearch()	
-		resultObj := oGraphicSearch.search(B3460_RuneExtract_Title_Graphic, optionsObjCoords)
-		if (resultObj)
-			goto Collect_Runes_Found
+		loop, 20
+		{
+			resultObj := oGraphicSearch.search(B3460_RuneExtract_Title_Graphic, optionsObjCoords)
+			if (resultObj)
+				goto Collect_Runes_Found
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}			
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	}
 	goto Collect_Runes_END
 	Collect_Runes_Found:
@@ -1442,8 +1434,8 @@ Benefits_Center:
 	, Select_Reward : [926_SelectReward_Button_Graphic, True]
 	, Selection_Chest : [927_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
-	, Warrior_Trial : [929_WarriorTrial_Button, True]
-	, Claim_Buttons : [922_Claim_Button, True]}
+	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]
+	, Claim_Buttons : [922_Claim_Button_Graphic, True]}
 
 	loop, 2
 		Mouse_Click(625,310) ; Tap Benefits Center
@@ -1630,18 +1622,21 @@ Benefits_Center:
 		;	return
 
 		Subroutine_Running := "Claim_Buttons"
-		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-		; Mouse_Click(180,1130, {Timeout: Delay_Short+0}) ; Tap Collide
-		if (OCR([530, 479, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #1
-			Mouse_Click(600,500, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 01
-		if (OCR([530, 633, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #2
-			Mouse_Click(600,660, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 02
-		if (OCR([530, 789, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #3
-			Mouse_Click(600,800, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 03
-		if (OCR([530, 943, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #4
-			Mouse_Click(600,970, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 04
-		if (OCR([530, 1100, 150, 60], "eng") = "Claim") ; Search for "Claim" Text on Button #5
-			Mouse_Click(600,1130, {Timeout: Delay_Medium+0}), Mouse_Click(300,50, {Timeout: Delay_Medium+0}) ; Tap "Claim" Button 05
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount ) 
+
+		oUse_ButtonSearch := new graphicsearch()
+		resultUse_Button := oUse_ButtonSearch.search(922_Claim_Button_Graphic, optionsObjCoords)
+		if (resultUse_Button)
+		{
+			sortedUse_Button := oUse_ButtonSearch.resultSort(resultUse_Button)
+			Reverse_Index := sortedUse_Button.Count()
+			loop, % sortedUse_Button.Count()
+			{	
+				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (Delay_Medium+0)})
+				Mouse_Click(320,70, {Timeout: (2*Delay_Short+0)}) ; Tap  title bar
+				Reverse_Index--
+			}
+		}
 
 		; Claim_Buttons_Run := False
 
@@ -2493,7 +2488,7 @@ Depot_Rewards:
 	return
 
 	Find_Rewards_ALL:
-	; DllCall("Sleep","UInt",rand_wait + (2*Delay_Long))
+	DllCall("Sleep","UInt",rand_wait + (1*Delay_Long))
 	; check if any graphic was found
 	oButtonsSearch := new graphicsearch()
 	allQueries_Depot := B352_Help_Button_Graphic B353_Request_Button_Graphic B354_Reward_Button_Graphic
@@ -2502,10 +2497,9 @@ Depot_Rewards:
 		resultButtons := oButtonsSearch.search(allQueries_Depot, optionsObjCoords)
 		if (resultButtons)
 		{
-			sortedButtons := oButtonsSearch.resultSortDistance(resultButtons, Client_Area_X2, Client_Area_Y2)
-			loop, % sortedButtons.Count()
+			loop, % resultButtons.Count()
 			{
-				Mouse_Click(sortedButtons[A_Index].x,sortedButtons[A_Index].y, {Timeout: (2*Delay_Short+0)})
+				Mouse_Click(resultButtons[A_Index].x,resultButtons[A_Index].y, {Timeout: (2*Delay_Short+0)})
 				Mouse_Click(320,70, {Timeout: (2*Delay_Short+0)}) ; Tap top title bar
 			}
 			Break
