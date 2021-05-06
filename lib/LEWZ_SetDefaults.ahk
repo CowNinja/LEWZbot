@@ -305,6 +305,128 @@ Loop, Read, LEWZ_User_Logins.ini
 	User_Logins[user] := row
 }
 
+; load User Logins from LEWZ_User_Logins.ini
+/*
+	populates Base_Array array as follows:
+	Account,row[1],
+	User_Name_new,row[1],
+	User_Name_old,row[2],
+	User_Email,row[3],
+	User_Pass,row[4],
+	User_PIN,row[5],
+
+	example input: 
+	Account,Hack_722_01,
+	User_Email,TestAccount@gmail.com,
+	User_Name_new,Hack_722_01,
+	User_Name_old,Hack 722.01,
+	User_Pass,99999999,
+	User_PIN,123456789,
+*/
+
+
+Base_Array := {}
+Loop, Read, LEWZ_User_Logins.ini
+{
+	row := StrSplit(A_LoopReadLine, ",")
+	User_Name_Input := row[1]
+	Base_Array[User_Name_Input] := {User_Name_new : row[1], User_Name_old: row[2], User_Email: row[3], User_Pass: row[4], User_PIN: row[5]}
+	; Base_Array.Push(Value, Value2, ...)
+	row.RemoveAt(1)
+}
+
+; Array_Gui(Base_Array)
+
+/*
+Headers := []
+Base_Array := []
+Loop, Read, LEWZ_User_Logins.ini
+{
+	if (A_Index = 1)
+		Headers := StrSplit(A_LoopReadLine, "|")
+	else ; if A_LoopField
+	{
+		obj := new CaseSenseList
+		; for k, v in StrSplit(A_LoopReadLine, ",")
+		row := StrSplit(A_LoopReadLine, ",")
+		{
+			cHead := Headers[k]
+			obj[cHead] := v
+			; MsgBox, % "key: " cHead " val = " v
+			; obj.Push(o) ;doesn't work
+		}
+		; MsgBox, % Obj2Str2(o)
+		; obj[A_Index-1] := o
+		Base_Array.Push(obj)
+	}
+	; MsgBox, % Base_Array.1
+}
+Array_Gui(Base_Array)
+*/
+
+/*
+Base_Array := []
+Loop, Read, LEWZ_User_Logins.ini
+{
+	row := StrSplit(A_LoopReadLine, ",")
+	User_Name_Input := row[1]
+	Base_Array[%User_Name_Input%] := []
+	Base_Array.User_Name_Input.User_Name_new := row[1]
+	Base_Array.User_Name_Input.User_Name_old := row[2]
+	Base_Array.User_Name_Input.User_Email := row[3]
+	Base_Array.User_Name_Input.User_Pass := row[4]
+	Base_Array.User_Name_Input.User_PIN := row[5]
+	row.RemoveAt(1)
+}
+*/
+
+/*
+; verify working array
+	for Account, vValue in Base_Array
+	{
+		vOutput .= "Account," Account ","
+		for bKey, bValue in vValue
+			vOutput .= bKey "," bValue ","
+		
+		; MsgBox, % "Account:" Account "`n vValue:" vValue[1] "`n Base_Array:" Base_Array[1] "`n bKey:" bKey "`n bValue:" bValue
+		vOutput .= "`n"
+	}
+	MsgBox, % "final:" vOutput
+*/
+
+/*
+change 
+			global User_Name := Current_User_Name
+			global User_Email := Current_User_Email
+			global User_Pass := Current_User_Pass
+			global User_PIN := Current_User_PIN
+
+
+	Base_Array := {}
+	User_Name := {}
+	
+	User_Name := {user_old: User_Name_old, 
+	email: User_Email,
+	PW: User_Pass,
+	PIN: User_PIN,
+	email: User_Name_Captured, 
+	routine: Routine, 
+	location: User_City_Location_Array,
+	alliance: User_Found_Alliance,
+	state: User_Found_State,
+	vip: User_VIP,
+	power: User_Power,
+	diamonds: User_Diamonds,
+	fuel_out: Available_Fuel
+	fuel_store: Inventory_Fuel
+	food_out: Available_Food
+	food_store: Inventory_Food
+	steel_out: Available_Steel
+	steel_store: Inventory_Steel
+	alloy_out: Available_Alloy
+	alloy_store: Inventory_Alloy}]
+*/
+
 /*
 ; load Colors
 Base_Colors := {}
@@ -439,7 +561,7 @@ Select_App()
 
 
 ; Renamed GraphicSearch_query (auto)
-    Global 011_Icon_LEWZ_Graphic := "|<011_Icon_LEWZ>*200$48.Dzzzzzz0DzzzzbzDDzzzzbzDDzjyzbzDDy1sC3zDDwtnbbzDDxtnrjz0Dzxnzjz0Dz1szjzDDw9wDjzDDwxz7jzDDxxzbjzDDxtnrbzD0AFlbbz00C5sDXz0U"
+    Global 011_Icon_LEWZ_Graphic := "|<011_Icon_LEWZ>0xF2F0F1@0.72$35.k0000NU0000n03kD1i0DkzDw0tna6M1Va6Ak03C0NU1yD0n0DwDVa0MM7XA0kn36M1Xa6AznzDsTzXqDkS"
     Global 022_Quit_OK_Button_Graphic := "|<022_Quit_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
     Global 021_Quit_Title_Graphic := "|<021_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzzzw7zjbttUDzDDnntTySTbbmzwwzDDZzttyST/znnwwyLzbbttwjzTDnntTwyTbbmTlwzDDaT7twSTC0Ts0wyC0zsNtyE"
     Global 023_Rebuild_Button_Graphic := "|<023_Rebuild_Button>*80$23.07zyw7zxyDzvwTVrsw0jlk0T33k0CDk0wTU3s073k0D7XzS77yyC7xwA73wQ07sQ0k"
@@ -450,7 +572,7 @@ Select_App()
       Global 1A10_Account_Title_Graphic := "|<1A10_Account_Title>*240$67.zXzzzzzzzzzzlzzzzzzzzzzqzzzzzzzzzzvjzzzzzzzzzzrzzzzzzzzzxvzzAzwnzzzyyzzTjxyTtnyzTzTvxzjvyzTbzTyxzvvzjjvzjzyzzvznjxzrzzTzxzxryTnzzDzyzyvzDvzzjzyzzMz3xzzrzzTzhztyTztzzjzozyzjzyzznzuzzTrzjTyxzxTzbvzjjyyzxDzvyzjvyTDyjzwzjjySTryrzzTwTztzwyw"
       Global 1A12_Switch_Button_Graphic := "|<1A12_Switch_Button>*240$59.wTzzzyzzzz77zzzxzzzyzbzzzzxzztzjzzzzvzznzTzzzzrzzbztyzjQ1w3DzvwzSzTnnDzrlxxyzjv1zbVvvxyTrkzjPrrvwzzwzTrDjrvzzwyPizTjrzzxyrhyzTjyzvxjPxyzDxzrsyDvxyTlzDlyTrvyz8wzXwzjnyQw7zjzzTly7U"
         Global 1A120_Switch_Title_Graphic := "|<1A120_Switch_Title>*200$55.XwDzzzzzlXzbzzzzzsnzlzzzzzwPzwzzzzzyBzzzTnzTw0TzzDszjC0DzzrwTbblUzztw7nnss1zwyHvtwT03zT9twyDz0zjgwyT7zwDnbSTDXzzXtnbTblzzlyvnDnsrzwzRtbtwPzyTYyrwyBzyDsT3yT6TzDwTVzDX3z7yDkzbss0Dz7wzny8"
-        Global 1A123_WarZ_Button_Graphic := "|<1A123_WarZ_Button>#407@0.25$23.k7kDkDUTUz1z1y3z3y7y7wDwDszsxlvtvnnrbbbjDTDSCwSsTsTkzkzVzVz1y3y3w3s7s7k7V"
+        Global 1A123_WarZ_Button_Graphic := "|<1A123_WarZ_Button>*60$20.DkT3s7ky0w7UD1s3kS0s7260kVUAMM2640Vl00w0UD083k20y1UDUQ3s71z1U"
           Global 1A1230_WarZ_Accounts_Title_Graphic := "|<1A1230_WarZ_Accounts_Title>*200$44.DzwTzzznzzDzzzQzzzzzzXDzzzzzsnzzzzzyAzznz1w0Dzwz0703zzDXtyAzzntyDXDzwyTnsnzzDbzyAzznsTzXDzwz0zsnzzDy3yAzznzwDXDzwzznsnzzDDwyAzznlzDX7zwyDXsk0DDk1z003ny0zsU"
           Global 1A1232_OtherAccount_Button_Graphic := "|<1A1232_OtherAccount_Button>*240$39.qTyzzzxzvrzzzTjSzzzzzVoDVkzrSxzyTyvryzrzrSzrqzzvryzrTjSzryvxvryzrjTSzvyz7xrzXrU"
           Global 1A1234_Email_Box_Button_Graphic := "|<1A1234_Email_Box_Button>*200$42.000001b000003b000001b30MM307DrzyDlbTzzyTvbsz77Mvbzz777vbzz77Tvbzz77TvbsL77svbwz77RvbTz77Tvb7X26DtaU"
@@ -476,8 +598,8 @@ Select_App()
   Global 60_Quest_Title_Graphic := "|<60_Quest_Title>*240$64.w3zzzzzzzzzDnzzzzzzzztzbzzzzzzzzjzDzzzzzzzwzyzzzzzzzzrzvzzzzXzyDTzbnzTttzDhzyTDxzDrxzLzxwzrxzDbwTzrnzTjyyTxzzTDxyzvtzrzxwzrnzjlzTzbnzT00zlxzyTDxwzzzwrzvwzrnzzzxDzjnzTjzzzkzwzDxyTzzz9zrwzbxzzbwnwztwTvwzTrU3zkBzX7y8s"
   Global 70_Speaker_Title_Graphic := "|<70_Speaker_Title>*240$61.01zzzzzzzzbzjzzzzzzzrzvzzzzzzzvzwzzzzzzzxzzTzzzzzzyzzjzzzYTzzTzbxnzTryvjzrzyzjvxzLzrxzjjyzzlzbxzzrzyzszlyzxvzzTwzyTTytzzDyTzj7wRzzbyDzrbzyzznzrzvvzzjzvzvzxxzzrzSzxzyyzzvzTTyzzDjxyzjjyTzbnxzjTvyjzvyxzzzzzs"
   Global 71_Speaker_Claim_Button_Graphic := "|<71_Speaker_Claim_Button>*240$65.k3yzzztzzzzDnxzzzzzzzwTnvzzzzzzztzrrzzzzzzzrzbjzzzzzzzjzzTs7wyEC1TzyzDbtwS/kzzxyzbntyDnzzvzzDbnwTrzzrzyTDbxzjzzjzwyTDvzDzzTs1wyTryTzyzDntwzjwzzxyzbntzTtztvtzDbnyzlzrrnyTDbxzVzDjbsyTDvzHwzTbVwyTrys3yzUntwzjx"
-    Global 821_World_Button_Graphic := "|<821_World_Button>*240$53.Trxzz3xzwTjnzwDvzuyDbztzrzpwTTzjzjzfuSz1ybT1LqxwtwSywbRnnlvstxivbjvrnrvRvSTHDrjqrqyzaTjTijhxzQzSzQTbvyxyxytzDntvxtxnyTrrrvvnbwzkTjrsI"
-    Global 822_Home_Button_Graphic := "|<822_Home_Button>*136$56.DwzzzzzzznzDzzzzzzwznzzzzzzzDwz7zntzlnzDUT087s4znlXlUkwM00swQwSCT00CTbDbnbkzn7tntws0DwlyQyTA03zATbDbn7wznbtntwtzDwswQyTCTXzD6CDbnVUznk7Xlsw0U"
+    Global 821_World_Button_Graphic := "|<821_World_Button>*70$17.01y03w07s0Dk4DUA7kMDkyDlzzU7zU0zU0zU1y03s07U08"
+    Global 822_Home_Button_Graphic := "|<822_Home_Button>*65$19.zk0Ts3zw1zy0zz0BzU0zk0Ds0Dw07y03y00z00TU0E"
   Global 83_ActiveSkill_Button_Graphic := "|<83_ActiveSkill_Button>*240$42.DzzzzzzbzzzzzwrzTzzzksDzzzzUw7zzzzVw3tzzy7z1xzzw7z0zTzsDzUDjzkTzs7rzUzzw3uz1zzy1zw3zzz0Ts7zU"
     Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>#177@0.25$15.DzXzyzzzkTw1zUDy0zw0zy3zy7zs7z03z07s0zU7y1zzzTztzwU"
     Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>*60$10.Dkz3wDkz3wDkz3wDkz3wDkS00U"
