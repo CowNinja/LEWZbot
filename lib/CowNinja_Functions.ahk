@@ -1195,6 +1195,68 @@ All_Restore() {
 	return
 }
 
+Array_Gui(Array, Parent="") {                                                        	;-- shows your array as an interactive TreeView
+
+		/*    	DESCRIPTION of function Array_Gui()
+        	-------------------------------------------------------------------------------------------------------------------
+			Description  	:	show your array as an interactive TreeView
+			Link              	:	https://autohotkey.com/boards/viewtopic.php?f=6&t=35124&p=162012#p162012
+			Author         	:	GeekDude
+			Date             	:	28 Jul 2017, 09:43
+			AHK-Version	:	AHK-V1, AHK_L
+			License         	:
+			Syntax          	:
+			Parameter(s)	:
+			Return value	:
+			Remark(s)    	:
+			Dependencies	:	none
+			KeyWords    	:	array, gui, debug, treeview
+        	-------------------------------------------------------------------------------------------------------------------
+	*/
+
+	/*    	EXAMPLE(s)
+
+			Array_Gui({"Apples":["Red", "Crunchy", "Lumpy"], "Oranges":["Orange", "Squishy", "Spherical"]})
+
+	*/
+
+	if !Parent
+	{
+		Gui, +HwndDefault
+		Gui, New, +HwndGuiArray +LabelGuiArray +Resize
+		Gui, Margin, 5, 5
+		Gui, Add, TreeView, w300 h200
+
+		Item := TV_Add("Array", 0, "+Expand")
+		Array_Gui(Array, Item)
+
+		Gui, Show,, GuiArray
+		Gui, %Default%:Default
+
+		WinWait, ahk_id%GuiArray%
+		WinWaitClose, ahk_id%GuiArray%
+		return
+	}
+
+	For Key, Value in Array
+	{
+		Item := TV_Add(Key, Parent)
+		if (IsObject(Value))
+			Array_Gui(Value, Item)
+		else
+			TV_Add(Value, Item)
+	}
+	return
+
+	GuiArrayClose:
+	Gui, Destroy
+	return
+
+	GuiArraySize:
+	GuiControl, Move, SysTreeView321, % "w" A_GuiWidth - 10 " h" A_GuiHeight - 10
+	return
+} ;</13.05.000011>
+
 ;-------------------------------------------------------------------------------
 StrJoin(arr, byref del) { ; join the array with delimiters and return a string
 ;-------------------------------------------------------------------------------
