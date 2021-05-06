@@ -72,7 +72,8 @@ while WinExist(FoundAppTitle)
 		; Process_Menu()
 
 		; Switch User
-		For User,Val in User_Logins
+		; For User,Val in User_Logins
+		for User,Val in Base_Array
 		{
 			; Gosub Get_Window_Geometry
 			Gosub Check_Window_Geometry
@@ -81,16 +82,35 @@ while WinExist(FoundAppTitle)
 			; ([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
 
 			; Populate account variables from next keyed array item
-			global User_Name := User
-			global User_Email := Val[1]
-			global User_Pass := Val[2]
-			global User_PIN := Val[3]
+			global User_Name := Base_Array[User].User_Name_new
+			global User_Email := Base_Array[User].User_Email
+			global User_Pass := Base_Array[User].User_Pass
+			global User_PIN := Base_Array[User].User_PIN
+			
+			/*
+			global Current_User_Name := Base_Array[User]
+			global Current_User_Email := Val[2]
+			global Current_User_Pass := Val[3]
+			global Current_User_PIN := Val[4]
+			
+			Current_User := Base_Array[User]			
+			global Current_User_Name := Current_User.User_Name_new
+			global Current_User_Email := Current_User.User_Email
+			global Current_User_Pass := Current_User.User_Pass
+			global Current_User_PIN := Current_User.User_PIN
+			
+			MsgBox, % Current_User.User_Name_new
+			. "`n " Current_User.User_Name_old
+			. "`n " Current_User.User_Email
+			. "`n " Current_User.User_Pass
+			. "`n " Current_User.User_PIN
+			*/
 
 			; Generate and combine text for account selection pop-up box
-			Output := "User: " User " has: "
-			Output .= "Email: " Val[1] " "
-			; Output .= "Password: " Val[2] " "
-			; Output .= "PIN: " Val[3]
+			Output := "User: " User_Name " has: "
+			Output .= "Email: " User_Email " "
+			; Output .= "Password: " User_Pass " "
+			; Output .= "PIN: " User_PIN
 			MsgBox, 3, , Login to %Output% ? (5 second Timeout & auto),5 ; 5
 			vRet := MsgBoxGetResult()
 			if (vRet = "Yes") || if (vRet = "Timeout")
@@ -107,7 +127,7 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -157,25 +177,56 @@ while WinExist(FoundAppTitle)
 				; DEBUG / Troubleshooting block - BEGIN
 				; add/remove or uncomment routines to check them
 				; ******************************************
-				; MsgBox, Hour: %Current_Hour_UTC% %Routine%
-				; for testing routines
-				; MsgBox, 0, Pause, Press OK to start (No Timeout)
-				; Gosub Benefits_Center
-				; Gosub Active_Skill
-				; Gosub Peace_Shield
-				; Gosub Mail_Collection
-				; Gosub Depot_Rewards
-				; Gosub Donate_Tech
-				; Gosub Peace_Shield
-				; Gosub BruteForcePIN
-				; Gosub Speaker_Help
-				; Gosub Golden_Chest
-				; Gosub Reserve_Factory
-				; Login_Password_PIN_BruteForce()
+				; gosub Game_Start_popups
+				; gosub Switch_Account
+				; gosub Peace_Shield
+				; gosub Collect_Collisions
+				; gosub Collect_Equipment_Crafting
+				; gosub Collect_Recruits
+				; gosub Collect_Runes
+				; gosub Collect_Red_Envelopes
+				; gosub Desert_Wonder
+				; gosub Benefits_Center
+				; gosub Speaker_Help
+				; gosub Drop_Zone
+				; gosub Adventure_Missions
+				; gosub Collect_Cafeteria
+				; gosub Active_Skill
+				; gosub Collect_Chips_Underground
+				; gosub Reserve_Factory
+				; gosub Donate_Tech
+				; gosub Depot_Rewards
+				; gosub VIP_Shop
+				; gosub Mail_Collection
+				; gosub Alliance_Boss_Regular
+				; gosub Alliance_Boss_Oasis
+				; gosub Alliance_Wages
+				; gosub Gather_Resources
+				; gosub Desert_Oasis
+				; gosub Gather_On_Base_RSS
+				; gosub Golden_Chest
+				; gosub Send_Mail_To_Boss
+				; gosub Send_Message_In_Chat
+				; gosub Get_Inventory
+				; gosub Get_User_Info
+				; gosub Get_User_Location
+				; gosub Check_Window_Geometry
+				; Reset_Posit()
+				; Reload_MEmu()
+				; Launch_LEWZ()
+				; Go_Back_To_Home_Screen()
+				; Login_Password_PIN_Enter()
+				; Login_Password_PIN_Find()
+				; Login_Password_PIN_Taps()
+				; Activity_Center_Open()
+				; Enter_Coordinates_From_Home()
+				; Enter_Coordinates_From_World()
+				; Enter_Coordinates_Open_Check()
+				; Check_For_Zombie_Popup()
+				; Select_App()
+				; Key_Menu()
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
-				; Gosub Game_Start_popups
-				; Gosub Shield_Warrior_Trial_etc
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
@@ -185,32 +236,13 @@ while WinExist(FoundAppTitle)
 				; ****************************
 				; if Peace_Shield_Needed
 				;	Gosub Peace_Shield
-				; Gosub Reset_Posit
+				; Reset_Posit()
 				
 				Gosub Collect_Collisions
 				Gosub Collect_Recruits
 				Gosub Collect_Equipment_Crafting
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
-				
-				; ******************************************
-				; DEBUG / Troubleshooting block - BEGIN
-				; ******************************************
-				; Gosub Speaker_Help
-				; Gosub Active_Skill
-				; Gosub Desert_Oasis
-				; Gosub Mail_Collection
-				; Gosub Speaker_Help
-				; ; Activity_Center_Open()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; if !Go_Back_To_Home_Screen()
-					; Reload_MEmu()
-				; Gosub Speaker_Help
-				; goto END_of_user_loop
-				; ******************************************
-				; DEBUG / Troubleshooting block - END
-				; ******************************************
-
 				Gosub Depot_Rewards
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				;	Gosub Golden_Chest
@@ -317,6 +349,7 @@ Reload_MEmu()
 	{
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		loop, 3
+		{
 			if Launch_LEWZ()
 			{
 				Gui, Status:add,text,, MEmu finished Loaded!!
@@ -324,13 +357,16 @@ Reload_MEmu()
 				GUI_Count++
 				return 1
 			}
+			Else
+				gosub Reload_MEmu_Launch
+		}
 
-			Gui, Status:add,text,, Reoading MEmu %A_Index%
-			Gui, Status:show, x731 y0 w300 h500
-			GUI_Count++
-					
-			gosub Reload_MEmu_Kill
-			gosub Reload_MEmu_Launch
+		Gui, Status:add,text,, Reoading MEmu %A_Index%
+		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
+				
+		gosub Reload_MEmu_Kill
+		gosub Reload_MEmu_Launch
 	}
 	Gui, Status:add,text,, MEmu NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
@@ -347,8 +383,11 @@ Reload_MEmu()
 		Gui, Status:show, x731 y0 w300 h500
 		GUI_Count++
 		loop, 2
+		{
 			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm " . MEmu_Instance)
-		DllCall("Sleep","UInt",(rand_wait + 10*Delay_Long+0))
+			DllCall("Sleep","UInt",(5*Delay_Long+0))
+		}
+		DllCall("Sleep","UInt",(5*Delay_Long+0))
 		return
 	}
 
@@ -358,8 +397,11 @@ Reload_MEmu()
 		Gui, Status:show, x731 y0 w300 h500
 		GUI_Count++
 		loop, 2
+		{
 			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" " . MEmu_Instance)
-		DllCall("Sleep","UInt",(rand_wait + 5*Delay_Long+0))
+			DllCall("Sleep","UInt",(5*Delay_Long+0))
+		}
+		DllCall("Sleep","UInt",(5*Delay_Long+0))
 		return
 	}
 }
@@ -386,13 +428,16 @@ Launch_LEWZ()
 		resultIcon_LEWZ := oIcon_LEWZSearch.search(011_Icon_LEWZ_Graphic, optionsObjCoords)
 		if (resultIcon_LEWZ)
 		{
-			Click_X := resultIcon_LEWZ[A_Index].x
-			Click_Y := resultIcon_LEWZ[A_Index].y
-			Gui, Status:add,text,, LEWZ icon found #%A_Index% (%Click_X%,%Click_Y%)
-			Mouse_Click(Click_X,Click_Y, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
-			Gui, Status:show, x731 y0 w300 h500
-			GUI_Count++
-			Icon_Found := True ; Goto Launch_LEWZ_Continue
+			loop, % resultIcon_LEWZ.Count()
+			{
+				Click_X := resultIcon_LEWZ[A_Index].x
+				Click_Y := resultIcon_LEWZ[A_Index].y
+				Gui, Status:add,text,, LEWZ icon found #%A_Index% (%Click_X%,%Click_Y%)
+				Mouse_Click(Click_X,Click_Y, {Clicks: 3,Timeout: Delay_Medium}) ; Tap LEWZ ICON
+				Gui, Status:show, x731 y0 w300 h500
+				GUI_Count++
+				Icon_Found := True ; Goto Launch_LEWZ_Continue
+			}
 		}
 		Else
 			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
@@ -444,25 +489,25 @@ Go_Back_To_Home_Screen()
 	; loop, 3
 	{
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(2*Delay_Short+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 	}
 
 	Go_Back_To_Home_Screen_OCR_Quit:
-	oGraphicSearch := new graphicsearch()	
+	oGoBackSearch := new graphicsearch()	
 	oRebuildSearch := new graphicsearch()	
 	loop, 200
 	{
-		resultObj := oGraphicSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
-		if (resultObj)
+		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if (resultGoBack)
 			goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
-				
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(2*Delay_Short+0))
-		Gosub Check_Window_Geometry
-	
+			
 		resultRebuild := oRebuildSearch.search(023_Rebuild_Button_Graphic, optionsObjCoords)
 		if (resultRebuild)
 			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
+				
+		Text_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Gosub Check_Window_Geometry	
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
 	return 0
@@ -470,12 +515,12 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
 	loop, 10
 	{
-		resultObj := oGraphicSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
-		if !(resultObj)
+		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if !(resultGoBack)
 			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
 
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(2*Delay_Short+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		Gosub Check_Window_Geometry
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
@@ -505,8 +550,8 @@ Game_Start_popups:
 	return
 }
 
-; reset position by going to world screen and back home
-Reset_Posit:
+; reset position by going to world screen and back home, returns TRUE is successful, FALSE if unsuccessful
+Reset_Posit()
 {
 	Subroutine_Running := "Reset_Posit"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -516,18 +561,37 @@ Reset_Posit:
 	; Go_Back_Home_Delay_Long := True
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
-	; Gosub Speaker_Help
 
-	; Tap World/home button x times
-		loop, 2
+	; Tap World/home button x times ; Mouse_Click(76,1200, {Timeout: (6*Delay_Long+0)}) ; Tap World/home button
+	oWorldSearch := new graphicsearch()
+	; loop, 2
 	{
-		Mouse_Click(76,1200) ; Tap World/home button
-		DllCall("Sleep","UInt",(rand_wait + 8*Delay_Long+0))
+		resultWorld := oWorldSearch.search(821_World_Button_Graphic, optionsObjCoords)
+		if (resultWorld)	
+		{
+			Mouse_Click(resultWorld[1].x,resultWorld[1].y, {Timeout: (3*Delay_Short+0)})
+			loop, 40
+			{
+				resultWorld := oWorldSearch.search(822_Home_Button_Graphic, optionsObjCoords)
+				if (resultWorld)
+				{
+					Mouse_Click(resultWorld[1].x,resultWorld[1].y, {Timeout: (3*Delay_Short+0)})
+					goto, Reset_Posit_END
+				}
+				Else
+					DllCall("Sleep","UInt",(1*Delay_Short+0))
+			}
+		}
+		Else
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
+	return 0
+	
+	Reset_Posit_END:
 	; Go_Back_Home_Delay_Long := True
 	if !Go_Back_To_Home_Screen()
-		Reload_MEmu()
-	return
+	 	Reload_MEmu()
+	return 1
 }
 
 
@@ -555,6 +619,12 @@ Switch_Account:
 	allQueries_Login := 1A1234_Email_Box_Button_Graphic 1A1235_PW_Box_Button_Graphic 1A1237_UseEmailLog_Button_Graphic
 	loop, 3
 	{
+		Mouse_Click(600,1200, {Timeout: (1*Delay_Long+0)}) ; "Settings" Button 
+		Mouse_Click(100, 330, {Timeout: (1*Delay_Long+0)}) ; "Account_Button_Graphic 
+		Mouse_Click(330, 880, {Timeout: (1*Delay_Long+0)}) ; "Switch_Button_Graphic 
+		Mouse_Click(315, 720, {Timeout: (1*Delay_Long+0)}) ; "WarZ_Button_Graphic 
+		Mouse_Click(480,1150, {Timeout: (1*Delay_Long+0)}) ; "Other Account" button
+		
 		loop, 7
 		{
 			resultObj := oAccountSearch.search(allQueries_Account, optionsObjCoords)
@@ -626,19 +696,18 @@ Switch_Account:
 		while (AccountLoading.Found)
 		{
 			Game_Loading_RAW := RegExReplace(AccountLoading.Text,"[^\d]")
-			; RegExMatch(Game_Loading_RAW, "([\d]{1,2})",Game_Loading)
-			; if (Game_Loading = Last_Game_Loading)
-			if (Game_Loading_RAW > Last_Game_Loading)
+			RegExMatch(Game_Loading_RAW, "\d\d",Game_Loading)
+			if (Game_Loading > Last_Game_Loading)
 			{
 				Gui, Status:new, , Status
 				Gui, Status:Margin, 0, 0
 				Gui, Status:add,text,, Account %User_Name%
 				GUI_Count := 0
-				Gui, Status:add,text,, Account Loading %Game_Loading_RAW%`%
+				Gui, Status:add,text,, Account Loading %Game_Loading%`%
 				Gui, Status:show, x731 y0 w300 h500
 				GUI_Count++
-				Last_Game_Loading = Game_Loading_RAW
-				; Last_Game_Loading = Game_Loading
+				; Last_Game_Loading = Game_Loading_RAW
+				Last_Game_Loading = Game_Loading
 			}
 			AccountLoading := Search_Captured_Text_OCR(["0","1","2","3","4","5","6","7","8","9","%"], {Pos: [319, 1067], Size: [54, 25]})
 		}
@@ -791,22 +860,20 @@ Peace_Shield:
 	oButtonSearch := new graphicsearch()	
 	Loop, 2
 	{
-		Mouse_Click(265,392, {Timeout: (Delay_Long+0)})  ; Tap Base=
-		Mouse_Click(348,499, {Timeout: (Delay_Long+0)})  ; Tap City buffs=
+		Mouse_Click(265,392, {Timeout: (Delay_Long+0)})  ; Tap Base
+		; Mouse_Click(348,499, {Timeout: (Delay_Long+0)})  ; Tap City buffs
 
 		loop, 3
 		{	
+			resultButton := oButtonSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
+			if (resultButton)
+				Mouse_Click(resultButton[1].x,resultButton[1].y, {Timeout: (Delay_Long+0)})  ; Tap City buffs
+				
 			resultTitle := oTitleSearch.search(B2240_CityBuffs_Title_Graphic, optionsObjCoords)
 			if (resultTitle)
 				Goto, Shield_Search_Buttons
-			
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-			
-			resultButton := oButtonSearch.search(B224_CityBuffs_Button_Graphic, optionsObjCoords)
-			if (resultButton)
-				Mouse_Click(resultButton[1].x,resultButton[1].y, {Timeout: (Delay_Long+0)})  ; Tap City buffs=
 		}
-		if !Go_Back_To_Home_Screen()
+		if !Reset_Posit()
 			Reload_MEmu()
 	}
 	; MsgBox, Shield_Open_Base Failed
@@ -1311,7 +1378,7 @@ Activity_Center_Open()
 					return 1
 			}
 		}
-		Gosub Reset_Posit
+		Reset_Posit()
 	}
 	return 0
 }
@@ -2147,10 +2214,8 @@ Reserve_Factory:
 
 	loop, 2
 	{
-		Mouse_Click(320,405) ; Tap Instant Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-		Mouse_Click(510,415) ; Tap Request Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		Mouse_Click(320,405, {Timeout: (Delay_Long+0)}) ; Tap Instant Help
+		Mouse_Click(510,415, {Timeout: (Delay_Medium+0)}) ; Tap Request Help
 	}
 
 	; Go_Back_Home_Delay_Long := True
@@ -2162,13 +2227,12 @@ Reserve_Factory:
 	{
 		loop, 2
 		{
-			Mouse_Click(610,1200) ; Tap Alliance Menu
-			DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+			Mouse_Click(610,1200, {Timeout: (2*Delay_Long+0)}) ; Tap Alliance Menu
 			oGraphicSearch := new graphicsearch()
 					
 			Loop, 8
 			{
-				resultObj := oGraphicSearch.search(870_AllianceMenu_Title_Graphic , optionsObjCoords)
+				resultObj := oGraphicSearch.search(870_AllianceMenu_Title_Graphic, optionsObjCoords)
 				if (resultObj)
 					break
 				Else
@@ -3126,7 +3190,7 @@ Train_Daily_Requirement:
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
 
-	Gosub Reset_Posit
+	Reset_Posit()
 	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 
 	; Zoom out
@@ -3442,7 +3506,10 @@ Desert_Oasis:
 
 	loop, 3
 		if Enter_Coordinates_From_Home()
+		{
 			gosub Desert_Oasis_Enter_Coordinates_Next
+			break
+		}
 
 	goto END_Stealing
 
@@ -3576,7 +3643,7 @@ Desert_Oasis:
 		*/
 		loop, 2
 		{
-			loop, 5
+			loop, 7
 				if Search_Captured_Text_OCR(["Steal"], {Pos: [315, 1190], Size: [55, 30]}).Found
 					Goto Desert_Oasis_Stealing_Found
 
@@ -5140,7 +5207,7 @@ Reload_Script:
 F7::
 	Resetting_Posit := True
 	Key_Menu()
-	Gosub Reset_Posit
+	Reset_Posit()
 	Resetting_Posit := False
 	Key_Menu()
 return
