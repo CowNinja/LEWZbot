@@ -36,6 +36,48 @@ MsgBox, % Person.Jack.city
 
 
 
+fileDB =
+(
+Name| DOB| Address| City| Zip
+Jake|01/01/2020|123 Main| NY City| 11001
+Mike|03/04/2001|30 south| MIAMI |2404
+)
+
+Headers := []
+Base_Array := []
+Loop, parse, LEWZ_User_Logins.ini
+{
+	if (A_Index = 1)
+		Headers := StrSplit(HeadStr:=A_LoopField, "|", " ")
+	else if A_LoopField
+	{
+		obj := new CaseSenseList
+		for k, v in StrSplit(A_LoopReadLine, ",")
+		{
+			cHead := Headers[k]
+			obj[cHead] := v
+			; MsgBox, % "key: " cHead " val = " v
+			; obj.Push(o) ;doesn't work
+		}
+		; MsgBox, % Obj2Str2(o)
+		; obj[A_Index-1] := o
+		Base_Array.Push(obj)
+	}
+}
+
+
+Base_Array := {}
+Loop, Read, LEWZ_User_Logins.ini
+{
+	row := StrSplit(A_LoopReadLine, ",")
+	User_Name_Input := row[1]
+	Base_Array[User_Name_Input] := {User_Name_new : row[1], User_Name_old: row[2], User_Email: row[3], User_Pass: row[4], User_PIN: row[5]}
+	Base_Array.Push(Value, Value2, ...)
+	row.RemoveAt(1)
+}
+
+
+
 
 
 arrayObj := [{"name": "bob", "age": 22}, {"name": "tom", "age": 51}]
@@ -61,25 +103,32 @@ Remove an item using the Delete method:
 RemovedValue := Base_Array.Delete(email)
 
 
-	Base_Array := [{"email": User_Email,
-	"user": User_Name, 
-	"email": User_Name_Captured, 
-	"routine": Routine, 
-	"location": User_City_Location_Array,
-	"alliance": User_Found_Alliance,
-	"state": User_Found_State,
-	"vip": User_VIP,
-	"power": User_Power,
-	"diamonds": User_Diamonds,
-	"fuel_out": Available_Fuel
-	"fuel_store": Inventory_Fuel
-	"food_out": Available_Food
-	"food_store": Inventory_Food
-	"steel_out": Available_Steel
-	"steel_store": Inventory_Steel
-	"alloy_out": Available_Alloy
-	"alloy_store": Inventory_Alloy}]
+	Base_Array := {}
+	User_Name := {}
 	
+	User_Name := {user_old: User_Name_old, 
+	email: User_Email,
+	PW: User_Pass,
+	PIN: User_PIN,
+	email: User_Name_Captured, 
+	routine: Routine, 
+	location: User_City_Location_Array,
+	alliance: User_Found_Alliance,
+	state: User_Found_State,
+	vip: User_VIP,
+	power: User_Power,
+	diamonds: User_Diamonds,
+	fuel_out: Available_Fuel
+	fuel_store: Inventory_Fuel
+	food_out: Available_Food
+	food_store: Inventory_Food
+	steel_out: Available_Steel
+	steel_store: Inventory_Steel
+	alloy_out: Available_Alloy
+	alloy_store: Inventory_Alloy}]
+	
+	Base_Array.User_Name := User_Name
+	Base_Array := {User_Name: User_Name}
 	
 	Base_Array := [ User_Email: {"user": User_Name, 
 	"email": User_Name_Captured, 
