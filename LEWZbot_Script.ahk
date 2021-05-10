@@ -198,8 +198,7 @@ while WinExist(FoundAppTitle)
 				; gosub Depot_Rewards
 				; gosub VIP_Shop
 				; gosub Mail_Collection
-				; gosub Alliance_Boss_Regular
-				; gosub Alliance_Boss_Oasis
+				; gosub Alliance_Boss_Feed
 				; gosub Alliance_Wages
 				; gosub Gather_Resources
 				; gosub Desert_Oasis
@@ -234,8 +233,8 @@ while WinExist(FoundAppTitle)
 				; ****************************
 				; ** Position dependant **
 				; ****************************
-				if Peace_Shield_Needed
-					Gosub Peace_Shield
+				; if Peace_Shield_Needed
+				;	Gosub Peace_Shield
 				; Reset_Posit()
 				
 				Gosub Collect_Collisions
@@ -245,9 +244,9 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-				;	Gosub Golden_Chest
+					Gosub Golden_Chest
 				Gosub Speaker_Help
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
 
 				; ****************************
@@ -260,13 +259,13 @@ while WinExist(FoundAppTitle)
 				; Gosub Donate_tech
 				Gosub Speaker_Help
 
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				{
 					Gosub VIP_Shop
 					Gosub Benefits_Center
 					Gosub Speaker_Help
-					Gosub Alliance_Boss_Regular
-					Gosub Alliance_Boss_Oasis
+					Gosub Alliance_Boss_Feed
+					Gosub Alliance_Boss_Feed
 					Gosub Mail_Collection
 					Gosub Alliance_Wages
 				}
@@ -285,7 +284,7 @@ while WinExist(FoundAppTitle)
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				Gosub Get_User_Location
 				
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Get_User_Info
 					Gosub Get_Inventory
 				Gosub Send_Mail_To_Boss
@@ -350,6 +349,7 @@ Reload_MEmu()
 		
 	Loop, 10
 	{
+		gosub Reload_MEmu_Launch
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		loop, 3
 		{
@@ -494,6 +494,7 @@ Go_Back_To_Home_Screen()
 		Text_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
+	DllCall("Sleep","UInt",(3*Delay_Micro+0))
 
 	Go_Back_To_Home_Screen_OCR_Quit:
 	oGoBackSearch := new graphicsearch()	
@@ -1353,12 +1354,13 @@ Activity_Center_Open()
 			; Mouse_Drag(82, 536, 335, 536, {EndMovement: T, SwipeTime: 500})
 			; Mouse_Click(180,600) ; Tap Activity Center
 
-			Loop, 5
+			Loop, 50
 			{
-				DllCall("Sleep","UInt",(1*Delay_Long+0))
 				resultObj := oGraphicSearch.search(910_ActivityCtr_Title_Graphic, optionsObjCoords)
 				if (resultObj)
 					return 1
+				Else
+					DllCall("Sleep","UInt",(1*Delay_Short+0))
 			}
 		}
 		Reset_Posit()
@@ -1375,15 +1377,16 @@ Desert_Wonder:
 	oGraphicSearch := new graphicsearch()	
 	loop, 3
 	{
-		loop, 10
+		loop, 50
 		{
-			DllCall("Sleep","UInt",(1*Delay_Medium+0))
 			resultObj := oGraphicSearch.search(917_DesertWonder_Button_Graphic, optionsObjCoords)
 			if (resultObj)
 			{
 				Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Desert Wonder
 				goto Desert_Wonder_Continue_Tab
 			}
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
 		Mouse_Drag(350, 1100, 350, 500, {EndMovement: T, SwipeTime: 500})
 	}
@@ -1392,14 +1395,15 @@ Desert_Wonder:
 	Desert_Wonder_Continue_Tab:
 	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
 
-	Loop, 10
+	; Find single occurence of image, return true or false	
+	oGraphicSearch := new graphicsearch()
+	Loop, 50
 	{
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
-		; Find single occurence of image, return true or false
-		oGraphicSearch := new graphicsearch()	
 		resultObj := oGraphicSearch.search(9170_DesertWonder_Title_Graphic, optionsObjCoords)
 		if (resultObj)
 			goto Desert_Wonder_Continue_Claim
+		Else
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
 	goto Desert_Wonder_END
 
@@ -1472,7 +1476,7 @@ Benefits_Center:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, False]
+	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
 	, Daily_Signin : [923_DailySignin_Button_Graphic, True]
 	, Monthly_Package_Collect : [924_MonthlyPackage_Button_Graphic, True]
 	, Monthly_Signin : [925_MonthlySignin_Button_Graphic, True]
@@ -1480,8 +1484,8 @@ Benefits_Center:
 	, Selection_Chest : [927_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
 	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]
-	, Claim_Buttons : [9221_Claim_Button_Graphic , True]
-	, Claim_Buttons : [9222_Claim_Button_Graphic , True]}
+	, Claim_Buttons : [9221_Claim_Button_Graphic, True]
+	, Claim_Buttons : [9222_Claim_Button_Graphic, True]}
 
 	loop, 2
 		Mouse_Click(625,310) ; Tap Benefits Center
@@ -1507,13 +1511,14 @@ Benefits_Center:
 	oGraphicSearch := new graphicsearch()	
 	loop, 5
 	{
-		loop, 5
+		loop, 40
 		{
-			DllCall("Sleep","UInt",(1*Delay_Short+0))
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
 			if (resultObj)
 				return
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
 
 		; Gosub Get_Window_Geometry
@@ -1521,8 +1526,8 @@ Benefits_Center:
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
 		loop, 2
-			Mouse_Click(625,310, {Timeout: (1*Delay_Short+0)}) ; Tap Benefits Center
-		DllCall("Sleep","UInt",(4*Delay_Long+0))
+			Mouse_Click(625,310, {Timeout: 0}) ; Tap Benefits Center
+		; DllCall("Sleep","UInt",(4*Delay_Long+0))
 	}
 	return
 
@@ -1547,7 +1552,7 @@ Benefits_Center:
 				if (resultObj)
 				{
 					loop, 3
-						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (3*Delay_Short+0)}) ; Tap found Heading
+						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Short+0)}) ; Tap found Heading
 					
 					DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0)) ; wait for tab to load
 					if IsLabel(Subroutine)
@@ -1574,8 +1579,8 @@ Benefits_Center:
 		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(500, 187, 300, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		Mouse_Drag(550, 187, 200, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
+		DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 	return
 
@@ -1626,13 +1631,13 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Mouse_Click(500,1200) ; Tap Claim
 
-		Mouse_Click(560,1220, {Timeout: (1*Delay_Short+0)}) ; Select redeem steel
-		Mouse_Click(366,680, {Timeout: (1*Delay_Short+0)}) ; Select max redeem slide bar
-		Mouse_Click(336,780, {Timeout: (1*Delay_Short+0)}) ; Select Exchange button
+		Mouse_Click(560,1220, {Timeout: (3*Delay_Short+0)}) ; Select redeem steel
+		Mouse_Click(366,680, {Timeout: (3*Delay_Short+0)}) ; Select max redeem slide bar
+		Mouse_Click(336,780, {Timeout: (3*Delay_Short+0)}) ; Select Exchange button
 
-		Mouse_Click(560,975, {Timeout: (1*Delay_Short+0)}) ; Select redeem silver medals
-		Mouse_Click(366,680, {Timeout: (1*Delay_Short+0)}) ; Select max redeem slide bar
-		Mouse_Click(336,780, {Timeout: (1*Delay_Short+0)}) ; Select Exchange button
+		Mouse_Click(560,975, {Timeout: (3*Delay_Short+0)}) ; Select redeem silver medals
+		Mouse_Click(366,680, {Timeout: (3*Delay_Short+0)}) ; Select max redeem slide bar
+		Mouse_Click(336,780, {Timeout: (3*Delay_Short+0)}) ; Select Exchange button
 
 		Warrior_Trial_Run := False
 		return
@@ -1687,43 +1692,43 @@ Benefits_Center:
 
 		Subroutine_Running := "Daily_Signin"
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-		Mouse_Click(103,553, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 1
+		Mouse_Click(103,553, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 1
 
-		Mouse_Click(343,560, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 2
+		Mouse_Click(343,560, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 2
 
-		Mouse_Click(560,550, {Timeout: (1*Delay_Micro+0)}) ; Select B Reward
+		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
 
-		Mouse_Click(560,550, {Timeout: (1*Delay_Micro+0)}) ; Select B Reward
+		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
 
-		Mouse_Click(343,1125, {Timeout: (1*Delay_Micro+0)}) ; Tap "OK"
+		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
 
-		Mouse_Click(330,1230, {Timeout: (1*Delay_Micro+0)}) ; Tap Bottom Middle
+		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
 
-		Mouse_Click(560,550, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 3
+		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 3
 
-		Mouse_Click(560,550, {Timeout: (1*Delay_Micro+0)}) ; Select B Reward
+		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
 
-		Mouse_Click(343,1125, {Timeout: (1*Delay_Micro+0)}) ; Tap "OK"
+		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
 
-		Mouse_Click(330,1230, {Timeout: (1*Delay_Micro+0)}) ; Tap Bottom Middle
+		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
 
-		Mouse_Click(556,819, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 4
+		Mouse_Click(556,819, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 4
 
-		Mouse_Click(330,1230, {Timeout: (1*Delay_Micro+0)}) ; Tap Bottom Middle
+		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
 
-		Mouse_Click(334,819, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 5
+		Mouse_Click(334,819, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 5
 
-		Mouse_Click(330,1230, {Timeout: (1*Delay_Micro+0)}) ; Tap Bottom Middle
+		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
 
-		Mouse_Click(109,809, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 6
+		Mouse_Click(109,809, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 6
 
-		Mouse_Click(330,1230, {Timeout: (1*Delay_Micro+0)}) ; Tap Bottom Middle
+		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
 
-		Mouse_Click(330,1035, {Timeout: (1*Delay_Micro+0)}) ; Daily Sign-In Click Day 7
+		Mouse_Click(330,1035, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 7
 
-		Mouse_Click(560,550, {Timeout: (1*Delay_Micro+0)}) ; Select B Reward
+		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
 
-		Mouse_Click(343,1125, {Timeout: (1*Delay_Micro+0)}) ; Tap "OK"
+		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
 
 		loop, 12
 			Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
@@ -1743,21 +1748,21 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Claim Monthly
 		loop, 2
-			Mouse_Click(342,1215, {Timeout: (1*Delay_Micro+0)}) ; Tap collect Monthly Signin
+			Mouse_Click(342,1215, {Timeout: (2*Delay_Short+0)}) ; Tap collect Monthly Signin
 
-		Mouse_Click(153,323, {Timeout: (1*Delay_Micro+0)}) ; Claim 5 Days
+		Mouse_Click(153,323, {Timeout: (2*Delay_Short+0)}) ; Claim 5 Days
 		Gosub Collect_and_Clear
 
-		Mouse_Click(266,323, {Timeout: (1*Delay_Micro+0)}) ; Claim 10 Days
+		Mouse_Click(266,323, {Timeout: (2*Delay_Short+0)}) ; Claim 10 Days
 		Gosub Collect_and_Clear
 
-		Mouse_Click(380,323, {Timeout: (1*Delay_Micro+0)}) ; Claim 15 Days
+		Mouse_Click(380,323, {Timeout: (2*Delay_Short+0)}) ; Claim 15 Days
 		Gosub Collect_and_Clear
 
-		Mouse_Click(505,323, {Timeout: (1*Delay_Micro+0)}) ; Claim 20 Days
+		Mouse_Click(505,323, {Timeout: (2*Delay_Short+0)}) ; Claim 20 Days
 		Gosub Collect_and_Clear
 
-		Mouse_Click(633,323, {Timeout: (1*Delay_Micro+0)}) ; Claim 25 Days
+		Mouse_Click(633,323, {Timeout: (2*Delay_Short+0)}) ; Claim 25 Days
 		Gosub Collect_and_Clear
 
 		Monthly_Signin_Run := False
@@ -1767,9 +1772,9 @@ Benefits_Center:
 
 	Collect_and_Clear:
 	{
-		Mouse_Click(340,1000, {Timeout: (1*Delay_Micro+0)}) ; Tap Collect Button
+		Mouse_Click(340,1000, {Timeout: (2*Delay_Short+0)}) ; Tap Collect Button
 
-		Mouse_Click(340,40, {Timeout: (1*Delay_Micro+0)}) ; 1215) ; Tap to Clear
+		Mouse_Click(340,40, {Timeout: (2*Delay_Short+0)}) ; 1215) ; Tap to Clear
 
 		return
 	}
@@ -1830,23 +1835,14 @@ Benefits_Center:
 
 		Battle_Honor_Click:
 		{
-			Mouse_Click(260,636, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 01
-			Mouse_Click(260,800, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 03
-			Mouse_Click(260,963, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 05
-			Mouse_Click(260,1126, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 07
-			Mouse_Click(260,720, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 02
-			Mouse_Click(260,883, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 04
-			Mouse_Click(260,1050, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 06
-			Mouse_Click(260,1202, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 08
-			Mouse_Click(260,636, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 01
-			Mouse_Click(260,800, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 03
-			Mouse_Click(260,963, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 05
-			Mouse_Click(260,1126, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 07
-			Mouse_Click(260,720, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 02
-			Mouse_Click(260,883, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 04
-			Mouse_Click(260,1050, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 06
-			Mouse_Click(260,1202, {Clicks: 2,Timeout: (Delay_Short+0)}) ; Tap Battle Honor 08
-
+			Mouse_Click(260,636, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 01
+			Mouse_Click(260,800, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 03
+			Mouse_Click(260,963, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 05
+			Mouse_Click(260,1126, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 07
+			Mouse_Click(260,720, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 02
+			Mouse_Click(260,883, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 04
+			Mouse_Click(260,1050, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 06
+			Mouse_Click(260,1202, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Tap Battle Honor 08
 			return
 		}
 
@@ -1907,14 +1903,14 @@ Drop_Zone:
 	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	oGraphicSearch := new graphicsearch()
 		
-	loop, 10
+	loop, 50
 	{
 		resultObj := oGraphicSearch.search(B361_Click_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 			loop, 5
 				Mouse_Click(410,1050, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
 		Else
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 	}
 
 	if !Go_Back_To_Home_Screen()
@@ -1992,8 +1988,8 @@ Active_Skill:
 			{	
 				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (Delay_Medium+0)})
 				gosub Active_Skill_Titles
-				loop, 2
-					Mouse_Click(350,350, {Timeout: (2*Delay_Short+0)}) ; Tap Active skill title bar
+				loop, 3
+					Mouse_Click(350,350, {Timeout: (1*Delay_Short+0)}) ; Tap Active skill title bar
 				Gosub Active_Skill_Reload
 				Reverse_Index--
 			}
@@ -2158,17 +2154,17 @@ Reserve_Factory:
 			Mouse_Click(610,1200, {Timeout: (2*Delay_Long+0)}) ; Tap Alliance Menu
 			oGraphicSearch := new graphicsearch()
 					
-			Loop, 8
+			Loop, 40
 			{
 				resultObj := oGraphicSearch.search(870_AllianceMenu_Title_Graphic, optionsObjCoords)
 				if (resultObj)
 					break
 				Else
-					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			}
 				
 			oGraphicSearch := new graphicsearch()
-			Loop, 4
+			Loop, 40
 			{
 				resultObj := oGraphicSearch.search(874_Help_Button_Graphic, optionsObjCoords)
 				if (resultObj)
@@ -2177,7 +2173,7 @@ Reserve_Factory:
 					goto Alliance_Help_Continue
 				}
 				Else
-					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 			}
 			if !Go_Back_To_Home_Screen()
 				Reload_MEmu()
@@ -2592,7 +2588,7 @@ Mail_Collection:
 	Mouse_Click(200,1160) ; Tap reports 05 - Other
 	Gosub Mark_All_As_Read
 
-	Mouse_Click(200,445, {Timeout: (1*Delay_Medium+0)}) ; Tap Activities
+	Mouse_Click(200,445, {Timeout: (1*Delay_Long+0)}) ; Tap Activities
 	
 	Mouse_Click(200,170) ; Tap Activities - SPAR (Single Player Arms Race)
 	Gosub Mark_All_As_Read
@@ -2620,13 +2616,13 @@ Mail_Collection:
 		
 		oMARK_READSearch := new graphicsearch()
 		oCONFIRMSearch := new graphicsearch()
-		loop, 10
+		loop, 15
 		{			
 			resultMARK_READ := oMARK_READSearch.search(8602_Read_Mark_Button_Graphic, optionsObjCoords)
 			if (resultMARK_READ)
 			{
 				Mouse_Click(resultMARK_READ[1].x,resultMARK_READ[1].y, {Timeout: (Delay_Long+0)})
-				loop, 10
+				loop, 15
 				{
 					resultCONFIRM := oCONFIRMSearch.search(8601_Read_Confirm_Button_Graphic, optionsObjCoords)
 					if (resultCONFIRM)
@@ -2643,8 +2639,8 @@ Mail_Collection:
 				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
 		
-		Loop, 2
-			Mouse_Click(340,70, {Timeout: (2*Delay_Short+0)}) ; Tap header to clear message
+		Loop, 3
+			Mouse_Click(340,70, {Timeout: (1*Delay_Short+0)}) ; Tap header to clear message
 		gosub Mail_Collection_Open
 		return
 	}	
@@ -2739,7 +2735,7 @@ Open_Menu_Alliance(SubMenu := "")
 }
 */
 
-Alliance_Boss_Regular:
+Alliance_Boss_Feed:
 {
 	Subroutine_Running := "Alliance_Boss"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2747,52 +2743,51 @@ Alliance_Boss_Regular:
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
 
-	Mouse_Click(610,1214, {Timeout: (2*Delay_Long+0)}) ; Tap Alliance
+		Mouse_Click(605,1212) ; Tap Alliance Menu
+		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		oGraphicSearch := new graphicsearch()
+		
+		loop, 2
+		{		
+			Loop, 40
+			{
+				resultObj := oGraphicSearch.search(870_AllianceMenu_Title_Graphic, optionsObjCoords)
+				if (resultObj)
+				{
+					; Swipe up
+					loop, 2
+						Mouse_Drag(345, 1100, 409, 196, {EndMovement: F, SwipeTime: 500})
+					break
+				}
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			}
+			
+			loop, 20
+			{
+				resultObj := oGraphicSearch.search(878_Boss_Button_Graphic, optionsObjCoords)
+				if (resultObj)
+				{
+					Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Long+0)}) ; Tap Alliance Boss button
+					goto Found_Alliance_Boss_Menu
+				}
+				Else
+					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			}
+			if !Go_Back_To_Home_Screen()
+				Reload_MEmu()
+			Mouse_Click(605,1212) ; Tap Alliance Menu
+		}
+		goto Alliance_Boss_END
 
-	; Swipe up
-	loop, 2
-		Mouse_Drag(345, 1100, 409, 196, {EndMovement: F, SwipeTime: 500})
+		Found_Alliance_Boss_Menu:
+		Mouse_Click(525,1186, {Timeout: (1*Delay_Long+0)}) ; Tap Feed Boss
+		Mouse_Click(340,780) ; Tap Confirm Feed Boss
 
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	Mouse_Click(273,540) ; Tap Alliance Boss regular play
-	; Mouse_Click(273,630, {Timeout: (1*Delay_Long+0)}) ; Tap Alliance Boss desert oasis
-
-	Mouse_Click(525,1186, {Timeout: (1*Delay_Long+0)}) ; Tap Feed Boss
-
-	Mouse_Click(340,780) ; Tap Confirm Feed Boss
-
-	if !Go_Back_To_Home_Screen()
-		Reload_MEmu()
-	return
-}
-
-Alliance_Boss_Oasis:
-{
-	Subroutine_Running := "Alliance_Boss"
-	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-	; if !Go_Back_To_Home_Screen()
-		; Reload_MEmu()
-
-	Mouse_Click(610,1214, {Timeout: (2*Delay_Long+0)}) ; Tap Alliance
-
-	; Swipe up
-	loop, 2
-		Mouse_Drag(345, 1100, 409, 196, {EndMovement: F, SwipeTime: 500})
-
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
-	; Mouse_Click(273,540) ; Tap Alliance Boss regular play
-	Mouse_Click(273,630, {Timeout: (1*Delay_Long+0)}) ; Tap Alliance Boss desert oasis
-
-	Mouse_Click(525,1186, {Timeout: (1*Delay_Long+0)}) ; Tap Feed Boss
-
-	Mouse_Click(340,780) ; Tap Confirm Feed Boss
-
-	if !Go_Back_To_Home_Screen()
-		Reload_MEmu()
-	return
+		Alliance_Boss_END:
+		if !Go_Back_To_Home_Screen()
+			Reload_MEmu()
+		return
 }
 
 Alliance_Wages:
@@ -2832,7 +2827,7 @@ Alliance_Wages:
 		{
 			loop, 20
 			{
-				resultObj := oGraphicSearch.search(875_Wages_Button_Graphic , optionsObjCoords)
+				resultObj := oGraphicSearch.search(875_Wages_Button_Graphic, optionsObjCoords)
 				if (resultObj)
 				{
 					Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Alliance Wages button
@@ -3518,198 +3513,117 @@ Gather_On_Base_RSS:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; if !Go_Back_To_Home_Screen()
 		; Reload_MEmu()
-
-	Swipe_Up_Left_RSS:
-	loop, 5
-	{
-		; Mouse_Drag(560, 900, 50, 600, {EndMovement: F, SwipeTime: 300})
-		Mouse_Drag(560, 930, 50, 330, {EndMovement: F, SwipeTime: 200})
-		; Mouse_Drag(480, 786, 143, 50, {EndMovement: F, SwipeTime: 500})
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
+		
+	Gosub Gather_On_Base_ALL
 	
-	oGraphicSearch := new graphicsearch()
-
-	loop, 2
-		Mouse_Click(405,653, {Timeout: (1*Delay_Short+0)}) ; Plot # 50
-
-	loop, 2
-		Mouse_Click(396,553, {Timeout: (1*Delay_Short+0)}) ; Plot # 49
-
-	loop, 2
-		Mouse_Click(397,453, {Timeout: (1*Delay_Short+0)}) ; Plot # 47
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(350,374, {Timeout: (1*Delay_Short+0)}) ; Plot # 35
-
-	loop, 2
-		Mouse_Click(330,280, {Timeout: (1*Delay_Short+0)}) ; Plot # 34
-
-	loop, 2
-		Mouse_Click(239,233, {Timeout: (1*Delay_Short+0)}) ; Plot # 32
-
-	resultObj := oGraphicSearch.search(BD01_Desert_building_Title_Graphic, optionsObjCoords)
-	if (resultObj)
-		Goto END_Gather_Base_RSS
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(305,587, {Timeout: (1*Delay_Short+0)}) ; Plot # 48
-
-	loop, 2
-		Mouse_Click(292,509, {Timeout: (1*Delay_Short+0)}) ; Plot # 46
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(250,337, {Timeout: (1*Delay_Short+0)}) ; Plot # 33
-
-	loop, 2
-		Mouse_Click(160,282, {Timeout: (1*Delay_Short+0)}) ; Plot # 31
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(137,817, {Timeout: (1*Delay_Short+0)}) ; Plot # 40
-
-	loop, 2
-		Mouse_Click(36,760, {Timeout: (1*Delay_Short+0)}) ; Plot # 39 - screen moves
-		
-	DllCall("Sleep","UInt",(2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(29,726, {Timeout: (1*Delay_Short+0)}) ; Plot # 37 - screen moves
-	; DllCall("Sleep","UInt",(2*Delay_Long+0))
-
-	resultObj := oGraphicSearch.search(BD01_Desert_building_Title_Graphic, optionsObjCoords)
-	if (resultObj)
-		Goto END_Gather_Base_RSS
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(130,827, {Timeout: (1*Delay_Short+0)}) ; Plot # 38
-
-	loop, 2
-		Mouse_Click(40,770, {Timeout: (1*Delay_Short+0)}) ; Plot # 36 - screen moves
-		
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(445,583, {Timeout: (1*Delay_Short+0)}) ; Plot # 45
-
-	loop, 2
-		Mouse_Click(367,542, {Timeout: (1*Delay_Short+0)}) ; Plot # 43
-
-	loop, 2
-		Mouse_Click(272,493, {Timeout: (1*Delay_Short+0)}) ; Plot # 41
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(485,510, {Timeout: (1*Delay_Short+0)}) ; Plot # 44
-
-	loop, 2
-		Mouse_Click(380,462, {Timeout: (1*Delay_Short+0)}) ; Plot # 42
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	Swipe_Right_RSS_02:
-	Mouse_Drag(147, 854, 330, 649, {EndMovement: T, SwipeTime: 500})
-	; Mouse_Drag(147, 854, 373, 649, {EndMovement: T, SwipeTime: 500})
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(307,424, {Timeout: (1*Delay_Short+0)}) ; Plot # 29
-
-	loop, 2
-		Mouse_Click(400,376, {Timeout: (1*Delay_Short+0)}) ; Plot # 30
-
-	loop, 2
-		Mouse_Click(360,293, {Timeout: (1*Delay_Short+0)}) ; Plot # 28
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(167,412, {Timeout: (1*Delay_Short+0)}) ; Plot # 26
-
-	loop, 2
-		Mouse_Click(273,354, {Timeout: (1*Delay_Short+0)}) ; Plot # 27
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(110,600, {Timeout: (1*Delay_Short+0)}) ; Plot # 24 - screen moves
-		
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(34,540, {Timeout: (1*Delay_Short+0)}) ; Plot # 22 - screen moves
-		
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(160,680, {Timeout: (1*Delay_Short+0)}) ; Plot # 25
-
-	loop, 2
-		Mouse_Click(110,644, {Timeout: (1*Delay_Short+0)}) ; Plot # 23 - screen moves
-
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(74,593, {Timeout: (1*Delay_Short+0)}) ; Plot # 21 - screen moves
-		
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(167,826, {Timeout: (1*Delay_Short+0)}) ; Plot # 19
-
-	loop, 2
-		Mouse_Click(86,770, {Timeout: (1*Delay_Short+0)}) ; Plot # 17 - screen moves
-
-	DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
-	loop, 2
-		Mouse_Click(530,1033, {Timeout: (1*Delay_Short+0)}) ; Tap next to speaker
-
-	loop, 2
-		Mouse_Click(310,780, {Timeout: (1*Delay_Short+0)}) ; Plot # 20
-
-	loop, 2
-		Mouse_Click(202,710, {Timeout: (1*Delay_Short+0)}) ; Plot # 18
-
-	loop, 2
-		Mouse_Click(114,665, {Timeout: (1*Delay_Short+0)}) ; Plot # 16 - screen moves
-
-	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
-
 	END_Gather_Base_RSS:
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
 	return
+	
+	Gather_On_Base_ALL:
+	oGraphicSearch := new graphicsearch()
+	{
+		Swipe_Up_Left_RSS:
+		loop, 5
+		{
+			Mouse_Drag(560, 930, 50, 330, {EndMovement: F, SwipeTime: 200})
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}
+		
+		Mouse_Click(405,653, {Timeout: 1*Delay_Short+0}) ; Plot # 50
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(396,553, {Timeout: 1*Delay_Short+0}) ; Plot # 49
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(397,453, {Timeout: 1*Delay_Short+0}) ; Plot # 47
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(350,374, {Timeout: 1*Delay_Short+0}) ; Plot # 35
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(330,280, {Timeout: 1*Delay_Short+0}) ; Plot # 34
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(239,233, {Timeout: 1*Delay_Short+0}) ; Plot # 32
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(305,587, {Timeout: 1*Delay_Short+0}) ; Plot # 48
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(292,509, {Timeout: 1*Delay_Short+0}) ; Plot # 46
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(250,337, {Timeout: 1*Delay_Short+0}) ; Plot # 33
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(160,282, {Timeout: 1*Delay_Short+0}) ; Plot # 31
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(137,817, {Timeout: 1*Delay_Short+0}) ; Plot # 40
+		Gosub Gather_On_Base_NEXT
+
+			Mouse_Click(36,760, {Timeout: (1*Delay_Long+0)}) ; Plot # 39 - screen moves
+			Mouse_Click(36,760, {Timeout: (2*Delay_Long+0)}) ; Plot # 39 - screen moves
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(29,726, {Timeout: (1*Delay_Long+0)}) ; Plot # 37 - screen moves
+			Mouse_Click(29,726, {Timeout: (2*Delay_Long+0)}) ; Plot # 37 - screen moves
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(130,827, {Timeout: 1*Delay_Short+0}) ; Plot # 38
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(40,770, {Timeout: (1*Delay_Long+0)}) ; Plot # 36 - screen moves
+			Mouse_Click(40,770, {Timeout: (2*Delay_Long+0)}) ; Plot # 36 - screen moves
+		Gosub Gather_On_Base_NEXT
+
+		Mouse_Click(445,583, {Timeout: 1*Delay_Short+0}) ; Plot # 45
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(367,542, {Timeout: 1*Delay_Short+0}) ; Plot # 43
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(272,493, {Timeout: 1*Delay_Short+0}) ; Plot # 41
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(485,510, {Timeout: 1*Delay_Short+0}) ; Plot # 44
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(380,462, {Timeout: 1*Delay_Short+0}) ; Plot # 42
+		Gosub Gather_On_Base_NEXT
+
+		Mouse_Drag(147, 854, 330, 649, {EndMovement: T, SwipeTime: 500})
+		Mouse_Click(307,424, {Timeout: 1*Delay_Short+0}) ; Plot # 29
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(400,376, {Timeout: 1*Delay_Short+0}) ; Plot # 30
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(360,293, {Timeout: 1*Delay_Short+0}) ; Plot # 28
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(167,412, {Timeout: 1*Delay_Short+0}) ; Plot # 26
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(273,354, {Timeout: 1*Delay_Short+0}) ; Plot # 27
+		Gosub Gather_On_Base_NEXT
+
+			Mouse_Click(110,600, {Timeout: (1*Delay_Long+0)}) ; Plot # 24 - screen moves
+			Mouse_Click(110,600, {Timeout: (2*Delay_Long+0)}) ; Plot # 24 - screen moves
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(34,540, {Timeout: (1*Delay_Long+0)}) ; Plot # 22 - screen moves
+			Mouse_Click(34,540, {Timeout: (2*Delay_Long+0)}) ; Plot # 22 - screen moves
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(160,680, {Timeout: 1*Delay_Short+0}) ; Plot # 25
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(110,644, {Timeout: (1*Delay_Long+0)}) ; Plot # 23 - screen moves
+			Mouse_Click(110,644, {Timeout: (2*Delay_Long+0)}) ; Plot # 23 - screen moves
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(70,593, {Timeout: (1*Delay_Long+0)}) ; Plot # 21 - screen moves
+			Mouse_Click(70,593, {Timeout: (2*Delay_Long+0)}) ; Plot # 21 - screen moves
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(167,826, {Timeout: 1*Delay_Short+0}) ; Plot # 19
+		Gosub Gather_On_Base_NEXT
+			Mouse_Click(86,770, {Timeout: (1*Delay_Long+0)}) ; Plot # 17 - screen moves
+			Mouse_Click(86,770, {Timeout: (2*Delay_Long+0)}) ; Plot # 17 - screen moves
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(310,780, {Timeout: 1*Delay_Short+0}) ; Plot # 20
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(202,710, {Timeout: 1*Delay_Short+0}) ; Plot # 18
+		Gosub Gather_On_Base_NEXT
+	}
+	return
+	
+	Gather_On_Base_NEXT:
+	{
+		Mouse_Click(530,1033, {Timeout: (3*Delay_Short+0)}) ; Tap next to speaker
+		resultObj := oGraphicSearch.search(BD01_Desert_building_Title_Graphic, optionsObjCoords)
+		if (resultObj)
+			Exit ; break ; Goto END_Gather_Base_RSS
+		return
+	}
+	
 }
 
 ; Claim Golden_Chest items
