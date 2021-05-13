@@ -308,6 +308,12 @@ while WinExist(FoundAppTitle)
 			End_Of_Day_Routine:
 			FULL_Q_and_A_Routine:
 			goto END_of_user_loop
+			
+			F10::
+				; A_Index++
+				Continue
+				Gosub Switch_Account
+			return			
 
 			END_of_user_loop:
 		}
@@ -4837,6 +4843,8 @@ if !Go_Back_To_Home_Screen()
 Gosub, Exit_Sub
 MsgBox, This MsgBox will never happen because of the EXIT.
 return
+
+
 
 Exit_Sub:
 Exit ; Terminate this subroutine as well as the calling subroutine.

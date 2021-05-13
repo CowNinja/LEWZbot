@@ -329,6 +329,8 @@ Key_Menu() {
 	Gui, Keys:add,text,, CTRL+F6 Reload MEmu
 	; Gui, Keys:add,text,, F7 Reset_Posit = %Resetting_Posit% ; or (%Resetting_Posit% ? "True" : "False")
 	Gui, Keys:add,text,, % "F7 Reset_Posit = " (Resetting_Posit ? "Yes" : "No")
+	Gui, Keys:add,text,, F9 Exit Subroutine
+	Gui, Keys:add,text,, F10 Switch user
 	Gui, Keys:add,text,, % "Pause Script = " (A_IsPaused ? "Yes" : "No")
 	Gui, Keys:show, x731 y700 w150 h250
 
