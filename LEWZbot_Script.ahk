@@ -224,8 +224,8 @@ while WinExist(FoundAppTitle)
 				; Check_For_Zombie_Popup()
 				; Select_App()
 				; Key_Menu()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
@@ -630,9 +630,9 @@ Switch_Account:
 	loop, 3
 	{
 		Mouse_Click(600,1200, {Timeout: (1*Delay_Long+0)}) ; "Settings" Button 
-		Mouse_Click(100, 330, {Timeout: (1*Delay_Long+0)}) ; "Account_Button_Graphic 
-		Mouse_Click(330, 880, {Timeout: (1*Delay_Long+0)}) ; "Switch_Button_Graphic 
-		Mouse_Click(315, 720, {Timeout: (1*Delay_Long+0)}) ; "WarZ_Button_Graphic 
+		Mouse_Click(100, 330, {Timeout: (1*Delay_Long+0)}) ; "Account" Button
+		Mouse_Click(330, 880, {Timeout: (1*Delay_Long+0)}) ; "Switch" Button
+		Mouse_Click(315, 720, {Timeout: (1*Delay_Long+0)}) ; "WarZ" Button
 		Mouse_Click(480,1150, {Timeout: (1*Delay_Long+0)}) ; "Other Account" button
 		
 		loop, 7
@@ -1353,7 +1353,8 @@ Activity_Center_Open()
 		{
 			if !Go_Back_To_Home_Screen()
 				Reload_MEmu()
-			Mouse_Drag(200, 350, 332, 350, {EndMovement: T, SwipeTime: 500})
+			; Mouse_Drag(200, 350, 332, 350, {EndMovement: T, SwipeTime: 500})
+			Mouse_Drag(200, 350, 332, 350, {EndMovement: F, SwipeTime: 500})
 			; Mouse_Drag(110, 536, 262, 537, {EndMovement: T, SwipeTime: 500})
 			Mouse_Click(137,580) ; Tap activity center
 			
@@ -1394,7 +1395,7 @@ Desert_Wonder:
 			Else
 				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
-		Mouse_Drag(350, 1100, 350, 500, {EndMovement: T, SwipeTime: 500})
+		Mouse_Drag(350, 900, 350, 500, {EndMovement: T, SwipeTime: 500})
 	}
 	goto Desert_Wonder_END
 
@@ -1504,9 +1505,9 @@ Benefits_Center:
 	
 	loop, 8
 	{
-		loop, 4
+		loop, 6
 			Gosub Benefits_Check_Tabs_New
-		gosub Swipe_Right2
+		gosub Swipe_Right
 	}
 
 	Goto Benefits_Center_END
@@ -1543,9 +1544,10 @@ Benefits_Center:
 	return
 	
 	Benefits_Check_Tabs_New:
-	Subroutine_Running := "Benefits_Check_Tabs_New"
-	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
+		Subroutine_Running := "Benefits_Check_Tabs_New"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+		oGraphicSearch := new graphicsearch()	
 		For Subroutine,Value in Subroutines_Text_Array
 		{
 			; GraphicSearch_Query := Value[1]
@@ -1553,7 +1555,6 @@ Benefits_Center:
 
 			If (Value[2])
 			{
-				oGraphicSearch := new graphicsearch()	
 				resultObj := oGraphicSearch.search(Value[1], optionsObjCoords)
 				if (resultObj)
 				{
@@ -1572,21 +1573,13 @@ Benefits_Center:
 	}
 
 	Swipe_Right:
-	loop, 4
-	{
-		; Benefits Center Swipe Right One position
-		Mouse_Drag(630, 187, 353, 187, {EndMovement: T, SwipeTime: 500})
-	}
-	return
-
-	Swipe_Right2:
 	{
 		; Benefits Center Swipe Right One position
 		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(550, 187, 200, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
+		Mouse_Drag(500, 187, 250, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 	return
 
@@ -3537,86 +3530,96 @@ Gather_On_Base_RSS:
 			DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
 		
-		Mouse_Click(405,653, {Timeout: 1*Delay_Short+0}) ; Plot # 50
+		Mouse_Click(160,282) ; Plot # 31
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(396,553, {Timeout: 1*Delay_Short+0}) ; Plot # 49
+		Mouse_Click(485,510) ; Plot # 44
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(397,453, {Timeout: 1*Delay_Short+0}) ; Plot # 47
+		Mouse_Click(239,233) ; Plot # 32
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(350,374, {Timeout: 1*Delay_Short+0}) ; Plot # 35
+		Mouse_Click(445,583) ; Plot # 45
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(330,280, {Timeout: 1*Delay_Short+0}) ; Plot # 34
+		Mouse_Click(250,337) ; Plot # 33
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(239,233, {Timeout: 1*Delay_Short+0}) ; Plot # 32
+		Mouse_Click(292,509) ; Plot # 46
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(305,587, {Timeout: 1*Delay_Short+0}) ; Plot # 48
+		Mouse_Click(330,280) ; Plot # 34
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(292,509, {Timeout: 1*Delay_Short+0}) ; Plot # 46
+		Mouse_Click(305,587) ; Plot # 48
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(250,337, {Timeout: 1*Delay_Short+0}) ; Plot # 33
+		Mouse_Click(350,374) ; Plot # 35
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(160,282, {Timeout: 1*Delay_Short+0}) ; Plot # 31
+		Mouse_Click(396,553) ; Plot # 49
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(137,817, {Timeout: 1*Delay_Short+0}) ; Plot # 40
+		Mouse_Click(397,453) ; Plot # 47
 		Gosub Gather_On_Base_NEXT
-
-			Mouse_Click(36,760, {Timeout: (1*Delay_Long+0)}) ; Plot # 39 - screen moves
-			Mouse_Click(36,760, {Timeout: (2*Delay_Long+0)}) ; Plot # 39 - screen moves
+		Mouse_Click(405,653) ; Plot # 50
 		Gosub Gather_On_Base_NEXT
-			Mouse_Click(29,726, {Timeout: (1*Delay_Long+0)}) ; Plot # 37 - screen moves
-			Mouse_Click(29,726, {Timeout: (2*Delay_Long+0)}) ; Plot # 37 - screen moves
-		Gosub Gather_On_Base_NEXT
-		Mouse_Click(130,827, {Timeout: 1*Delay_Short+0}) ; Plot # 38
-		Gosub Gather_On_Base_NEXT
-			Mouse_Click(40,770, {Timeout: (1*Delay_Long+0)}) ; Plot # 36 - screen moves
-			Mouse_Click(40,770, {Timeout: (2*Delay_Long+0)}) ; Plot # 36 - screen moves
+		Mouse_Click(137,817) ; Plot # 40
 		Gosub Gather_On_Base_NEXT
 
-		Mouse_Click(445,583, {Timeout: 1*Delay_Short+0}) ; Plot # 45
+		loop, 2
+			Mouse_Click(36,760) ; Plot # 39 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(367,542, {Timeout: 1*Delay_Short+0}) ; Plot # 43
+		loop, 2
+			Mouse_Click(29,726) ; Plot # 37 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(272,493, {Timeout: 1*Delay_Short+0}) ; Plot # 41
+		Mouse_Click(130,827) ; Plot # 38
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(485,510, {Timeout: 1*Delay_Short+0}) ; Plot # 44
+		loop, 2
+			Mouse_Click(40,770) ; Plot # 36 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
+
+		Mouse_Click(367,542) ; Plot # 43
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(380,462, {Timeout: 1*Delay_Short+0}) ; Plot # 42
+		Mouse_Click(272,493) ; Plot # 41
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(380,462) ; Plot # 42
 		Gosub Gather_On_Base_NEXT
 
 		Mouse_Drag(147, 854, 330, 649, {EndMovement: T, SwipeTime: 500})
-		Mouse_Click(307,424, {Timeout: 1*Delay_Short+0}) ; Plot # 29
+		Mouse_Click(167,412) ; Plot # 26
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(400,376, {Timeout: 1*Delay_Short+0}) ; Plot # 30
+		Mouse_Click(273,354) ; Plot # 27
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(360,293, {Timeout: 1*Delay_Short+0}) ; Plot # 28
+		Mouse_Click(360,293) ; Plot # 28
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(167,412, {Timeout: 1*Delay_Short+0}) ; Plot # 26
+		Mouse_Click(307,424) ; Plot # 29
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(273,354, {Timeout: 1*Delay_Short+0}) ; Plot # 27
+		Mouse_Click(400,376) ; Plot # 30
 		Gosub Gather_On_Base_NEXT
 
-			Mouse_Click(110,600, {Timeout: (1*Delay_Long+0)}) ; Plot # 24 - screen moves
-			Mouse_Click(110,600, {Timeout: (2*Delay_Long+0)}) ; Plot # 24 - screen moves
+		loop, 2
+			Mouse_Click(110,600) ; Plot # 24 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-			Mouse_Click(34,540, {Timeout: (1*Delay_Long+0)}) ; Plot # 22 - screen moves
-			Mouse_Click(34,540, {Timeout: (2*Delay_Long+0)}) ; Plot # 22 - screen moves
+		loop, 2
+			Mouse_Click(34,540) ; Plot # 22 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(160,680, {Timeout: 1*Delay_Short+0}) ; Plot # 25
+		Mouse_Click(160,680) ; Plot # 25
 		Gosub Gather_On_Base_NEXT
-			Mouse_Click(110,644, {Timeout: (1*Delay_Long+0)}) ; Plot # 23 - screen moves
-			Mouse_Click(110,644, {Timeout: (2*Delay_Long+0)}) ; Plot # 23 - screen moves
+		loop, 2
+			Mouse_Click(110,644) ; Plot # 23 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-			Mouse_Click(70,593, {Timeout: (1*Delay_Long+0)}) ; Plot # 21 - screen moves
-			Mouse_Click(70,593, {Timeout: (2*Delay_Long+0)}) ; Plot # 21 - screen moves
+		loop, 2
+			Mouse_Click(70,593) ; Plot # 21 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(167,826, {Timeout: 1*Delay_Short+0}) ; Plot # 19
+
+		Mouse_Click(167,826) ; Plot # 19
 		Gosub Gather_On_Base_NEXT
-			Mouse_Click(86,770, {Timeout: (1*Delay_Long+0)}) ; Plot # 17 - screen moves
-			Mouse_Click(86,770, {Timeout: (2*Delay_Long+0)}) ; Plot # 17 - screen moves
+		loop, 2
+			Mouse_Click(86,770) ; Plot # 17 - screen moves
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(310,780, {Timeout: 1*Delay_Short+0}) ; Plot # 20
+		Mouse_Click(310,780) ; Plot # 20
 		Gosub Gather_On_Base_NEXT
-		Mouse_Click(202,710, {Timeout: 1*Delay_Short+0}) ; Plot # 18
+		Mouse_Click(202,710) ; Plot # 18
+		Gosub Gather_On_Base_NEXT
+		Mouse_Click(117,675) ; Plot # 16
 		Gosub Gather_On_Base_NEXT
 	}
 	return
@@ -3644,74 +3647,47 @@ Golden_Chest:
 	if !Activity_Center_Open()
 		goto Golden_Chest_END
 
-	Golden_Chest_Next:
-	Golden_Chest_Text := ["Golden"]
+	oGraphicSearch := new graphicsearch()	
 	loop, 3
 	{
-		; Capture_Screen_Text := OCR([181, 596, 80, 33], "eng") ; Check Activity Center item 01
-		if Search_Captured_Text_OCR(["Golden"], {Pos: [180, 596], Size: [120, 33]}).Found
+		loop, 50
 		{
-			Mouse_Click(180, 596) ; Tap Activity Center item 01
-			goto Golden_Chest_Open_for_free_button
+			resultObj := oGraphicSearch.search(91A_GoldenChest_Button_Graphic, optionsObjCoords)
+			if (resultObj)
+			{
+				Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Desert Wonder
+				goto Golden_Chest_Continue_Tab
+			}
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
-
-		; Capture_Screen_Text := OCR([181, 790, 80, 33], "eng") ; Check Activity Center item 02
-		if Search_Captured_Text_OCR(["Golden"], {Pos: [180, 790], Size: [120, 33]}).Found
-		{
-			Mouse_Click(180, 793) ; Tap Activity Center item 02
-			goto Golden_Chest_Open_for_free_button
-		}
-
-		; Capture_Screen_Text := OCR([181, 985, 80, 33], "eng") ; Check Activity Center item 03
-		if Search_Captured_Text_OCR(["Golden"], {Pos: [180, 985], Size: [120, 33]}).Found
-		{
-			Mouse_Click(180, 989) ; Tap Activity Center item 03
-			goto Golden_Chest_Open_for_free_button
-		}
-
-		; Capture_Screen_Text := OCR([181, 1182, 80, 33], "eng") ; Check Activity Center item 04
-		if Search_Captured_Text_OCR(["Golden"], {Pos: [180, 1182], Size: [120, 33]}).Found
-		{
-			Mouse_Click(180, 1182) ; Tap Activity Center item 04
-			goto Golden_Chest_Open_for_free_button
-		}
-	}
-	; MsgBox, 0, Pause, Tap Golden Chest`, Press OK to resume (No Timeout)
-
-	Golden_Chest_Open_for_free_button:
-	DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
-	loop, 2
-	{
-		loop, 3
-			if Search_Captured_Text_OCR(["Golden Chest"]).Found
-				goto Golden_Chest_Finish
-
-		; MsgBox, 0, Pause, Tap Golden Chest`, Press OK to resume (No Timeout)
+		Mouse_Drag(350, 900, 350, 500, {EndMovement: T, SwipeTime: 500})
 	}
 	goto Golden_Chest_END
 
-	Golden_Chest_Finish:
-	; DllCall("Sleep","UInt",(rand_wait + 4*Delay_Long+0))
-	if Pause_Script
-		MsgBox, 0, Pause, Press OK to resume (No Timeout)
+	Golden_Chest_Continue_Tab:
+	; MsgBox, 0, , Capture_Screen_Text:"%Capture_Screen_Text%"`nSearch_Text_Array:"%Search_Text_Array%"
 
-	Golden_Chest_Text := ["free"]
+	; Find single occurence of image, return true or false	
+	oGraphicSearch := new graphicsearch()
+	Loop, 50
+	{
+		resultObj := oGraphicSearch.search(91A0_GoldenChest_Title_Graphic, optionsObjCoords)
+		if (resultObj)
+			goto Golden_Chest_Next
+		Else
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
+	}
+	goto Golden_Chest_END
 
-	; Capture_Screen_Text := OCR([150, 1182, 40, 30], "eng") ; Check if "Open for free" button
-	if Search_Captured_Text_OCR(["free"], {Pos: [150, 1182], Size: [40, 21]}).Found
-		Mouse_Click(125, 1200, {Timeout: (5*Delay_Medium+0)}) ; Tap "Open for free" button
-		
-	loop, 2
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(585,250) ; Tap outside claim banner
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(357,495, {Timeout: (1*Delay_Long+0)}) ; Tap Silver tab
-
-	; Capture_Screen_Text := OCR([150, 1182, 85, 30], "eng") ; Check if "Open for free" button
-	if Search_Captured_Text_OCR(Golden_Chest_Text, {Pos: [150, 1182], Size: [40, 21]}).Found
-		Mouse_Click(125, 1200, {Timeout: (5*Delay_Medium+0)}) ; Tap "Open for free" button
-	loop, 2
-		Mouse_Click(320,70) ; Tap top title bar ; Mouse_Click(585,250) ; Tap outside claim banner
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+	Golden_Chest_Next:
+	; loop, 500
+	; {
+	;	Mouse_Click(100,475, {Timeout: 0}) ; Tap Bronze tab
+		Gosub Golden_Chest_Open_for_free_button
+		Mouse_Click(350,475, {Timeout: 0}) ; Tap Silver tab
+		Gosub Golden_Chest_Open_for_free_button
+	; }
 
 	Mouse_Click(633,600, {Timeout: (1*Delay_Long+0)}) ; Tap rankings
 	Mouse_Click(157,367, {Timeout: (1*Delay_Long+0)}) ; Tap Open box
@@ -3720,6 +3696,26 @@ Golden_Chest:
 	Golden_Chest_END:
 	if !Go_Back_To_Home_Screen()
 		Reload_MEmu()
+	return
+	
+	Golden_Chest_Open_for_free_button:
+	; Find single occurence of image, return true or false	
+	oGraphicSearch := new graphicsearch()
+	Loop, 50
+	{
+		resultObj := oGraphicSearch.search(91A1_Free_title_Graphic, optionsObjCoords)
+		if (resultObj)
+		{
+			loop, % resultObj.Count()
+				Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y, {Timeout: (1*Delay_Long+0)})
+			; Mouse_Click(125, 1200, {Timeout: (1*Delay_Long+0)}) ; Tap "Open for free" button
+			loop, 2
+				Mouse_Click(320,70, {Timeout: (1*Delay_Long+0)}) ; Tap top title bar
+			break
+		}
+		Else
+			Mouse_Click(320,70, {Timeout: (1*Delay_Short+0)}) ; Tap top title bar
+	}
 	return
 }
 
