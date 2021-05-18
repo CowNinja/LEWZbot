@@ -127,7 +127,7 @@ while WinExist(FoundAppTitle)
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
 			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -224,8 +224,8 @@ while WinExist(FoundAppTitle)
 				; Check_For_Zombie_Popup()
 				; Select_App()
 				; Key_Menu()
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				goto END_of_user_loop
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; goto END_of_user_loop
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
@@ -244,7 +244,7 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-					Gosub Golden_Chest
+				;	Gosub Golden_Chest
 				Gosub Speaker_Help
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -364,6 +364,7 @@ Reload_MEmu()
 				Gui, Status:add,text,, MEmu finished Loaded!!
 				Gui, Status:show, x731 y0 w300 h500
 				GUI_Count++
+				Gosub Elivate_program
 				return 1
 			}
 			Else
@@ -449,7 +450,7 @@ Launch_LEWZ()
 			}
 		}
 		Else
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 			
 		Login_Password_PIN_Enter()
 	}
@@ -461,7 +462,6 @@ Launch_LEWZ()
 	Launch_LEWZ_Continue:	
 	Loop, 10
 	{
-		
 		Login_Password_PIN_Enter()
 		if Go_Back_To_Home_Screen()
 		{
@@ -498,9 +498,9 @@ Go_Back_To_Home_Screen()
 	loop, 3
 	{
 		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		; DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
-	DllCall("Sleep","UInt",(3*Delay_Micro+0))
+	DllCall("Sleep","UInt",(1*Delay_Short+0))
 
 	Go_Back_To_Home_Screen_OCR_Quit:
 	oGoBackSearch := new graphicsearch()	
@@ -516,8 +516,8 @@ Go_Back_To_Home_Screen()
 			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
 				
 		Text_To_Screen("{F5}")
-		; DllCall("Sleep","UInt",(3*Delay_Short+0))
-		DllCall("Sleep","UInt",(5*Delay_Micro+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry	
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
@@ -531,8 +531,9 @@ Go_Back_To_Home_Screen()
 			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
 
 		Text_To_Screen("{F5}")
-		; DllCall("Sleep","UInt",(3*Delay_Short+0))
-		DllCall("Sleep","UInt",(5*Delay_Micro+0))
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(3*Delay_Micro+0))
+		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry
 	}
 	; goto Reload_LEWZ_routine	; Gosub Reload_LEWZ_routine
@@ -1483,7 +1484,7 @@ Benefits_Center:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
+	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, False]
 	, Daily_Signin : [923_DailySignin_Button_Graphic, True]
 	, Monthly_Package_Collect : [924_MonthlyPackage_Button_Graphic, True]
 	, Monthly_Signin : [925_MonthlySignin_Button_Graphic, True]
@@ -1496,16 +1497,16 @@ Benefits_Center:
 
 	loop, 2
 		Mouse_Click(625,310) ; Tap Benefits Center
-	DllCall("Sleep","UInt",(1*Delay_Long+0)) ; wait for Benefits Center to load
+	; DllCall("Sleep","UInt",(1*Delay_Long+0)) ; wait for Benefits Center to load
 	Gosub Benefits_Center_Reload
 	
 	Gosub Benefits_Check_Tabs_New
 	Go_Back_To_Home_Screen()
 	Gosub Benefits_Center_Reload
 	
-	loop, 8
+	loop, 12
 	{
-		loop, 6
+		loop, 10
 			Gosub Benefits_Check_Tabs_New
 		gosub Swipe_Right
 	}
@@ -1518,7 +1519,7 @@ Benefits_Center:
 	oGraphicSearch := new graphicsearch()	
 	loop, 5
 	{
-		loop, 40
+		loop, 20
 		{
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
@@ -1532,9 +1533,19 @@ Benefits_Center:
 		Gosub Check_Window_Geometry
 		if !Go_Back_To_Home_Screen()
 			Reload_MEmu()
-		loop, 2
-			Mouse_Click(625,310, {Timeout: 0}) ; Tap Benefits Center
+		loop, 4
+			Mouse_Click(625,310, {Timeout: (2*Delay_Short+0)}) ; Tap Benefits Center
 		; DllCall("Sleep","UInt",(4*Delay_Long+0))
+		
+		loop, 20
+		{
+			; Find single occurence of image, return true or false
+			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
+			if (resultObj)
+				return
+			Else
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
+		}
 	}
 	return
 
@@ -1578,7 +1589,7 @@ Benefits_Center:
 		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(500, 187, 250, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
+		Mouse_Drag(500, 187, 300, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
 		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 	return
@@ -1617,6 +1628,9 @@ Benefits_Center:
 
 		Mouse_Click(500,1200) ; Tap Claim
 
+		loop, 12
+				Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
+
 		Monthly_Package_Collect_Run := False
 		return
 	}
@@ -1638,6 +1652,9 @@ Benefits_Center:
 		Mouse_Click(366,680, {Timeout: (3*Delay_Short+0)}) ; Select max redeem slide bar
 		Mouse_Click(336,780, {Timeout: (3*Delay_Short+0)}) ; Select Exchange button
 
+		loop, 12
+				Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
+
 		Warrior_Trial_Run := False
 		return
 	}
@@ -1651,6 +1668,9 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(560,550) ; Tap Claim
+
+		loop, 12
+				Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
 
 		Single_Cumulation_Run := False
 		return
@@ -1677,6 +1697,9 @@ Benefits_Center:
 				Mouse_Click(320,70, {Timeout: (2*Delay_Short+0)}) ; Tap  title bar
 				Reverse_Index--
 			}
+			
+			loop, 12
+				Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
 		}
 
 		; Claim_Buttons_Run := False
@@ -1692,46 +1715,26 @@ Benefits_Center:
 		Subroutine_Running := "Daily_Signin"
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		Mouse_Click(103,553, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 1
-
 		Mouse_Click(343,560, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 2
-
 		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
-
 		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
-
 		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
-
 		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
-
 		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 3
-
 		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
-
 		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
-
 		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
-
 		Mouse_Click(556,819, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 4
-
 		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
-
 		Mouse_Click(334,819, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 5
-
 		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
-
 		Mouse_Click(109,809, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 6
-
 		Mouse_Click(330,1230, {Timeout: (2*Delay_Short+0)}) ; Tap Bottom Middle
-
 		Mouse_Click(330,1035, {Timeout: (2*Delay_Short+0)}) ; Daily Sign-In Click Day 7
-
 		Mouse_Click(560,550, {Timeout: (2*Delay_Short+0)}) ; Select B Reward
-
 		Mouse_Click(343,1125, {Timeout: (2*Delay_Short+0)}) ; Tap "OK"
-
 		loop, 12
 			Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
-
 		loop, 7
 			Mouse_Click(320,70, {Timeout: (1*Delay_Short+0)}) ; Tap top title bar
 
@@ -1772,7 +1775,6 @@ Benefits_Center:
 	Collect_and_Clear:
 	{
 		Mouse_Click(340,1000, {Timeout: (2*Delay_Short+0)}) ; Tap Collect Button
-
 		Mouse_Click(340,40, {Timeout: (2*Delay_Short+0)}) ; 1215) ; Tap to Clear
 
 		return
@@ -1787,28 +1789,23 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(87,430, {Timeout: (8*Delay_Short+0)}) ; Tap Free Chest
-
 		Mouse_Click(52,682, {Timeout: (1*Delay_Short+0)}) ; Select 1,000 Diamonds
-
 		Mouse_Click(517,680, {Timeout: (1*Delay_Short+0)}) ; Select Silver Medal
 
 		; Swipe Up X times
 		loop, 4
-			Mouse_Drag(300, 1030, 300, 650, {EndMovement: F, SwipeTime: 1000})
+			Mouse_Drag(300, 1030, 300, 650, {EndMovement: F, SwipeTime: 500})
 
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 
 		Mouse_Click(205,770, {Timeout: (1*Delay_Short+0)}) ; Select 1,000 Vip Points X 10
-
 		Mouse_Click(520,960, {Timeout: (1*Delay_Short+0)}) ; Select 500K Strength Abilities Exp
 
 		Mouse_Click(60,960) ; Select Super Officer
 		; DllCall("Sleep","UInt",(1*Delay_Short+0))
 
 		loop, 2
-		{
 			Mouse_Click(349,1207, {Timeout: (1*Delay_Short+0)}) ; Tap Collect
-		}
 
 		Selection_Chest_Run := False
 

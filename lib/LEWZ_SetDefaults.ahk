@@ -606,7 +606,7 @@ Select_App()
     Global 821_World_Button_Graphic := "|<821_World_Button>*70$17.01y03w07s0Dk4DUA7kMDkyDlzzU7zU0zU0zU1y03s07U08"
     Global 822_Home_Button_Graphic := "|<822_Home_Button>*65$19.zk0Ts3zw1zy0zz0BzU0zk0Ds0Dw07y03y00z00TU0E"
 ;  Global 83_ActiveSkill_Button_Graphic := "|<83_ActiveSkill_Button>*240$42.DzzzzzzbzzzzzwrzTzzzksDzzzzUw7zzzzVw3tzzy7z1xzzw7z0zTzsDzUDjzkTzs7rzUzzw3uz1zzy1zw3zzz0Ts7zU"
-    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>*46$16.07U0C3kMT1Vz67wM7zU3y03sU3XU6DkMzVXz67sM01U0C01sU"
+    Global 830_ActiveSkill_Title_Graphic := "|<830_ActiveSkill_Title>*47$31.Vzs88Ezw448Ty224Dz1127U0UV3U0EEVU088EUA4480S2240D1120DUUV07kEEU1s88E0w448EC224A311271UUV3U0EEVs088Ey0448"
     Global 831_Blue_Use_Button_Graphic := "|<831_Blue_Use_Button>*60$10.Dkz3wDkz3wDkz3wDkz3wDkS00U"
     Global 832_Green_Use_Button_Graphic := "|<832_Green_Use_Button>#89@0.34$10.030w3kD0w3kD0w3kD0w3kD0w3kDzs"
       Global 8331_Instructor_Title_Graphic := "|<8331_Instructor_Title>*117$15.1k0MM0Q0w84C0S467060730303U01k1y0zk7z2zwrzw"
