@@ -1505,12 +1505,24 @@ Benefits_Center:
 	
 	loop, 12
 	{
-		loop, 10
+		loop, 6
 			Gosub Benefits_Check_Tabs_New
 		gosub Swipe_Right
 	}
 
 	Goto Benefits_Center_END
+
+	Swipe_Right:
+	{
+		; Benefits Center Swipe Right One position
+		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
+		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
+		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
+		Mouse_Drag(500, 187, 350, 187, {EndMovement: T, SwipeTime: 200}) ; 324 is half
+		; Mouse_Drag(500, 187, 300, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
+	}
+	return
 
 	Benefits_Center_Reload:
 	Subroutine_Running := "Benefits_Center_Reload"
@@ -1518,7 +1530,7 @@ Benefits_Center:
 	oGraphicSearch := new graphicsearch()	
 	loop, 5
 	{
-		loop, 20
+		loop, 10
 		{
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
@@ -1536,7 +1548,7 @@ Benefits_Center:
 			Mouse_Click(625,310, {Timeout: (2*Delay_Short+0)}) ; Tap Benefits Center
 		; DllCall("Sleep","UInt",(4*Delay_Long+0))
 		
-		loop, 20
+		loop, 30
 		{
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
@@ -1581,17 +1593,6 @@ Benefits_Center:
 		}
 		return
 	}
-
-	Swipe_Right:
-	{
-		; Benefits Center Swipe Right One position
-		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
-		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
-		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(500, 187, 300, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
-		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
-	}
-	return
 
 	Select_Reward:
 	{
@@ -1788,17 +1789,17 @@ Benefits_Center:
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 
 		Mouse_Click(87,430, {Timeout: (8*Delay_Short+0)}) ; Tap Free Chest
-		Mouse_Click(52,682, {Timeout: (1*Delay_Short+0)}) ; Select 1,000 Diamonds
-		Mouse_Click(517,680, {Timeout: (1*Delay_Short+0)}) ; Select Silver Medal
+		Mouse_Click(52,682, {Timeout: (2*Delay_Short+0)}) ; Select 1,000 Diamonds
+		Mouse_Click(517,680, {Timeout: (2*Delay_Short+0)}) ; Select Silver Medal
 
 		; Swipe Up X times
-		loop, 4
-			Mouse_Drag(300, 1030, 300, 650, {EndMovement: F, SwipeTime: 500})
+		loop, 2
+			Mouse_Drag(300, 1030, 300, 650, {EndMovement: F, SwipeTime: 300})
 
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 
-		Mouse_Click(205,770, {Timeout: (1*Delay_Short+0)}) ; Select 1,000 Vip Points X 10
-		Mouse_Click(520,960, {Timeout: (1*Delay_Short+0)}) ; Select 500K Strength Abilities Exp
+		Mouse_Click(205,770, {Timeout: (2*Delay_Short+0)}) ; Select 1,000 Vip Points X 10
+		Mouse_Click(520,960, {Timeout: (2*Delay_Short+0)}) ; Select 500K Strength Abilities Exp
 
 		Mouse_Click(60,960) ; Select Super Officer
 		; DllCall("Sleep","UInt",(1*Delay_Short+0))

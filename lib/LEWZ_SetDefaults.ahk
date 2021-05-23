@@ -686,7 +686,7 @@ Select_App()
         Global B2241_Shield_Button_Graphic := "|<B2241_Shield_Button>*30$29.03lzk03XzUQ77z1w60C3wA0A3ws0M0Dk0E07VkU077V7k6D27sAS4DsMw8DklsED1XkU037V00CD28"
           Global B22410_Shield_Title_Graphic := "|<B22410_Shield_Title>*38$34.01sTzUQ3Vzy7wC7zzTkMETlzVU0S7yC01s3zs03U3zUw601y7kM03sT1X07Vw6DUC7kMbUMT1Wz1Uw67y67kMTkMT1Vz0Vw600C7kM01sT1W"
 ;          Global B22411_Shield_Ends_Title_Graphic := "|<B22411_Shield_Ends_Title>0xF5F5F5@0.21$40.zw003U3zk00C0A09s0sMk1zlzbv07zDyzzySCtvXztkz3iD073wCzg0QDktzk1kz3Vz073wCkzzQCxvbzxkvzjy"
-          Global B22412_GetUse_Button_Graphic := "|<B22412_GetUse_Button>*51$31.U3zzlU0zzslwTzwMyDUM0zbU40TzU20Dzlklb0kwMnU80ANk406Az2036DV3Q03kUkE00s0E80S084"
+          Global B22412_GetUse_Button_Graphic := "|<B22412_GetUse_Button>*47$29.01zzs61zzkz3wD3y7U4DyC00TzwAAw0kwNs0U0Hk100bz2017w002Ds0S470E0000U0001U04"
           Global B22413_Replace_OK_Button_Graphic := "|<B22413_Replace_OK_Button>*62$25.U3lw00sw0wQQ8y6AAz346TlW7Dsk7bwM3nyA0tz64Az366DVXV3lls00sw80AQ4"
 ;    Global B34_CommandCtr_Button_Graphic := "|<B34_CommandCtr_Button>*100$69.zrzjTzzzzw5DzrzXzzzzz0QSnNkzzzzzU3rxskTzzzzk02ywMDzzzzs827mQ3zzzU63k0za/zyzw00607z9zzfzs0000zwzzujzk0007znzzqzzXk00zy0zzvzzzU07zc2jzzzzw00zzU0zxzzz007zw03zrzzs00zzk0DzTzzU07zx00zzzzw00zz403zzzzU27zwk0Dzzzw0Ezzz01zzzzU07zzs07zzzw00zzzU0TzzzU07zzy03zzzw0Czzzs0DzzzU6I"
 ;        ; B3420_ActiveSkill_Title
