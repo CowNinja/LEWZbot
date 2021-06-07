@@ -17,7 +17,8 @@ SetBatchLines -1
 
 ; global App_Title := "(LEWZ001)"
 ; global App_Title := "(LEWZ002)"
-global App_Title := "(LEWZ003)"
+; global App_Title := "(LEWZ003)"
+global App_Title := "(MAIN)"
 ; global App_Title := "(OLD_03_LEWZ)"
 global App_Control := "Qt5QWindowIcon19"
 	
