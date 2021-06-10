@@ -178,39 +178,40 @@ while WinExist(FoundAppTitle)
 				; DEBUG / Troubleshooting block - BEGIN
 				; add/remove or uncomment routines to check them
 				; ******************************************
-				; gosub Game_Start_popups
-				; gosub Switch_Account
-				; gosub Peace_Shield
+				; Gosub Speaker_Help
+				; gosub Active_Skill
+				; gosub Adventure_Missions
+				; gosub Alliance_Boss_Feed
+				; gosub Alliance_Wages
+				; gosub Benefits_Center
+				; gosub Check_Window_Geometry
+				; gosub Collect_Cafeteria
+				; gosub Collect_Chips_Underground
 				; gosub Collect_Collisions
 				; gosub Collect_Equipment_Crafting
 				; gosub Collect_Recruits
-				; gosub Collect_Runes
 				; gosub Collect_Red_Envelopes
-				; gosub Desert_Wonder
-				; gosub Benefits_Center
-				; gosub Speaker_Help
-				; gosub Drop_Zone
-				; gosub Adventure_Missions
-				; gosub Collect_Cafeteria
-				; gosub Active_Skill
-				; gosub Collect_Chips_Underground
-				; gosub Reserve_Factory
-				; gosub Donate_Tech
+				; gosub Collect_Runes
 				; gosub Depot_Rewards
-				; gosub VIP_Shop
-				; gosub Mail_Collection
-				; gosub Alliance_Boss_Feed
-				; gosub Alliance_Wages
-				; gosub Gather_Resources
 				; gosub Desert_Oasis
+				; gosub Desert_Wonder
+				; gosub Donate_Tech
+				; gosub Drop_Zone
+				; gosub Game_Start_popups
 				; gosub Gather_On_Base_RSS
-				; gosub Golden_Chest
-				; gosub Send_Mail_To_Boss
-				; gosub Send_Message_In_Chat
+				; gosub Gather_Resources
 				; gosub Get_Inventory
 				; gosub Get_User_Info
 				; gosub Get_User_Location
-				; gosub Check_Window_Geometry
+				; gosub Golden_Chest
+				; gosub Mail_Collection
+				; gosub Peace_Shield
+				; gosub Reserve_Factory
+				; gosub Send_Mail_To_Boss
+				; gosub Send_Message_In_Chat
+				; gosub Speaker_Help
+				; gosub Switch_Account
+				; gosub VIP_Shop
 				; Reset_Posit()
 				; Reload_MEmu()
 				; Launch_LEWZ()
@@ -230,6 +231,7 @@ while WinExist(FoundAppTitle)
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
+				; goto DEBUG_SKIP
 
 				; ****************************
 				; ** Position dependant **
@@ -272,8 +274,8 @@ while WinExist(FoundAppTitle)
 					Gosub Mail_Collection
 					Gosub Alliance_Wages
 				}
-				if !Desert_Event
-					Gosub Gather_On_Base_RSS
+				
+				; DEBUG_SKIP:
 
 				if Desert_Event
 					Gosub Desert_Oasis
@@ -290,6 +292,8 @@ while WinExist(FoundAppTitle)
 							Gosub Desert_Wonder
 				Gosub Speaker_Help
 				; Gosub Collect_Red_Envelopes
+				if !Desert_Event
+					Gosub Gather_On_Base_RSS
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
@@ -507,7 +511,7 @@ Go_Back_To_Home_Screen()
 	loop, 3
 	{
 		Text_To_Screen("{F5}")
-		; DllCall("Sleep","UInt",(1*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
 	DllCall("Sleep","UInt",(1*Delay_Short+0))
 
@@ -750,7 +754,7 @@ Account_Loading:
 		}
 		*/
 		
-		AccountLoading := Search_Captured_Text_OCR(["Arms","Supply","Weekly","Deal","Doomsday","Invest","News"], {Pos: [200, 40], Size: [300, 42]})
+		AccountLoading := Search_Captured_Text_OCR(["Arms","Supply","Weekly","Deal","Doomsday","Invest","News","Soul","Hunter","Iron","Wall","Racer","Reynolds","Mutation","Master","Dio"], {Pos: [200, 40], Size: [300, 42]})
 		
 		if (AccountLoading.Found)
 		{
@@ -988,6 +992,10 @@ Peace_Shield:
 		if RegExMatch(Shield_Ends,"\d+d",Shield_Days)
 			RegExMatch(Shield_Days,"\d+",Shield_DD)
 			
+		; if shiled length is greater than, or equal to, 1 day, skip the rest.
+		if (Shield_DD >= 1)
+			goto Peace_Shield_END
+			
 		; RegExMatch(Shield_Ends,"(\d\d)\:*\d\d\:*\d\d",Shield_HH)
 		; RegExMatch(Shield_Ends,"\d\d\:*(\d\d)\:*\d\d",Shield_MM)
 		; RegExMatch(Shield_Ends,"\d\d\:*\d\d\:*(\d\d)",Shield_SS)
@@ -1164,7 +1172,7 @@ Collect_Collisions:
 		Mouse_Click(515,375) ; Tap Collision
 			
 		oGraphicSearch := new graphicsearch()	
-		loop, 20
+		loop, 10
 		{
 			resultObj := oGraphicSearch.search(B3450_Collision_Title_Graphic, optionsObjCoords)
 			if (resultObj)
@@ -1213,7 +1221,7 @@ Collect_Equipment_Crafting:
 		Mouse_Click(430,390) ; Tap Craft
 			
 		oGraphicSearch := new graphicsearch()	
-		loop, 20
+		loop, 10
 		{
 			resultObj := oGraphicSearch.search(B3440_Craft_Title_Graphic, optionsObjCoords)
 			if (resultObj)
@@ -1263,7 +1271,7 @@ Collect_Recruits:
 		Mouse_Click(350,375) ; Tap Recruit
 			
 		oGraphicSearch := new graphicsearch()	
-		loop, 20
+		loop, 10
 		{
 			resultObj := oGraphicSearch.search(B3430_Recruit_Title_Graphic, optionsObjCoords)
 			if (resultObj)
@@ -1315,7 +1323,7 @@ Collect_Runes:
 		Mouse_Click(570,340) ; Rune Extraction
 			
 		oGraphicSearch := new graphicsearch()	
-		loop, 20
+		loop, 10
 		{
 			resultObj := oGraphicSearch.search(B3460_RuneExtract_Title_Graphic, optionsObjCoords)
 			if (resultObj)
@@ -1512,7 +1520,7 @@ Benefits_Center:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, False]
+	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
 	, Claim_Buttons : [9221_Claim_Button_Graphic, True]
 	, Claim_Buttons : [9222_Claim_Button_Graphic, True]
 	, Daily_Signin : [923_DailySignin_Button_Graphic, True]
@@ -1534,7 +1542,7 @@ Benefits_Center:
 	
 	loop, 12
 	{
-		loop, 5
+		loop, 2
 			Gosub Benefits_Check_Tabs_New
 		gosub Swipe_Right
 	}
@@ -1811,7 +1819,7 @@ Benefits_Center:
 	Subroutine_Running := "Battle_Honor_Collect"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
-		loop, 4
+		; loop, 4
 		{
 			Gosub Battle_Honor_Click
 			Gosub Battle_Honor_Click
@@ -1868,7 +1876,7 @@ Speaker_Help:
 		}
 		Else
 		{
-			Mouse_Click(630,1033, {Timeout: (1*Delay_Long+0)}) ; Tap speaker/help
+			Mouse_Click(630,1033, {Timeout: (1*Delay_Medium+0)}) ; Tap speaker/help
 		}
 	}
 	
@@ -2086,21 +2094,11 @@ Reserve_Factory:
 	if Pause_Script
 		MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
-	Mouse_Click(110,340, {Timeout: (1*Delay_Long+0)}) ; Tap Reserve Factory Icon
-	
-	oGraphicSearch := new graphicsearch()	
-	Loop, 20
-	{
-		resultObj := oGraphicSearch.search(FactoryWorld_Graphic, optionsObjCoords)
-		if (resultObj)
-			break
-		Else
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-	}
+	Mouse_Click(110,340, {Timeout: (6*Delay_Long+0)}) ; Tap Reserve Factory Icon
 
 	loop, 4
 	{
-		Mouse_Click(344,590, {Timeout: (3*Delay_Short+0)}) ; Tap Reserve Factory On World Map
+		Mouse_Click(344,590, {Timeout: (4*Delay_Short+0)}) ; Tap Reserve Factory On World Map
 	}
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 
@@ -2112,16 +2110,6 @@ Reserve_Factory:
 		Gosub Alliance_Help_Open
 
 		Mouse_Click(119,336, {Timeout: (1*Delay_Long+0)}) ; Tap Reserve Factory Icon
-		
-		oGraphicSearch := new graphicsearch()	
-		Loop, 20
-		{
-			resultObj := oGraphicSearch.search(FactoryWorld_Graphic, optionsObjCoords)
-			if (resultObj)
-				break
-			Else
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-		}
 
 		Mouse_Click(240,613, {Timeout: (1*Delay_Long+0)}) ; Tap Info Menu On Reserve Factory On World Map
 
@@ -3759,9 +3747,9 @@ Golden_Chest:
 		goto Golden_Chest_END
 
 	oGraphicSearch := new graphicsearch()	
-	loop, 3
+	loop, 5
 	{
-		loop, 50
+		loop, 10
 		{
 			resultObj := oGraphicSearch.search(91A_GoldenChest_Button_Graphic, optionsObjCoords)
 			if (resultObj)
@@ -3772,7 +3760,7 @@ Golden_Chest:
 			Else
 				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
-		Mouse_Drag(350, 900, 350, 500, {EndMovement: T, SwipeTime: 500})
+		Mouse_Drag(350, 800, 350, 600, {EndMovement: T, SwipeTime: 500})
 	}
 	goto Golden_Chest_END
 
@@ -3801,8 +3789,8 @@ Golden_Chest:
 	; }
 
 	Mouse_Click(633,600, {Timeout: (1*Delay_Long+0)}) ; Tap rankings
-	Mouse_Click(157,367, {Timeout: (1*Delay_Long+0)}) ; Tap Open box
-	Mouse_Click(330,1000, {Timeout: (1*Delay_Long+0)}) ; Tap Collect Rewards
+	Mouse_Click(157,367, {Timeout: (1*Delay_Medium+0)}) ; Tap Open box
+	Mouse_Click(330,1000, {Timeout: (1*Delay_Medium+0)}) ; Tap Collect Rewards
 
 	Golden_Chest_END:
 	if !Go_Back_To_Home_Screen()
@@ -3812,7 +3800,7 @@ Golden_Chest:
 	Golden_Chest_Open_for_free_button:
 	; Find single occurence of image, return true or false	
 	oGraphicSearch := new graphicsearch()
-	Loop, 50
+	Loop, 10
 	{
 		resultObj := oGraphicSearch.search(91A1_Free_title_Graphic, optionsObjCoords)
 		if (resultObj)
