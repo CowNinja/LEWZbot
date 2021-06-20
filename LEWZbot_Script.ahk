@@ -118,6 +118,7 @@ while WinExist(FoundAppTitle)
 			else if (vRet = "No")
 				goto END_of_user_loop
 
+			; Login_Password_PIN_BruteForce()
 			; loop, 2
 			if !Go_Back_To_Home_Screen()
 				Reload_LEWZ()
@@ -126,8 +127,8 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
-			CSB_Event := True ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			CSB_Event := False ; True ; True if CSB Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || if Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -179,11 +180,30 @@ while WinExist(FoundAppTitle)
 				; add/remove or uncomment routines to check them
 				; ******************************************
 				; Gosub Speaker_Help
-				; gosub Active_Skill
 				; gosub Adventure_Missions
 				; gosub Alliance_Boss_Feed
-				; gosub Alliance_Wages
+				; gosub Speaker_Help
+				; gosub Active_Skill
+				
+				
+				; gosub Speaker_Help
 				; gosub Benefits_Center
+				/*
+				gosub Speaker_Help
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				Go_Back_To_Home_Screen()
+				gosub Alliance_Wages
+				gosub Active_Skill
+				gosub Speaker_Help
+				; Go_Back_To_Home_Screen()
+				gosub Gather_Resources
+				goto END_of_user_loop
+				*/
+				
+				; Goto_Coordinates(591,64)
+				; Goto_Coordinates()
+				
+				; Login_Password_PIN_BruteForce()
 				; gosub Check_Window_Geometry
 				; gosub Collect_Cafeteria
 				; gosub Collect_Chips_Underground
@@ -247,8 +267,8 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
-				if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-					Gosub Golden_Chest
+				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; 	Gosub Golden_Chest
 				Gosub Speaker_Help
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -263,20 +283,23 @@ while WinExist(FoundAppTitle)
 				; Gosub Donate_tech
 				Gosub Speaker_Help
 
-				;if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; if (Routine = "New_Day")
 				{
 					Gosub VIP_Shop
 					Gosub Benefits_Center
 					Gosub Alliance_Boss_Feed
 				}
 				Gosub Speaker_Help
-				;if (Routine = "New_Day") || if (Routine = "End_Of_Day")
+				; if (Routine = "End_Of_Day")
 				{
 					Gosub Mail_Collection
 					Gosub Alliance_Wages
 				}
 				
+				; *************************
 				; DEBUG_SKIP:
+				; *************************
+				
 
 				if Desert_Event
 					Gosub Desert_Oasis
@@ -288,8 +311,8 @@ while WinExist(FoundAppTitle)
 				; Gosub Collect_Equipment_Crafting
 				Gosub Collect_Runes
 				if Desert_Event
-					if ((Current_Day_UTC = "Friday") || (Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday"))
-						; if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
+					if ((Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday")) ; if ((Current_Day_UTC = "Friday") || 
+						if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
 							Gosub Desert_Wonder
 				Gosub Speaker_Help
 				; Gosub Collect_Red_Envelopes
@@ -556,8 +579,8 @@ Go_Back_To_Home_Screen()
 
 	loop, 3
 	{
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		Command_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(2*Delay_Short+0))
 	}
 	DllCall("Sleep","UInt",(1*Delay_Short+0))
 
@@ -574,8 +597,8 @@ Go_Back_To_Home_Screen()
 		if (resultRebuild)
 			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
 				
-		Text_To_Screen("{F5}")
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		Command_To_Screen("{F5}")
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry	
 	}
@@ -589,7 +612,7 @@ Go_Back_To_Home_Screen()
 		if !(resultGoBack)
 			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
 
-		Text_To_Screen("{F5}")
+		Command_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		; DllCall("Sleep","UInt",(3*Delay_Micro+0))
 		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
@@ -606,7 +629,7 @@ Game_Start_popups:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 	; Clear first pop-up by pressing back
-	Text_To_Screen("{F5}")
+	Command_To_Screen("{F5}")
 	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
 	Mouse_Click(256,979, {Timeout: (1*Delay_Long+0)}) ; Check No More Prompts Today On Today'S Hot Sale
@@ -697,6 +720,10 @@ Switch_Account:
 		
 		loop, 7
 		{
+			resultLogin := oLoginSearch.search(allQueries_Login, optionsObjCoords)
+			if (resultLogin)
+				goto Switch_Account_Dialog
+				
 			resultObj := oAccountSearch.search(allQueries_Account, optionsObjCoords)
 			if (resultObj)
 				Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (2*Delay_Short+0)})
@@ -706,10 +733,6 @@ Switch_Account:
 				MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
 				Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
 			}
-			
-			resultLogin := oLoginSearch.search(allQueries_Login, optionsObjCoords)
-			if (resultLogin)
-				goto Switch_Account_Dialog
 		}
 			Mouse_Click(600,1200, {Timeout: 0}) ; "Settings" Button
 			Mouse_Click(480,1150, {Timeout: 0}) ; "Other Account" button
@@ -718,33 +741,47 @@ Switch_Account:
 	goto Switch_Account_START
 
 	Switch_Account_Dialog:
-	Gosub Switch_Account_User_Email
-	Gosub Switch_Account_User_Password
-	goto Switch_Account_Next
+	oEmailSearch := new graphicsearch()	
+	oPWSearch := new graphicsearch()
+	loop, 5
+	{
+		resultEmail := oEmailSearch.search(1A1234_Email_Box_Button_Graphic, optionsObjCoords)
+		resultPW := oPWSearch.search(1A1235_PW_Box_Button_Graphic, optionsObjCoords)
+		
+		if (resultEmail)
+			Gosub Switch_Account_User_Email
+		Else if (resultPW)
+			Gosub Switch_Account_User_Password
+		Else
+			goto Switch_Account_Next
+	}
+	goto Switch_Account_START
 
 	Switch_Account_User_Email:
 	{
-		loop, 3
+		loop, 2
 			Mouse_Click(220,382, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Email)
-		DllCall("Sleep","UInt",(4*Delay_Short+0))
-		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		; DllCall("Sleep","UInt",(4*Delay_Short+0))
+		Command_To_Screen("{Enter}")
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
 		return
 	}
 
 	Switch_Account_User_Password:
 	{
-		loop, 3
+		loop, 2
 			Mouse_Click(209,527, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Pass)
-		DllCall("Sleep","UInt",(4*Delay_Short+0))
-		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		; DllCall("Sleep","UInt",(4*Delay_Short+0))
+		Command_To_Screen("{Enter}")
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
 		return
 	}
 
@@ -754,8 +791,8 @@ Switch_Account:
 	
 	Gosub Account_Loading
 	
-	Switch_Account_END:
-	Login_Password_PIN_Enter()
+	; Switch_Account_END:
+	; Login_Password_PIN_Enter()
 
 	return
 }
@@ -764,7 +801,7 @@ Account_Loading:
 {
 	oGraphicSearch := new graphicsearch()	
 	Last_Game_Loading := "0"
-	loop, 60
+	loop, 10
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
 		if (resultObj)
@@ -775,6 +812,21 @@ Account_Loading:
 			MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
 			Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
 		}
+	}
+
+	loop, 20 ; 60
+	{
+		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
+		if (resultObj)
+			Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap "OK"
+		
+		/*
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
+		{
+			MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
+			Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
+		}
+		*/
 
 		Login_Password_PIN_Enter()
 		
@@ -800,7 +852,7 @@ Account_Loading:
 		}
 		*/
 		
-		AccountLoading := Search_Captured_Text_OCR(["Arms","Supply","Weekly","Deal","Doomsday","Invest","News","Soul","Hunter","Iron","Wall","Racer","Reynolds","Mutation","Master","Dio","New","Officer","Online"], {Pos: [200, 40], Size: [300, 42]})
+		AccountLoading := Search_Captured_Text_OCR(["Arms","Deal","Dio","Doomsday","Festival","Hot","Hunter","Invest","Iron","Master","Mutation","New","Officer","Online","Racer","Reynolds","Sale","Supply","Wall","Weekly"], {Pos: [200, 40], Size: [300, 42]})
 		
 		if (AccountLoading.Found)
 		{
@@ -812,7 +864,7 @@ Account_Loading:
 		}
 	}
 
-	; gosub BruteForcePIN
+	; Login_Password_PIN_BruteForce()
 
 	Switch_Account_PIN:
 	if Login_Password_PIN_Find() ; if Text_Found
@@ -1413,7 +1465,7 @@ Collect_Red_Envelopes:
 		Mouse_Click(227,1215, {Timeout: (1*Delay_Medium+0)}) ; Tap in Message Box
 
 		; Shake phone
-		Text_To_Screen("!{F2}")
+		Command_To_Screen("!{F2}")
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 
 		; Gosub Get_Window_Geometry
@@ -1573,7 +1625,8 @@ Benefits_Center:
 	, Monthly_Package_Collect : [924_MonthlyPackage_Button_Graphic, True]
 	, Monthly_Signin : [925_MonthlySignin_Button_Graphic, True]
 	, Select_Reward : [926_SelectReward_Button_Graphic, True]
-	, Selection_Chest : [927_SelectionChest_Button_Graphic, True]
+	, Selection_Chest : [9271_SelectionChest_Button_Graphic, True]
+	, Selection_Chest : [9272_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
 	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]}
 
@@ -1586,7 +1639,7 @@ Benefits_Center:
 	Go_Back_To_Home_Screen()
 	Gosub Benefits_Center_Reload
 	
-	loop, 12
+	loop, 10
 	{
 		loop, 2
 			Gosub Benefits_Check_Tabs_New
@@ -1759,9 +1812,12 @@ Benefits_Center:
 			resultUse_Button := oUse_ButtonSearch.search(ClaimButtons, optionsObjCoords)
 			if (resultUse_Button)
 			{
-				Mouse_Click(resultUse_Button[1].x,resultUse_Button[1].y, {Timeout: (1*Delay_Medium+0)}) ; Tap "Claim" button			
-				loop, 3
-					Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
+				loop, % resultUse_Button.Count()
+				{
+					Mouse_Click(resultUse_Button[A_Index].x,resultUse_Button[A_Index].y, {Timeout: (1*Delay_Medium+0)}) ; Tap "Claim" button			
+					loop, 3
+						Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
+				}
 			}
 			; Else
 			;	DllCall("Sleep","UInt",(1*Delay_Short+0))
@@ -1912,12 +1968,13 @@ Speaker_Help:
 		Mouse_Click(630,1033, {Timeout: (1*Delay_Medium+0)}) ; Tap speaker/help
 
 	oGraphicSearch := new graphicsearch()
-	loop, 3
+	loop, 2
 	{
 		resultObj := oGraphicSearch.search(71_Speaker_Claim_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
 			Mouse_Click(resultObj[1].x,resultObj[1].y)
+			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 			break
 		}
 		Else
@@ -1926,8 +1983,6 @@ Speaker_Help:
 		}
 	}
 	
-	DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-
 	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
 	return
@@ -1943,14 +1998,14 @@ Drop_Zone:
 	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 	oGraphicSearch := new graphicsearch()
 		
-	loop, 50
+	loop, 20 ; 50
 	{
 		resultObj := oGraphicSearch.search(B361_Click_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 			loop, 5
 				Mouse_Click(410,1050, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
 		Else
-			DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
 
 	if !Go_Back_To_Home_Screen()
@@ -2028,8 +2083,7 @@ Active_Skill:
 			{	
 				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (Delay_Medium+0)})
 				gosub Active_Skill_Titles
-				loop, 1
-					Mouse_Click(350,350, {Timeout: (3*Delay_Short+0)}) ; Tap Active skill title bar
+				Mouse_Click(350,350, {Timeout: (3*Delay_Short+0)}) ; Tap Active skill title bar
 				Gosub Active_Skill_Reload
 				Reverse_Index--
 			}
@@ -2068,6 +2122,8 @@ Active_Skill:
 	}
 
 	Active_Skill_Reload:
+	
+	ActiveSkill_Title_Graphics := 8301_ActiveSkill_Title_Graphic 8302_ActiveSkill_Title_Graphic
 	loop, 2
 	{
 		; check to see if active skill is properly displayed x times
@@ -2075,7 +2131,7 @@ Active_Skill:
 		oSkill_TitleSearch := new graphicsearch()
 		loop, 20
 		{
-			resultSkill_Title := oSkill_TitleSearch.search(830_ActiveSkill_Title_Graphic, optionsObjCoords)
+			resultSkill_Title := oSkill_TitleSearch.search(ActiveSkill_Title_Graphics, optionsObjCoords)
 			if (resultSkill_Title)
 			{
 				Mouse_Click(resultSkill_Title[1].x,resultSkill_Title[1].y, {Timeout: (1*Delay_Short+0)})
@@ -2168,7 +2224,7 @@ Reserve_Factory:
 		Mouse_Click(320,70, {Timeout: (1*Delay_Medium+0)}) ; Tap top title bar
 
 		Mouse_Click(33,62) ; Tap back Button
-		; Text_To_Screen("{F5}")
+		; Command_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 	}
 
@@ -2963,15 +3019,16 @@ Alliance_Wages:
 
 	Alliance_Menu_Wages:
 	{
-		Mouse_Click(605,1212) ; Tap Alliance Menu
-		; DllCall("Sleep","UInt",(1*Delay_Long+0))
+		Mouse_Click(605,1212, {Timeout: (1*Delay_Long+0)}) ; Tap Alliance Menu
 		oGraphicSearch := new graphicsearch()
+		
+		Wages_Button_Graphics := 8751_Wages_Button_Graphic 8752_Wages_Button_Graphic
 		
 		loop, 2
 		{
 			loop, 20
 			{
-				resultObj := oGraphicSearch.search(875_Wages_Button_Graphic, optionsObjCoords)
+				resultObj := oGraphicSearch.search(Wages_Button_Graphics, optionsObjCoords)
 				if (resultObj)
 				{
 					Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap Alliance Wages button
@@ -2982,7 +3039,7 @@ Alliance_Wages:
 			}
 			if !Go_Back_To_Home_Screen()
 				Reload_LEWZ()
-			Mouse_Click(605,1212) ; Tap Alliance Menu
+			Mouse_Click(605,1212, {Timeout: (1*Delay_Long+0)}) ; Tap Alliance Menu
 		}
 		goto Alliance_Wages_END
 
@@ -3155,7 +3212,7 @@ Train_Daily_Requirement:
 	; Zoom out
 	loop, 10
 	{
-		Text_To_Screen("{F2}")
+		Command_To_Screen("{F2}")
 		DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 
@@ -3170,7 +3227,7 @@ Train_Daily_Requirement:
 		; Zoom out
 		loop, 10
 		{
-			Text_To_Screen("{F2}")
+			Command_To_Screen("{F2}")
 			DllCall("Sleep","UInt",(1*Delay_Medium+0))
 		}
 	}
@@ -3180,7 +3237,7 @@ Train_Daily_Requirement:
 	; Zoom out
 	loop, 10
 	{
-		Text_To_Screen("{F2") ; 2}
+		Command_To_Screen("{F2}") ; 2}
 		DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 
@@ -3260,16 +3317,16 @@ Train_Daily_Requirement:
 
 		loop, 8
 		{
-			Text_To_Screen("{Backspace}")
+			Command_To_Screen("{Backspace}")
 			DllCall("Sleep","UInt",(3*Delay_Short+0))
 		}
-		Text_To_Screen("{3}")
+		Command_To_Screen("{3}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen("{0}")
+		Command_To_Screen("{0}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen("{0}")
+		Command_To_Screen("{0}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen("{Enter}")
+		Command_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Mouse_Click(509,1189) ; Tap Train Now
@@ -3297,7 +3354,7 @@ Gather_Resources:
 	; Tap search button x times
 	loop, 2
 	{
-		Mouse_Click(627,1069, {Timeout: (1*Delay_Micro+0)}) ; Mouse_Click(627,1034)
+		Mouse_Click(627,1069, {Timeout: (1*Delay_Short+0)}) ; Mouse_Click(627,1034)
 	}
 	DllCall("Sleep","UInt",(1*Delay_Medium+0))
 
@@ -3305,28 +3362,27 @@ Gather_Resources:
 	loop, 2
 		Mouse_Drag(100, 990, 600, 990, {EndMovement: F, SwipeTime: 500})
 
-	; DllCall("Sleep","UInt",(1*Delay_Long+0))
-
-	MsgBox, 4, , Gather Oil Well? (8 Second Timeout & skip), 5 ; 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		{
+	DllCall("Sleep","UInt",(1*Delay_Long+0))
+	; MsgBox, 4, , Gather Oil Well? (8 Second Timeout & skip), 5 ; 8
+	; vRet := MsgBoxGetResult()
+	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+	;	{
 			Mouse_Click(407,974) ; Tap Oil Well
 			Gosub Search_And_Deploy_Resources
 			; DllCall("Sleep","UInt",(1*Delay_Long+0))
-		}
+	;	}
 
 	Gather_Farm:
 	Subroutine_Running := "Gather_Farm"
-	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	MsgBox, 4, , Gather Farm? (8 Second Timeout & skip), 5 ; 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		{
+	; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+	; MsgBox, 4, , Gather Farm? (8 Second Timeout & skip), 5 ; 8
+	; vRet := MsgBoxGetResult()
+	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+	;	{
 			Mouse_Click(547,970) ; Tap Farm
 			Gosub Search_And_Deploy_Resources
 			; DllCall("Sleep","UInt",(1*Delay_Long+0))
-		}
+	;	}
 
 	Gather_Steel:
 	Subroutine_Running := "Gather_Steel"
@@ -3334,7 +3390,7 @@ Gather_Resources:
 	; Tap search button x times
 	loop, 2
 	{
-		Mouse_Click(627,1069, {Timeout: (1*Delay_Micro+0)}) ; Mouse_Click(627,1034)
+		Mouse_Click(627,1069, {Timeout: (1*Delay_Short+0)}) ; Mouse_Click(627,1034)
 	}
 	DllCall("Sleep","UInt",(1*Delay_Medium+0))
 
@@ -3342,16 +3398,16 @@ Gather_Resources:
 	loop, 2
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
 
-	; DllCall("Sleep","UInt",(1*Delay_Long+0))
+	DllCall("Sleep","UInt",(1*Delay_Long+0))
 
-	MsgBox, 4, , Gather Steel Mill? (8 Second Timeout & skip), 5 ; 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		{
+	; MsgBox, 4, , Gather Steel Mill? (8 Second Timeout & skip), 5 ; 8
+	; vRet := MsgBoxGetResult()
+	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+	;	{
 			Mouse_Click(124,983) ; Tap Steel Mill
 			Gosub Search_And_Deploy_Resources
 			; DllCall("Sleep","UInt",(1*Delay_Long+0))
-		}
+	;	}
 
 	Gather_Alloy:
 	Subroutine_Running := "Gather_Alloy"
@@ -3360,20 +3416,20 @@ Gather_Resources:
 	loop, 2
 		Mouse_Drag(600, 990, 100, 990, {EndMovement: F, SwipeTime: 500})
 
-	; DllCall("Sleep","UInt",(1*Delay_Long+0))
-	MsgBox, 4, , Gather Alloy Mine? (8 Second Timeout & skip), 5 ; 8
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		{
+	DllCall("Sleep","UInt",(1*Delay_Long+0))
+	; MsgBox, 4, , Gather Alloy Mine? (8 Second Timeout & skip), 5 ; 8
+	; vRet := MsgBoxGetResult()
+	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+	;	{
 			Mouse_Click(270,970) ; Tap Alloy Mine
 			Gosub Search_And_Deploy_Resources
 			; DllCall("Sleep","UInt",(1*Delay_Long+0))
-		}
+	;	}
 
-	MsgBox, 4, , Gather more? (10 Second Timeout & skip), 15 ; 0
-	vRet := MsgBoxGetResult()
-	if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
-		Gosub Gather_Fuel
+	; MsgBox, 4, , Gather more? (10 Second Timeout & skip), 15 ; 0
+	; vRet := MsgBoxGetResult()
+	; if (vRet = "Yes") ; || if (vRet = "Timeout") || if (vRet = "No")
+	;	Gosub Gather_Fuel
 
 	End_Gathering:
 
@@ -3384,17 +3440,17 @@ Gather_Resources:
 
 	Search_And_Deploy_Resources:
 	{
-		; Tap Level Box
-		Mouse_Click(637,1112, {Timeout: (1*Delay_Short+0)}) ; Mouse_Click(637,1112+0)
-		Text_To_Screen("{6}")
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
-		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		Mouse_Click(637,1112, {Timeout: (1*Delay_Medium+0)}) ; Mouse_Click(637,1112) ; Tap Level Box
+		Command_To_Screen("{6}")
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Command_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Mouse_Click(346,1200, {Timeout: (3*Delay_Medium+0)}) ; Tap Search Button
 
-		Mouse_Click(440,640, {Timeout: (1*Delay_Long+0)}) ; Tap Gather Button
+		Mouse_Click(440,640, {Timeout: (3*Delay_Medium+0)}) ; Tap Gather Button
 
+		/*
 		Select_Gather_Officers:
 		{
 			Mouse_Click(525,437, {Timeout: (1*Delay_Micro+0)}) ; Tap Officer 5
@@ -3412,19 +3468,20 @@ Gather_Resources:
 			Mouse_Click(54,436, {Timeout: (1*Delay_Micro+0)}) ; Tap Officer 1
 			Mouse_Click(319,350, {Timeout: (1*Delay_Micro+0)}) ; Tap Above Officer In Case Already Marching
 		}
+		*/
 		; DllCall("Sleep","UInt",(1*Delay_Long+0))
 
-		Mouse_Click(480,1186, {Timeout: (8*Delay_Short+0)}) ; Tap March
+		Mouse_Click(480,1186, {Timeout: (1*Delay_Long+0)}) ; Tap March
 
 		; Mouse_Click(54,965) ; Tap Do Not Remind Me Again
 		; DllCall("Sleep","UInt",(1*Delay_Long+0))
 
-		Mouse_Click(560,1020, {Timeout: (1*Delay_Medium+0)}) ; Tap Deploy
+		; Mouse_Click(560,1020, {Timeout: (1*Delay_Medium+0)}) ; Tap Deploy
 
 		; Tap search button x times
 		loop, 2
 		{
-			Mouse_Click(627,1069, {Timeout: (1*Delay_Micro+0)}) ; Mouse_Click(627,1034)
+			Mouse_Click(627,1069, {Timeout: (1*Delay_Short+0)}) ; Mouse_Click(627,1034)
 		}
 		DllCall("Sleep","UInt",(1*Delay_Medium+0))
 		return
@@ -3449,115 +3506,7 @@ Desert_Oasis:
 	Subroutine_Running := "Desert_Oasis_Enter_Coordinates_Next"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	{
-		; Mouse_Click(242,526) ; Tap inside X Coordinate Text box
-		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
-
-		; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
-		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
-		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
-		; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
-
-		; if none selected, auto Steal from:
-		goto NW_Tower
-		; goto NE_Tower
-		; goto SW_Tower
-		goto SE_Tower
-		; goto END_Stealing
-
-		MsgBox, 4, , Steal from NW_Tower (595:599)? (8 Second Timeout & skip), 5 ; 8
-		vRet := MsgBoxGetResult()
-		if (vRet = "Yes")
-			goto NW_Tower
-
-		MsgBox, 4, , Steal from NE_Tower(599:595)? (8 Second Timeout & skip), 5 ; 8
-		vRet := MsgBoxGetResult()
-		if (vRet = "Yes")
-			goto NE_Tower
-
-		MsgBox, 4, , Steal from SW_Tower(600:604)? (8 Second Timeout & skip), 5 ; 8
-		vRet := MsgBoxGetResult()
-		if (vRet = "Yes")
-			goto SE_Tower
-
-		MsgBox, 4, , Steal from SE_Tower(604:599)? (8 Second Timeout & skip), 5 ; 8
-		vRet := MsgBoxGetResult()
-		if (vRet = "Yes")
-			goto SE_Tower
-
-		; if none selected, auto Steal from:
-		; goto NW_Tower
-		; goto NE_Tower
-		; goto SW_Tower
-		goto SE_Tower
-		return ; goto END_Stealing
-
-		NW_Tower:
-		{
-			Desert_Tower_X := "{Raw}595"
-			Desert_Tower_Y := "{Raw}599"
-			goto Desert_Oasis_Tower
-		}
-
-		NE_Tower:
-		{
-			Desert_Tower_X := "{Raw}599"
-			Desert_Tower_Y := "{Raw}595"
-			goto Desert_Oasis_Tower
-		}
-
-		SW_Tower:
-		{
-			Desert_Tower_X := "{Raw}599"
-			Desert_Tower_Y := "{Raw}604"
-			goto Desert_Oasis_Tower
-		}
-
-		SE_Tower:
-		{
-			Desert_Tower_X := "{Raw}604"
-			Desert_Tower_Y := "{Raw}599"
-			goto Desert_Oasis_Tower
-		}
-
-		; if none selected, auto go to
-		{
-			Desert_Tower_X := "{Raw}599"
-			Desert_Tower_Y := "{Raw}595"
-			goto Desert_Oasis_Tower
-		}
-
-		return ; goto END_Stealing
-
-		Desert_Oasis_Tower:
-		Subroutine_Running := "Desert_Oasis_Tower"
-		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-		; NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
-		; NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
-		; SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
-		; SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
-		; MsgBox, 4, Coordinates, Are Desert_Tower_X`,Y %Desert_Tower_X% %Desert_Tower_X% Correct? (8 Second Timeout & auto),5 ; 8
-
-		loop, 2
-		{
-			Mouse_Click(242,526, {Timeout: (3*Delay_Short+0)}) ; Tap inside X Coordinate Text box
-		}
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen(Desert_Tower_X)
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
-
-		loop, 2
-		{
-			Mouse_Click(484,530, {Timeout: (3*Delay_Short+0)}) ; Tap inside Y Coordinate Text box
-		}
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen(Desert_Tower_Y)
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
-		Text_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
-
-		Mouse_Click(340,620, {Timeout: (3*Delay_Long+0)}) ; Tap Go to Coordinates
+		Goto_Coordinates()
 		Mouse_Click(340,680, {Timeout: (2*Delay_Long+0)}) ; Tap on Holy Tower
 		Mouse_Click(440,680, {Timeout: (1*Delay_Long+0)}) ; Tap Holy Tower Steal button
 
@@ -3603,6 +3552,134 @@ Desert_Oasis:
 	; Go_Back_Home_Delay_Long := True
 	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
+	return
+}
+
+Goto_Coordinates(GotoCoordinates_X := "", GotoCoordinates_Y := "")
+{
+	Subroutine_Running := "GotoCoordinates_"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+
+	loop, 3
+		if Enter_Coordinates_From_Home()
+		{
+			gosub GotoCoordinates_Next
+			break
+		}
+
+	goto Goto_Coordinates_END
+
+	GotoCoordinates_Next:
+	Subroutine_Running := "GotoCoordinates_Next"
+	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+	{
+		; Mouse_Click(242,526) ; Tap inside X Coordinate Text box
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
+
+		; Default_NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
+		; Default_NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
+		; Default_SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
+		; Default_SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
+		
+		; if ((GotoCoordinates_X := "") || (GotoCoordinates_Y := ""))
+		if (GotoCoordinates_X && GotoCoordinates_Y)
+			goto GotoCoordinates_GOTO
+		Else
+		{
+			; if none selected, auto Steal from:
+			; goto Default_NW_Tower
+			; goto Default_NE_Tower
+			; goto Default_SW_Tower
+			goto Default_SE_Tower
+			; goto Goto_Coordinates_END
+		}
+
+		Default_NW_Tower:
+		{
+			GotoCoordinates_X := "595"
+			GotoCoordinates_Y := "599"
+			goto GotoCoordinates_GOTO
+		}
+
+		Default_NE_Tower:
+		{
+			GotoCoordinates_X := "599"
+			GotoCoordinates_Y := "595"
+			goto GotoCoordinates_GOTO
+		}
+
+		Default_SW_Tower:
+		{
+			GotoCoordinates_X := "599"
+			GotoCoordinates_Y := "604"
+			goto GotoCoordinates_GOTO
+		}
+
+		Default_SE_Tower:
+		{
+			GotoCoordinates_X := "604"
+			GotoCoordinates_Y := "599"
+			goto GotoCoordinates_GOTO
+		}
+
+		; if none selected, auto go to
+		{
+			GotoCoordinates_X := "599"
+			GotoCoordinates_Y := "595"
+			goto GotoCoordinates_GOTO
+		}
+
+		return ; goto Goto_Coordinates_END
+
+		GotoCoordinates_GOTO:
+		Subroutine_Running := "GotoCoordinates_GOTO"
+		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+		; Default_NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
+		; Default_NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
+		; Default_SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
+		; Default_SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
+		; MsgBox, 4, Coordinates, Are GotoCoordinates_X`,Y %GotoCoordinates_X% %GotoCoordinates_X% Correct? (8 Second Timeout & auto),5 ; 8
+			
+		loop, 2
+		{
+			Mouse_Click(242,526, {Timeout: (3*Delay_Short+0)}) ; Tap inside X Coordinate Text box
+		}
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Command_To_Screen("{Raw}" . GotoCoordinates_X)
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Command_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(1*Delay_Medium+0))
+
+		loop, 2
+		{
+			Mouse_Click(484,530, {Timeout: (3*Delay_Short+0)}) ; Tap inside Y Coordinate Text box
+		}
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Command_To_Screen("{Raw}" . GotoCoordinates_Y)
+		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Command_To_Screen("{Enter}")
+		DllCall("Sleep","UInt",(1*Delay_Medium+0))
+		
+		if Pause_Script
+		{
+			MsgBox, 4, , Go to %GotoCoordinates_X%:%GotoCoordinates_Y%? (5 Second Timeout & skip), 5 ; 8
+			vRet := MsgBoxGetResult()
+			if (vRet = "No")
+				MsgBox, 0, Pause, Enter correct coordinates and tap ""Go to""`n(Press OK to resume`, No Timeout)
+		}
+		
+		Mouse_Click(340,620, {Timeout: (3*Delay_Long+0)}) ; Tap Go to Coordinates
+		return ; goto Goto_Coordinates_END
+	}
+
+	Goto_Coordinates_END:
+
+	if Pause_Script
+		MsgBox, 0, Pause, Press OK to resume (No Timeout)
+
+	; Go_Back_Home_Delay_Long := True
+	; if !Go_Back_To_Home_Screen()
+	;	Reload_LEWZ()
 	return
 }
 
@@ -3852,7 +3929,7 @@ Golden_Chest:
 		if (resultObj)
 		{
 			loop, % resultObj.Count()
-				Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y, {Timeout: (1*Delay_Long+0)})
+				Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y, {Timeout: (1*Delay_Medium+0)})
 			; Mouse_Click(125, 1200, {Timeout: (1*Delay_Long+0)}) ; Tap "Open for free" button
 			loop, 2
 				Mouse_Click(320,70, {Timeout: (1*Delay_Long+0)}) ; Tap top title bar
@@ -3871,15 +3948,71 @@ Send_Mail_To_Boss:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; FormatTime, DateString,, yyyy-MM-dd
 	; FormatTime, TimeString,, HH:mm
-	FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
+	; FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
+	FormatTime, LogDateTimeString,, yyyy-MM-dd @ HHmm
 	FormatTime, DayOfWeek,, ddd
 	CSVout.WriteLine(LogDateTimeString "," Message_To_The_Boss)
 	FormatTime, TimeString_Message, R
-	Message_To_The_Boss .= DayOfWeek . ", " . LogDateTimeString
+	; Message_To_The_Boss .= DayOfWeek . ", " . LogDateTimeString
 
 	; MsgBox, before: %Message_To_The_Boss%
 
-	Message_To_The_Boss := RegExReplace(Message_To_The_Boss,"[\r\n ]+"," ")
+	; Message_To_The_Boss := RegExReplace(Message_To_The_Boss,"[\r\n ]+"," ")
+	/*
+	Message_To_The_Boss_01 := % Base_Array[User].User_Name_Captured
+	. " (" . Base_Array[User].User_City_Location_XY . ")"
+	. " {#}" . Base_Array[User].User_Found_State
+	. " [" . Base_Array[User].User_Found_Alliance . "]"
+	. " " .  Base_Array[User].User_VIP
+	Message_To_The_Boss_02 := "Power: " . Convert_Value(Base_Array[User].User_Power)
+	. " Diamonds: " . Convert_Value(Base_Array[User].User_Diamonds)
+	Message_To_The_Boss_03 := "Fuel: " . Convert_Value(Base_Array[User].Available_Fuel)
+	. " {+} " . Convert_Value(Base_Array[User].Inventory_Fuel) . " = " . Convert_Value(Base_Array[User].Available_Fuel + Base_Array[User].Inventory_Fuel)
+	Message_To_The_Boss_04 := "Food: " . Convert_Value(Base_Array[User].Available_Food)
+	. " {+} " . Convert_Value(Base_Array[User].Inventory_Food) . " = " . Convert_Value(Base_Array[User].Available_Food + Base_Array[User].Inventory_Food)
+	Message_To_The_Boss_05 := "Steel: " . Convert_Value(Base_Array[User].Available_Steel)
+	. " {+} " . Convert_Value(Base_Array[User].Inventory_Steel) . " = " . Convert_Value(Base_Array[User].Available_Steel + Base_Array[User].Inventory_Steel)
+	Message_To_The_Boss_06 := "Alloy: " . Convert_Value(Base_Array[User].Available_Alloy)
+	. " {+} " . Convert_Value(Base_Array[User].Inventory_Alloy) . " = " . Convert_Value(Base_Array[User].Available_Alloy + Base_Array[User].Inventory_Alloy)
+	Message_To_The_Boss_07 := DayOfWeek . ", " . LogDateTimeString
+	*/
+
+	Power_Total := Convert_Value(Base_Array[User].User_Power)
+	Diamonds_Total := Convert_Value(Base_Array[User].User_Diamonds)
+	
+	Fuel_Available := Convert_Value(Base_Array[User].Available_Fuel)
+	Fuel_Inventory := Convert_Value(Base_Array[User].Inventory_Fuel)
+	Fuel_Total  := Convert_Value(Base_Array[User].Available_Fuel + Base_Array[User].Inventory_Fuel)
+	
+	Food_Available := Convert_Value(Base_Array[User].Available_Food)
+	Food_Inventory := Convert_Value(Base_Array[User].Inventory_Food)
+	Food_Total  := Convert_Value(Base_Array[User].Available_Food + Base_Array[User].Inventory_Food)
+	
+	Steel_Available := Convert_Value(Base_Array[User].Available_Steel)
+	Steel_Inventory := Convert_Value(Base_Array[User].Inventory_Steel)
+	Steel_Total := Convert_Value(Base_Array[User].Available_Steel + Base_Array[User].Inventory_Steel)
+	
+	Alloy_Available := Convert_Value(Base_Array[User].Available_Alloy)
+	Alloy_Inventory := Convert_Value(Base_Array[User].Inventory_Alloy)
+	Alloy_Total := Convert_Value(Base_Array[User].Available_Alloy + Base_Array[User].Inventory_Alloy)
+	
+	/*
+	Message_To_The_Boss_01 := % "O:" . Fuel_Total . " F:" . Food_Total . " S:" . Steel_Total . " A:" . Alloy_Total
+	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User].User_VIP
+	. "`n(" . Base_Array[User].User_Found_Alliance . ")"	
+	*/
+	
+	Message_To_The_Boss_01 := % Fuel_Total . " " . Food_Total . " " . Steel_Total . " " . Alloy_Total
+	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User].User_VIP
+	. " " . Base_Array[User].User_City_Location_XY	
+	. "`n(" . Base_Array[User].User_Found_Alliance . ")"
+	. Base_Array[User].User_Name_Captured
+	. "#" . Base_Array[User].User_Found_State
+	. "`n" . "Fuel: " . Fuel_Available . " + " . Fuel_Inventory . " = " . Fuel_Total
+	. "`n" . "Food: " . Food_Available . " + " . Food_Inventory . " = " . Food_Total
+	. "`n" . "Steel: " . Steel_Available . " + " . Steel_Inventory . " = " . Steel_Total
+	. "`n" . "Alloy: " . Alloy_Available . " + " . Alloy_Inventory . " = " . Alloy_Total
+	. "`nTime: " . DayOfWeek . ", " . LogDateTimeString
 
 	; MsgBox, After: %Message_To_The_Boss%
 
@@ -3896,10 +4029,36 @@ Send_Mail_To_Boss:
 	Mouse_Click(636,55, {Timeout: (7*Delay_Short+0)}) ; Tap new Message
 	Mouse_Click(500,173, {Timeout: (3*Delay_Short+0)}) ; Tap User Name Text Box
 	Text_To_Screen(Boss_User_name) ; Type user name to send message to
-	DllCall("Sleep","UInt",(1*Delay_Medium+0))
+	; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	Mouse_Click(433,327, {Timeout: (3*Delay_Short+0)}) ; Tap Message text body
-	Text_To_Screen(Message_To_The_Boss) ; Type Message to user
+	Text_To_Screen(Message_To_The_Boss_01) ; Type Message to user
+	; DllCall("Sleep","UInt",(3*Delay_Short+0))
+	/*
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_02) ; Type Message to user
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_03) ; Type Message to user
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_04) ; Type Message to user
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_05) ; Type Message to user
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_06) ; Type Message to user
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Command_To_Screen("{Enter}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
+	Text_To_Screen(Message_To_The_Boss_07) ; Type Message to user
 	DllCall("Sleep","UInt",(1*Delay_Long+0))
+	*/
 
 	; MsgBox, 0, Pause, Press OK to resume (No Timeout)
 
@@ -3991,19 +4150,19 @@ Get_Inventory:
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 	Mouse_Click(95,140, {Timeout: (7*Delay_Short+0)}) ; Tap Fuel tab
-	Inventory_Fuel := OCR([87, 180, 520, 40], "eng") ; capture Reserve Fuel number
+	Inventory_Fuel := OCR([187, 185, 320, 30], "eng") ; capture Reserve Fuel number
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 	Mouse_Click(249,140, {Timeout: (7*Delay_Short+0)}) ; Tap Food tab
-	Inventory_Food := OCR([87, 180, 520, 40], "eng") ; capture Reserve Food number
+	Inventory_Food := OCR([187, 185, 320, 30], "eng") ; capture Reserve Food number
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 	Mouse_Click(442,136, {Timeout: (7*Delay_Short+0)}) ; Tap Steel tab
-	Inventory_Steel := OCR([87, 180, 520, 40], "eng") ; capture Reserve Steel number
+	Inventory_Steel := OCR([187, 185, 320, 30], "eng") ; capture Reserve Steel number
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
 	Mouse_Click(594,140, {Timeout: (7*Delay_Short+0)}) ; Tap Alloy tab
-	Inventory_Alloy := OCR([87, 180, 520, 40], "eng") ; capture Reserve Alloy number
+	Inventory_Alloy := OCR([187, 185, 320, 30], "eng") ; capture Reserve Alloy number
 	Available_Fuel := OCR([70, 132, 90, 25], "eng") ; capture Available Fuel number
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
 
@@ -4040,6 +4199,17 @@ Get_Inventory:
 	Inventory_Food := % Convert_OCR_Value(Inventory_Food)
 	Inventory_Steel := % Convert_OCR_Value(Inventory_Steel)
 	Inventory_Alloy := % Convert_OCR_Value(Inventory_Alloy)
+	
+	Base_Array[User].Available_Fuel :=   Convert_OCR_Value(Available_Fuel)
+	Base_Array[User].Available_Food :=   Convert_OCR_Value(Available_Food)
+	Base_Array[User].Available_Steel :=  Convert_OCR_Value(Available_Steel)
+	Base_Array[User].Available_Alloy :=  Convert_OCR_Value(Available_Alloy)
+	Base_Array[User].Inventory_Fuel :=   Convert_OCR_Value(Inventory_Fuel)
+	Base_Array[User].Inventory_Food :=   Convert_OCR_Value(Inventory_Food)
+	Base_Array[User].Inventory_Steel :=  Convert_OCR_Value(Inventory_Steel)
+	Base_Array[User].Inventory_Alloy :=  Convert_OCR_Value(Inventory_Alloy)
+	
+	; Array_Gui(Base_Array)
 
 	; CSV entry
 	Message_To_The_Boss .= "Fuel:`," . Available_Fuel . "`," . Inventory_Fuel
@@ -4088,14 +4258,27 @@ Get_User_Info:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Mouse_Click(47,80) ; Tap commander info on upper menu bar
+	Mouse_Click(47,80, {Timeout: (1*Delay_Long+0)}) ; Tap commander info on upper menu bar
+	; Mouse_Click(47,80, {Timeout: (1*Delay_Medium+0)}) ; Tap commander info on upper menu bar
+
+	/*
+	loop, 20
+	{
+		Commander_Title := Search_Captured_Text_OCR(["Commander","Info"])
+		if (Commander_Title.Found)
+		{
+			; MsgBox, % "Loop:" A_Index  " Commander_Title:""" Commander_Title.Text """"
+			break
+		}
+	}
+	*/
 
 	; capture text from commander info screen
-	DllCall("Sleep","UInt",(rand_wait + 7*Delay_Short+0))
-	User_Name_Captured := OCR([196, 183, 270, 30], "eng")
-	User_State_Alliance := OCR([292, 145, 222, 32], "eng")
-	User_VIP := OCR([183, 139, 116, 44], "eng")
-	User_Power := OCR([497, 362, 122, 27], "eng")
+	; DllCall("Sleep","UInt",(7*Delay_Short+0))
+	User_Name_Captured := OCR([205, 187, 180, 22], "eng")
+	User_State_Alliance := OCR([290, 154, 220, 23], "eng")
+	User_VIP := OCR([183, 151, 116, 24], "eng")
+	User_Power := OCR([480, 366, 142, 24], "eng")
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 
@@ -4133,7 +4316,7 @@ Get_User_Info:
 		Reload_LEWZ()
 
 	; User_Diamonds := OCR([590, 90, 96, 30], "eng")
-	User_Diamonds := OCR([590, 95, 90, 20], "eng")
+	User_Diamonds := OCR([594, 98, 93, 19], "eng")
 	User_Diamonds := % Convert_OCR_Value(User_Diamonds)
 
 	Message_To_The_Boss .= User_Name_Captured
@@ -4142,6 +4325,20 @@ Get_User_Info:
 	. "`,VIP:`," . User_VIP
 	. "`,Power:`," . User_Power . "`,"
 	. "`,Diamonds:`," . User_Diamonds . "`,"
+	
+	
+	; Base_Array[User] := {User_Name_Captured : User_Name_Captured, User_State_Alliance: User_State_Alliance, User_VIP: User_VIP, User_Power: User_Power, User_Diamonds: User_Diamonds}
+	
+	Base_Array[User].User_Name_Captured := User_Name_Captured
+	Base_Array[User].User_Found_State := User_Found_State
+	Base_Array[User].User_Found_Alliance := User_Found_Alliance
+	Base_Array[User].User_VIP := User_VIP
+	Base_Array[User].User_Power := User_Power
+	Base_Array[User].User_Diamonds := User_Diamonds
+	
+	
+	; Array_Gui(Base_Array)
+	; MsgBox, Message_To_The_Boss: %Message_To_The_Boss%
 	return
 }
 
@@ -4152,18 +4349,28 @@ Get_User_Location:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Mouse_Click(76,1200, {Timeout: (5*Delay_Long+0)}) ; Tap World/home button
+	Mouse_Click(76,1200, {Timeout: (3*Delay_Long+0)}) ; Tap World/home button
 
-	Mouse_Click(347,600, {Timeout: (2*Delay_Long+0)}) ; Tap My City on World Map
-	User_City_Location := OCR([300, 664, 120, 43], "eng")
-	; User_City_Location := Trim(User_City_Location)
-	User_City_Location := % RegExMatch(User_City_Location,"X:\d+[^\d]*Y:\d+[^\d]*", User_City_Location_XY)
-	User_City_Location_XY := % RegExReplace(User_City_Location_XY,"[^0-9,]+")
-	User_City_Location_XY := StrReplace(User_City_Location_XY, ",", ":")
-
+	loop, 5
+	{
+		Mouse_Click(347,600, {Timeout: (1*Delay_Long+0)}) ; Tap My City on World Map
+		; User_City_Location := OCR([300, 664, 120, 43], "eng")
+		User_City_Location := OCR([298, 660, 100, 34], "eng")
+		; User_City_Location := Trim(User_City_Location)
+		; User_City_Location := % RegExMatch(User_City_Location,"X:\d+[^\d]*Y:\d+[^\d]*", User_City_Location_XY)
+		if (RegExMatch(User_City_Location,"X:\d+[^\d]*Y:\d+[^\d]*", User_City_Location_XY))
+		{
+			User_City_Location_XY := % RegExReplace(User_City_Location_XY,"[^0-9,]+")
+			User_City_Location_XY := StrReplace(User_City_Location_XY, ",", ":")
+			; if !(User_City_Location_XY = "")
+				break
+		}
+	}
 	; MsgBox, % "User_City_Location: " . User_City_Location . " User_City_Location_XY: " . User_City_Location_XY
 
 	Message_To_The_Boss .= "Location:`,""(" . User_City_Location_XY . ")""`,"
+	
+	Base_Array[User].User_City_Location_XY := User_City_Location_XY
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	; User_City_Location := OCR([304, 663, 85, 22], "eng")
@@ -4239,12 +4446,12 @@ Base_Search_World_Map:
 		Mouse_Click(200,530, {Timeout: (2*Delay_Short+0)}) ; Tap inside X coordinate Box
 		Text_To_Screen(Map_X)
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Text_To_Screen("{Enter}")
+		Command_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Mouse_Click(449,530, {Timeout: (2*Delay_Short+0)}) ; Tap inside Y coordinate Box
 		Text_To_Screen(Map_Y)
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
-		Text_To_Screen("{Enter}")
+		Command_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		; Mouse_Click(196,467) ; Tap Go To Coordinates1
 		Mouse_Click(350,620, {Timeout: (2*Delay_Short+0)}) ; Tap Go To Coordinates2
@@ -4486,7 +4693,7 @@ Check_For_Zombie_Popup()
 	else
 	{
 		Mouse_Click(550,1037) ; Tap next to speaker
-		; Text_To_Screen("{Esc}")
+		; Command_To_Screen("{Esc}")
 		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 		; MsgBox, Zombie or Rover return 5 ; 1
 		return 1
@@ -4988,6 +5195,10 @@ if !Go_Back_To_Home_Screen()
 	Reload_LEWZ()
 Gosub, Exit_Sub
 MsgBox, This MsgBox will never happen because of the EXIT.
+return
+
+^F9::
+	Array_Gui(Base_Array)
 return
 
 Exit_Sub:
