@@ -24,7 +24,7 @@
 ;	Search_Pixels(Search_Pixels_Array, Options := "") {
 ;	Search_Images(Search_Images_Array, Options := "") {
 ;	Text_To_Log(ByRef Input_Array)
-;	Text_To_Screen(Text_To_Send, Options := "") {
+;	Command_To_Screen(Text_To_Send, Options := "") {
 ;	IsWindowChildOf(aChild, aParent) {
 ;	EnumChildFindHwnd(aWnd, lParam) {
 ;	EnumChildFindPoint(aWnd, lParam) {
@@ -595,10 +595,10 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
-	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "125" ; "115"
-	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "35" ; "30"
-	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "370" ; "450"	;  "560"
-	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "70" ; "75"
+	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "200" ; "185" ; "115"
+	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "40" ; "54" ; "30"
+	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "300" ; "450"	;  "560"
+	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "40" ; "28" ; "75"
 	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
 	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : 0 ; "8"
@@ -793,7 +793,7 @@ Search_Images(Search_Images_Array, Options := "") {
 	return
 }
 
-; example: Text_To_Screen("UserName")
+; example: Command_To_Screen("UserName")
 ; example: Text_To_Diag("UserName")
 ; example: Text_To_CSV("UserName")
 ; example: Text_To_Log("UserName")
@@ -828,7 +828,7 @@ Text_To_Log(ByRef Input_Array)
 }
 
 
-Text_To_Screen(Text_To_Send, Options := "") {
+Command_To_Screen(Text_To_Send, Options := "") {
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl	; "ahk_parent"
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
@@ -853,8 +853,28 @@ Text_To_Screen(Text_To_Send, Options := "") {
 		; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
 	}
 	*/
-	Timeout += (StrLen(Text_To_Send) * 1+Delay_Micro)
-	DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
+	; Timeout += (StrLen(Text_To_Send) * 1+Delay_Micro)
+	; DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
+	return
+}
+
+Text_To_Screen(Text_To_Send, Options := "") {
+	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : "0"
+	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl	; "ahk_parent"
+	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
+	
+	ClipBoard_Save()
+	; ClipSave := Clipboard, Clipboard := ""
+	Clipboard := Text_To_Send
+	ClipWait, 3
+	ControlSend, %Win_Control%, ^v, %Win_Title%
+	ClipBoard_Restore()
+	; Clipboard := ClipSave, ClipSave := ""
+	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
+	; MsgBox, ControlSend, %Win_Control%, ^v, %Win_Title%
+
+	; Timeout += (StrLen(Text_To_Send) * 1+Delay_Micro)
+	; DllCall("Sleep","UInt",Timeout+1) ; Sleep, 500
 	return
 }
 
@@ -1089,7 +1109,34 @@ Convert_OCR_Value(RSS_VAR_OLD) {
 	RSS_VAR_NEW := Format("{:u}",RSS_VAR_NEW)
 	; MsgBox, END 1: RSS_VAR_OLD:%RSS_VAR_OLD% RSS_VAR_NEW:%RSS_VAR_NEW%
 
-	RSS_VAR_NEW := """" . RSS_VAR_NEW . """"
+	; RSS_VAR_NEW := """" . RSS_VAR_NEW . """"
+
+	; MsgBox, END 2: RSS_VAR_OLD:%RSS_VAR_OLD% RSS_VAR_NEW:%RSS_VAR_NEW%
+
+	return RSS_VAR_NEW
+}
+
+Convert_Value(RSS_VAR_OLD) {
+	RSS_VAR_OLD := % RegExReplace(RSS_VAR_OLD,"[^\d\.MKG]+")
+	RSS_VAR_NEW := % RegExReplace(RSS_VAR_OLD,"[^\d\.]+")
+	; MsgBox, BEGIN: RSS_VAR_OLD:%RSS_VAR_OLD% RSS_VAR_NEW:%RSS_VAR_NEW%
+	; RSS_VAR_OLD := Format("{:.1f}",RSS_VAR_OLD)
+	; RSS_VAR_NEW := Format("{:.1f}",RSS_VAR_NEW)
+
+	if (StrLen(RSS_VAR_OLD) > 9)
+		RSS_VAR_NEW := Format("{:.1f}",(RSS_VAR_OLD / 1000000000)) . "G"
+	else if (StrLen(RSS_VAR_OLD) > 6)
+		RSS_VAR_NEW := Format("{:.1f}",(RSS_VAR_OLD / 1000000)) . "M"
+	else if (StrLen(RSS_VAR_OLD) > 3)
+		RSS_VAR_NEW := Format("{:.1f}",(RSS_VAR_OLD / 1000)) . "K"
+	else
+		RSS_VAR_NEW := RSS_VAR_OLD
+
+	; SetFormat Integer, %RSS_VAR_NEW%
+	; RSS_VAR_NEW := Format("{:.1f}",RSS_VAR_NEW)
+	; MsgBox, END 1: RSS_VAR_OLD:%RSS_VAR_OLD% RSS_VAR_NEW:%RSS_VAR_NEW%
+
+	; RSS_VAR_NEW := """" . RSS_VAR_NEW . """"
 
 	; MsgBox, END 2: RSS_VAR_OLD:%RSS_VAR_OLD% RSS_VAR_NEW:%RSS_VAR_NEW%
 
