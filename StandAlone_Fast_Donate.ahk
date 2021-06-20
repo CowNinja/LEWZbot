@@ -17,8 +17,9 @@ SetBatchLines -1
 
 ; global App_Title := "(LEWZ001)"
 ; global App_Title := "(LEWZ002)"
-; global App_Title := "(LEWZ003)"
-global App_Title := "(MAIN)"
+; global App_Title := "(LEWZ004)"
+global App_Title := "LEWZ004"
+; global App_Title := "(MAIN)"
 ; global App_Title := "(OLD_03_LEWZ)"
 global App_Control := "Qt5QWindowIcon19"
 	
@@ -45,11 +46,11 @@ Return
 Tap(x,y)
 {
 	ControlClick, %App_Control%, %App_Title%,, Left, 1,  x%x% y%y% NA
-	Sleep, 30
+	DllCall("Sleep","UInt",(30)) ; Sleep, 30
 	return
 }
 
 
-F4::ExitApp
+^F4::ExitApp
 
-Pause::Pause
+^P::Pause
