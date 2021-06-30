@@ -318,6 +318,10 @@ while WinExist(FoundAppTitle)
 				; Gosub Collect_Red_Envelopes
 				if !Desert_Event
 					Gosub Gather_On_Base_RSS
+					
+				
+				if ((Current_Day_UTC = "Monday") || (Current_Day_UTC = "Tuesday")) ; if ((Current_Day_UTC = "Friday") || 
+					gosub Gather_Resources
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
@@ -2295,6 +2299,7 @@ Reserve_Factory:
 			resultObj := oGraphicSearch.search(8741_Build_Button_Graphic, optionsObjCoords)
 			if (resultObj)
 			{
+				return ;  skip build factory
 				Mouse_Click(resultObj[1].x,resultObj[1].y) ; Mouse_Click(350,400) ; Tap "Go Build."
 				gosub Reserve_Factory_Build
 				goto Alliance_Help_Open ; break
