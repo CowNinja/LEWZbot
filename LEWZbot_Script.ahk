@@ -1999,7 +1999,9 @@ Drop_Zone:
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	Mouse_Click(285,200) ; Tap On Drop Zone
-	; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
+	; DllCall("Sleep","UInt", (2*Delay_Long+0))
+	loop, 10
+		Mouse_Click(410,1050, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Get Steel X Times
 	oGraphicSearch := new graphicsearch()
 		
 	loop, 20 ; 50
@@ -2007,7 +2009,7 @@ Drop_Zone:
 		resultObj := oGraphicSearch.search(B361_Click_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 			loop, 5
-				Mouse_Click(410,1050, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Get Steel X Times
+				Mouse_Click(410,1050, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Get Steel X Times
 		Else
 			DllCall("Sleep","UInt",(1*Delay_Short+0))
 	}
