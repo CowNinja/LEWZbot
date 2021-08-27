@@ -111,12 +111,17 @@ while WinExist(FoundAppTitle)
 			Output .= "Email: " User_Email " "
 			; Output .= "Password: " User_Pass " "
 			; Output .= "PIN: " User_PIN
-			MsgBox, 3, , Login to %Output% ? (5 second Timeout & auto),5 ; 5
-			vRet := MsgBoxGetResult()
-			if (vRet = "Yes") || if (vRet = "Timeout")
-				Gosub Switch_Account
-			else if (vRet = "No")
-				goto END_of_user_loop
+			
+			; Gosub Switch_Account
+			; OR
+			{
+				MsgBox, 3, , Login to %Output% ? (3 second Timeout & auto),3 ; 5
+				vRet := MsgBoxGetResult()
+				if (vRet = "Yes") || if (vRet = "Timeout")
+					Gosub Switch_Account
+				else if (vRet = "No")
+					goto END_of_user_loop
+			}
 
 			; Login_Password_PIN_BruteForce()
 			; loop, 2
@@ -155,10 +160,16 @@ while WinExist(FoundAppTitle)
 
 			; Figure out the day and time to determine if shield is needed
 			; If time is within 24 hours of killing event, Peace_Shield_Needed variable = True
-			if ((Current_Day_UTC = "Friday") || (Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday"))
+			if (Current_Day_UTC = "Friday") ; || (Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday"))
 				Peace_Shield_Needed := True
 			if At_War
 				Peace_Shield_Needed := True
+				
+			; ###############################
+			; ###############################
+			; Peace_Shield_Needed := False
+			; ###############################
+			; ###############################
 
 			; Figure out time of day for which subroutines will run
 			if (Current_Hour_UTC >= 16 && Current_Hour_UTC < 24)
@@ -184,7 +195,7 @@ while WinExist(FoundAppTitle)
 				; gosub Alliance_Boss_Feed
 				; gosub Speaker_Help
 				; gosub Active_Skill
-				
+				; gosub Alliance_Wages
 				
 				; gosub Speaker_Help
 				; gosub Benefits_Center
@@ -226,7 +237,15 @@ while WinExist(FoundAppTitle)
 				; gosub Golden_Chest
 				; gosub Mail_Collection
 				; gosub Peace_Shield
+				
+				; gosub Golden_Chest
+				; Gosub Speaker_Help
+				; gosub Benefits_Center
+				; gosub Active_Skill
+				; Gosub Speaker_Help
 				; gosub Reserve_Factory
+				; Gosub Speaker_Help
+				
 				; gosub Send_Mail_To_Boss
 				; gosub Send_Message_In_Chat
 				; gosub Speaker_Help
@@ -247,8 +266,12 @@ while WinExist(FoundAppTitle)
 				; Check_For_Zombie_Popup()
 				; Select_App()
 				; Key_Menu()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				/*
+				gosub Benefits_Center
+				gosub Active_Skill
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
+				*/
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
@@ -268,7 +291,7 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
-				; 	Gosub Golden_Chest
+				;	Gosub Golden_Chest
 				Gosub Speaker_Help
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 					Gosub Drop_Zone
@@ -276,9 +299,11 @@ while WinExist(FoundAppTitle)
 				; ****************************
 				; ** Not position dependant **
 				; ****************************
+				/*
 				if CSB_Event ; || if Desert_Event
 					if !(Current_Hour_UTC = 00 && A_Min <= 30)
 						Gosub Reserve_Factory
+				*/
 				Gosub Active_Skill
 				; Gosub Donate_tech
 				Gosub Speaker_Help
@@ -305,28 +330,26 @@ while WinExist(FoundAppTitle)
 					Gosub Desert_Oasis
 					
 				; Gosub Gather_Resources
-				
-				; Gosub Collect_Collisions
-				Gosub Collect_Recruits
-				; Gosub Collect_Equipment_Crafting
-				Gosub Collect_Runes
+
 				if Desert_Event
 					if ((Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday")) ; if ((Current_Day_UTC = "Friday") || 
 						if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
 							Gosub Desert_Wonder
 				Gosub Speaker_Help
 				; Gosub Collect_Red_Envelopes
-				if !Desert_Event
-					Gosub Gather_On_Base_RSS
+				; if !Desert_Event
+				;	Gosub Gather_On_Base_RSS
 					
 				
-				if ((Current_Day_UTC = "Monday") || (Current_Day_UTC = "Tuesday")) ; if ((Current_Day_UTC = "Friday") || 
+				if ((Current_Day_UTC = "Monday") || (Current_Day_UTC = "Tuesday") || (Current_Day_UTC = "Wednesday")) 
 					gosub Gather_Resources
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				; Reset_Posit()
-				Gosub Get_User_Location
+				Gosub Get_User_Location	
+					Gosub Collect_Recruits
+					Gosub Collect_Runes
 				Gosub Get_User_Info
 				Gosub Get_Inventory
 				Gosub Send_Mail_To_Boss
@@ -390,7 +413,8 @@ Reload_LEWZ()
 		return 1
 	Else
 		return 0
-	
+}
+
 	Reload_LEWZ_Kill:
 	{
 		Gui, Status:new, , Status
@@ -424,7 +448,7 @@ Reload_LEWZ()
 		; DllCall("Sleep","UInt",(4*Delay_Long+0))
 		return
 	}
-}
+
 
 ; Reload_MEmu() <--> Launch_LEWZ() <--> Go_Back_To_Home_Screen()
 
@@ -470,7 +494,7 @@ Reload_MEmu()
 	GUI_Count++
 	goto Reload_MEmu_START
 	return 0
-	
+}	
 	
 	Reload_MEmu_Kill:
 	{
@@ -501,7 +525,6 @@ Reload_MEmu()
 		DllCall("Sleep","UInt",(4*Delay_Long+0))
 		return
 	}
-}
 
 ; Launch_LEWZ() calls Go_Back_To_Home_Screen() and NOT Reload_MEmu()
 ; Launch LEWZ app from android main screen
@@ -591,7 +614,7 @@ Go_Back_To_Home_Screen()
 	Go_Back_To_Home_Screen_OCR_Quit:
 	oGoBackSearch := new graphicsearch()	
 	oRebuildSearch := new graphicsearch()	
-	loop, 100
+	loop, 50
 	{
 		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
 		if (resultGoBack)
@@ -603,6 +626,7 @@ Go_Back_To_Home_Screen()
 				
 		Command_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(3*Delay_Micro+0))
 		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry	
 	}
@@ -707,7 +731,7 @@ Switch_Account:
 	Switch_Account_START:
 	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
-	Mouse_Click(50,70) ; , {Clicks: 1,Timeout: (1*Delay_Medium+0)}) ; Tap Commander Info
+	Mouse_Click(50,70, {Clicks: 1,Timeout: (1*Delay_Medium+0)}) ; Tap Commander Info
 	
 	; check if any graphic was found
 	oAccountSearch := new graphicsearch()	
@@ -716,11 +740,11 @@ Switch_Account:
 	allQueries_Login := 1A1234_Email_Box_Button_Graphic 1A1235_PW_Box_Button_Graphic 1A1237_UseEmailLog_Button_Graphic
 	loop, 3
 	{
-		Mouse_Click(600,1200, {Timeout: (1*Delay_Long+0)}) ; "Settings" Button 
-		Mouse_Click(100, 330, {Timeout: (1*Delay_Long+0)}) ; "Account" Button
-		Mouse_Click(330, 880, {Timeout: (1*Delay_Long+0)}) ; "Switch" Button
-		Mouse_Click(315, 720, {Timeout: (1*Delay_Long+0)}) ; "WarZ" Button
-		Mouse_Click(480,1150, {Timeout: (1*Delay_Long+0)}) ; "Other Account" button
+		Mouse_Click(600,1200, {Timeout: (3*Delay_Short+0)}) ; "Settings" Button 
+		Mouse_Click(100, 330, {Timeout: (3*Delay_Short+0)}) ; "Account" Button
+		Mouse_Click(330, 880, {Timeout: (3*Delay_Short+0)}) ; "Switch" Button
+		Mouse_Click(315, 720, {Timeout: (3*Delay_Short+0)}) ; "WarZ" Button
+		Mouse_Click(480,1150, {Timeout: (3*Delay_Short+0)}) ; "Other Account" button
 		
 		loop, 7
 		{
@@ -738,9 +762,11 @@ Switch_Account:
 				Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
 			}
 		}
+		/*
 			Mouse_Click(600,1200, {Timeout: 0}) ; "Settings" Button
 			Mouse_Click(480,1150, {Timeout: 0}) ; "Other Account" button
-			DllCall("Sleep","UInt",(2*Delay_Short+0))
+			DllCall("Sleep","UInt",(1*Delay_Short+0))
+		*/
 	}
 	goto Switch_Account_START
 
@@ -758,13 +784,15 @@ Switch_Account:
 			Gosub Switch_Account_User_Password
 		Else
 			goto Switch_Account_Next
+		
+		DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 	goto Switch_Account_START
 
 	Switch_Account_User_Email:
 	{
 		loop, 2
-			Mouse_Click(220,382, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
+			Mouse_Click(220,382, {Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Email)
@@ -778,7 +806,7 @@ Switch_Account:
 	Switch_Account_User_Password:
 	{
 		loop, 2
-			Mouse_Click(209,527, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
+			Mouse_Click(209,527, {Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Text_To_Screen(User_Pass)
@@ -809,7 +837,7 @@ Account_Loading:
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
 		if (resultObj)
-			Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap "OK"
+			Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Short+0)}) ; Tap "OK"
 		
 		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
 		{
@@ -818,17 +846,17 @@ Account_Loading:
 		}
 	}
 
-	loop, 20 ; 60
+	loop, 60 ; 20
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
 		if (resultObj)
-			Mouse_Click(resultObj[1].x,resultObj[1].y) ; Tap "OK"
+			Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Short+0)}) ; Tap "OK"
 		
 		/*
 		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
 		{
 			MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
-			Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
+			Mouse_Click(340,870, {Timeout: (1*Delay_Short+0)}) ; Tap Yes	
 		}
 		*/
 
@@ -856,7 +884,7 @@ Account_Loading:
 		}
 		*/
 		
-		AccountLoading := Search_Captured_Text_OCR(["Arms","Deal","Dio","Doomsday","Festival","Hot","Hunter","Invest","Iron","Master","Mutation","New","Officer","Online","Racer","Reynolds","Sale","Supply","Wall","Weekly"], {Pos: [200, 40], Size: [300, 42]})
+		AccountLoading := Search_Captured_Text_OCR(["Anniversary","Arms","Benefit","Celebrat","Center","Deal","Dio","Doomsday","element","Festival","Hot","Hunter","Invest","Iron","Master","Mutation","New","Officer","Online","Pack","Racer","Reynolds","Sale","Supply","Wall","Weekly"], {Pos: [200, 40], Size: [300, 42]})
 		
 		if (AccountLoading.Found)
 		{
@@ -912,10 +940,21 @@ Login_Password_PIN_Find()
 	oGraphicSearch := new graphicsearch()	
 	resultObj := oGraphicSearch.search(1A123730_EnterPIN_Title_Graphic, optionsObjCoords)
 	if (resultObj)
+	{
+		; Gui, Status:add,text,, PIN prompt: TRUE
+		; Gui, Status:show, x731 y0 w300 h500
+		; GUI_Count++
 		return 1 ; true if PIN text found
+	}
+	Else
+	{
+		; Gui, Status:add,text,, PIN prompt: FALSE
+		; Gui, Status:show, x731 y0 w300 h500
+		; GUI_Count++
+		Text_Found := False
+		return 0 ; false if PIN text not found
+	}
 
-	Text_Found := False
-	return 0 ; false if PIN text not found
 	
 }
 
@@ -923,24 +962,23 @@ Login_Password_PIN_Taps() ; FMR Enter_Login_PIN_Dialog:
 {
 	; tap backspace X times
 	loop, 6
-		Mouse_Click(465, 1164, {Timeout: (1*Delay_Pico+0)}) ; Tap backspace
+		Mouse_Click(560, 1190, {Timeout: 20}) ; (1*Delay_Pico+0)}) ; Tap backspace
+		; Mouse_Click(465, 1164, {Timeout: (1*Delay_Pico+0)}) ; Tap backspace
 		; old Mouse_Click(577,1213, {Timeout: (1*Delay_Pico+0)}) ; Tap backspace
-	DllCall("Sleep","UInt",(1*Delay_Micro+0))
+	DllCall("Sleep","UInt",(1*Delay_Pico+0))
 
 	; Split PIN and tap each corrsponding number
 	Enter_User_PIN := StrSplit(User_PIN)
 	Loop % Enter_User_PIN.MaxIndex()
 	{
-		DllCall("Sleep","UInt",(3*Delay_Pico+0))
+		; DllCall("Sleep","UInt",(1*Delay_Pico+0))
 
-		if Enter_User_PIN[A_Index] = "0"
-			Mouse_Click(340,1200, {Timeout: 0}) ; Tap 0
 		if Enter_User_PIN[A_Index] = "1"
-			Mouse_Click(120,920, {Timeout: 0}) ; Tap 1
+			Mouse_Click(120,920,  {Timeout: 0}) ; Tap 1
 		if Enter_User_PIN[A_Index] = "2"
-			Mouse_Click(340,920, {Timeout: 0}) ; Tap 2
+			Mouse_Click(340,920,  {Timeout: 0}) ; Tap 2
 		if Enter_User_PIN[A_Index] = "3"
-			Mouse_Click(560,920, {Timeout: 0}) ; Tap 3
+			Mouse_Click(560,920,  {Timeout: 0}) ; Tap 3
 		if Enter_User_PIN[A_Index] = "4"
 			Mouse_Click(120,1000, {Timeout: 0}) ; Tap 4
 		if Enter_User_PIN[A_Index] = "5"
@@ -953,13 +991,19 @@ Login_Password_PIN_Taps() ; FMR Enter_Login_PIN_Dialog:
 			Mouse_Click(340,1100, {Timeout: 0}) ; Tap 8
 		if Enter_User_PIN[A_Index] = "9"
 			Mouse_Click(560,1100, {Timeout: 0}) ; Tap 9
+		if Enter_User_PIN[A_Index] = "0"
+			Mouse_Click(340,1190, {Timeout: 0}) ; Tap 0
 	}
-	DllCall("Sleep","UInt",(3*Delay_Micro+0))
+	; DllCall("Sleep","UInt",(3*Delay_Micro+0))
+	
+
+	loop, 6
+		Mouse_Click(560, 1190, {Timeout: 20}) ; (1*Delay_Pico+0)}) ; Tap backspace
 		
 	return
 }
 
-Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1000") ; FMR BruteForcePIN:
+Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "100", Reload_After_Loops := "5000") ; FMR BruteForcePIN:
 {
 	Subroutine_Running := "BruteForce PIN " . User_PIN
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -980,20 +1024,64 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "000000", Check_After_Loops := "1
 		
 			Login_Password_PIN_Taps() ; Login_Password_PIN_Find
 			; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
-
-			if (Mod(A_Index, %Check_After_Loops%) == 0) ; if !Text_Found
+			
+			; if (Mod(A_Index, %Check_After_Loops%) == 0) ; if !Text_Found
+			if (Mod(A_Index, Check_After_Loops) == 0) ; if !Text_Found
+			{
 				if Login_Password_PIN_Find()
 				{
+					if (Mod(A_Index, Reload_After_Loops) == 0) ; if !Text_Found
+					{
+						loop, 2
+							gosub Reload_LEWZ_Kill
+						loop, 2
+							gosub Reload_LEWZ_Launch
+						
+						loop, 500
+						{	
+							; loop, 6
+								Mouse_Click(560, 1190, {Timeout: 20}) ; (1*Delay_Pico+0)}) ; Tap backspace
+							if Login_Password_PIN_Find()
+								break
+							DllCall("Sleep","UInt",(1*Delay_Short+0))
+						}
+					}
+				}
+				Else
+				{
+					loop, 20
+					{
+						
+						; loop, 6
+							Mouse_Click(560, 1190, {Timeout: 20}) ; (1*Delay_Pico+0)}) ; Tap backspace
+						if Login_Password_PIN_Find()
+							goto Resume_BruteForce
+					}
+					
+						
 					PIN_Start := (User_PIN - Check_After_Loops)
 					stdout.WriteLine(A_NowUTC ",Found," Text_Found ",User_Email," User_Email ",Check_After_Loops," Check_After_Loops ",PIN," User_PIN )
-					MsgBox, 3, , % " PIN discovered for account:" User_Email "`nbetween: " PIN_Start " and " User_PIN " (10 second Timeout & auto)",15 ; 0
+					MsgBox, 3, , % " PIN discovered for account:" User_Email "`nbetween: " PIN_Start " and " User_PIN " (10 second Timeout & auto)" ; 0
 						vRet := MsgBoxGetResult()
 						if (vRet = "Yes")
-							break	
+							break
+						if (vRet = "No")
+							goto Resume_BruteForce	
 
-					if Go_Back_To_Home_Screen()
-						break
+					; if Go_Back_To_Home_Screen()
+					;	break
+					
+					gosub Reload_LEWZ_Kill
+					gosub Reload_LEWZ_Launch
+										
+					Resume_BruteForce:
 				}
+			}
+				
+			
+			Gui, Status:add,text,, Trying %User_PIN%
+			Gui, Status:show, x731 y0 w300 h500
+			GUI_Count := GUI_Count + 0.5
 
 		}
 	return
@@ -1622,33 +1710,37 @@ Benefits_Center:
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-	Subroutines_Text_Array := {Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
-	, Claim_Buttons : [9221_Claim_Button_Graphic, True]
+	Subroutines_Text_Array := {Claim_Buttons : [9221_Claim_Button_Graphic, True]
 	, Claim_Buttons : [9222_Claim_Button_Graphic, True]
 	, Daily_Signin : [923_DailySignin_Button_Graphic, True]
 	, Monthly_Package_Collect : [924_MonthlyPackage_Button_Graphic, True]
-	, Monthly_Signin : [925_MonthlySignin_Button_Graphic, True]
+	, Monthly_Signin : [9251_MonthlySignin_Button_Graphic, True]
+	, Monthly_Signin : [9252_MonthlySignin_Button_Graphic, True]
 	, Select_Reward : [926_SelectReward_Button_Graphic, True]
 	, Selection_Chest : [9271_SelectionChest_Button_Graphic, True]
 	, Selection_Chest : [9272_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
+	, Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
 	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]}
 
 	loop, 2
-		Mouse_Click(625,310) ; Tap Benefits Center
+		Mouse_Click(625,310, {Timeout: (1*Delay_Micro+0)}) ; Tap Benefits Center
+		; Mouse_Click(625,310) ; Tap Benefits Center
 	; DllCall("Sleep","UInt",(1*Delay_Long+0)) ; wait for Benefits Center to load
-	Gosub Benefits_Center_Reload
-	
-	Gosub Benefits_Check_Tabs_New
-	Go_Back_To_Home_Screen()
 	Gosub Benefits_Center_Reload
 	
 	loop, 10
 	{
-		loop, 2
+		; loop, 2
 			Gosub Benefits_Check_Tabs_New
 		gosub Swipe_Right
 	}
+	
+	Go_Back_To_Home_Screen()
+	loop, 2
+		Mouse_Click(625,310, {Timeout: (1*Delay_Micro+0)}) ; Tap Benefits Center
+	Gosub Benefits_Center_Reload
+	Gosub Benefits_Check_Tabs_New
 
 	Goto Benefits_Center_END
 
@@ -1670,14 +1762,14 @@ Benefits_Center:
 	oGraphicSearch := new graphicsearch()	
 	loop, 5
 	{
-		loop, 10
+		loop, 20
 		{
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
 			if (resultObj)
 				return
 			Else
-				DllCall("Sleep","UInt",(1*Delay_Short+0))
+				DllCall("Sleep","UInt",(1*Delay_Micro+0))
 		}
 
 		; Gosub Get_Window_Geometry
@@ -1685,17 +1777,17 @@ Benefits_Center:
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
 		loop, 4
-			Mouse_Click(625,310, {Timeout: (2*Delay_Short+0)}) ; Tap Benefits Center
+			Mouse_Click(625,310, {Timeout: (1*Delay_Micro+0)}) ; Tap Benefits Center
 		; DllCall("Sleep","UInt",(4*Delay_Long+0))
 		
-		loop, 30
+		loop, 60
 		{
 			; Find single occurence of image, return true or false
 			resultObj := oGraphicSearch.search(920_Benefits_Title_Graphic, optionsObjCoords)
 			if (resultObj)
 				return
 			Else
-				DllCall("Sleep","UInt",(1*Delay_Short+0))
+				DllCall("Sleep","UInt",(1*Delay_Micro+0))
 		}
 	}
 	return
@@ -1710,13 +1802,14 @@ Benefits_Center:
 		Subroutine_Running := "Benefits_Check_Tabs_New"
 		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		
-		Gosub Claim_Buttons
+		; Gosub Claim_Buttons
 		
 		oGraphicSearch := new graphicsearch()	
 		For Subroutine,Query in Subroutines_Text_Array
 		{
 			; GraphicSearch_Query := Query[1]
 			; Run_Routine := (byref Query[2])
+			Gosub Claim_Buttons
 
 			If (Query[2]) ; if Query is true, check for it
 			{
@@ -1724,9 +1817,9 @@ Benefits_Center:
 				if (resultObj)
 				{
 					loop, 2
-						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (3*Delay_Short+0)}) ; Tap found Heading
+						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Micro+0)}) ; Tap found Heading
 					
-					DllCall("Sleep","UInt",(rand_wait + 3*Delay_Long+0)) ; wait for tab to load
+					DllCall("Sleep","UInt",(3*Delay_Medium+0)) ; wait for tab to load
 					if IsLabel(Subroutine)
 						Gosub %Subroutine%
 					if (Subroutine != "Claim_Buttons")
@@ -1811,7 +1904,7 @@ Benefits_Center:
 
 		ClaimButtons := 9221_Claim_Button_Graphic 9222_Claim_Button_Graphic 
 		oUse_ButtonSearch := new graphicsearch()
-		loop, 5
+		loop, 2 ; 5
 		{
 			resultUse_Button := oUse_ButtonSearch.search(ClaimButtons, optionsObjCoords)
 			if (resultUse_Button)
@@ -1974,6 +2067,7 @@ Speaker_Help:
 	oGraphicSearch := new graphicsearch()
 	loop, 2
 	{
+		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 		resultObj := oGraphicSearch.search(71_Speaker_Claim_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
@@ -2000,9 +2094,11 @@ Drop_Zone:
 
 	Mouse_Click(285,200) ; Tap On Drop Zone
 	; DllCall("Sleep","UInt", (2*Delay_Long+0))
-	loop, 10
-		Mouse_Click(410,1050, {Clicks: 2,Timeout: (2*Delay_Short+0)}) ; Get Steel X Times
+	loop, 20
+		Mouse_Click(410,1050, {Clicks: 2,Timeout: (3*Delay_Short+0)}) ; Get Steel X Times
 	oGraphicSearch := new graphicsearch()
+	
+	B361_Click_Button := B3611_Click_Button B3612_Click_Button
 		
 	loop, 20 ; 50
 	{
@@ -2056,21 +2152,21 @@ Active_Skill:
 
 	Gosub Active_Skill_Reload
 	loop, 2
-		Mouse_Click(215,425) ; Active Skill tab #2 - Officer
+		Mouse_Click(215,425, {Timeout: (1*Delay_Micro+0)}) ; Active Skill tab #2 - Officer
 	Gosub Active_Skill_Click_Button
 	
 	/*
 	loop, 2
-		Mouse_Click(340,425) ; Active Skill tab #3 - Combat
+		Mouse_Click(340,425, {Timeout: (1*Delay_Micro+0)}) ; Active Skill tab #3 - Combat
 	Gosub Active_Skill_Click_Button
 	*/
 
 	loop, 2
-		Mouse_Click(470,425) ; Active Skill tab #4 - Develop
+		Mouse_Click(470,425, {Timeout: (1*Delay_Micro+0)}) ; Active Skill tab #4 - Develop
 	Gosub Active_Skill_Click_Button
 
 	loop, 2
-		Mouse_Click(600,425) ; Active Skill tab #5 - Support
+		Mouse_Click(600,425, {Timeout: (1*Delay_Micro+0)}) ; Active Skill tab #5 - Support
 	Gosub Active_Skill_Click_Button
 	
 	goto Active_Skill_END
@@ -2087,22 +2183,22 @@ Active_Skill:
 			Reverse_Index := sortedUse_Button.Count()
 			loop, % sortedUse_Button.Count()
 			{	
-				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (Delay_Medium+0)})
+				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (6*Delay_Short+0)}) ; (3*Delay_Short+0)})
 				gosub Active_Skill_Titles
-				Mouse_Click(350,350, {Timeout: (3*Delay_Short+0)}) ; Tap Active skill title bar
+				Mouse_Click(350,350, {Timeout: (1*Delay_Micro+0)}) ; Tap Active skill title bar
 				Gosub Active_Skill_Reload
 				Reverse_Index--
 			}
 			return
 		}
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Micro+0))
 		Gosub Active_Skill_Reload
 	}
 	return
 	
 	Active_Skill_Titles:
 	{
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
+		; DllCall("Sleep","UInt",(4*Delay_Short+0))
 		oTitlesSearch := new graphicsearch()
 		loop, 20
 		{
@@ -2110,7 +2206,7 @@ Active_Skill:
 			if (resultTitles)
 				Goto Active_Skill_Titles_Continue ; break
 			Else
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+				DllCall("Sleep","UInt",(1*Delay_Micro+0))
 		}
 		Gosub Active_Skill_Reload
 		return
@@ -2119,9 +2215,9 @@ Active_Skill:
 		oTitlesSearch := new graphicsearch()
 		resultTitles := oTitlesSearch.search(OfficerSkills, optionsObjCoords)
 		if (resultTitles)
-			Mouse_Click(340,780, {Timeout: (1*Delay_Long+0)}) ; Tap Blue "Use" button
+			Mouse_Click(340,780, {Timeout: (1*Delay_Medium+0)}) ; Tap Blue "Use" button
 
-		Mouse_Click(350,350, {Timeout: (1*Delay_Short+0)}) ; Tap Active skill title bar
+		Mouse_Click(350,350, {Timeout: (1*Delay_Micro+0)}) ; Tap Active skill title bar
 
 		Gosub Active_Skill_Reload
 		return
@@ -2140,11 +2236,11 @@ Active_Skill:
 			resultSkill_Title := oSkill_TitleSearch.search(ActiveSkill_Title_Graphics, optionsObjCoords)
 			if (resultSkill_Title)
 			{
-				Mouse_Click(resultSkill_Title[1].x,resultSkill_Title[1].y, {Timeout: (1*Delay_Short+0)})
+				Mouse_Click(resultSkill_Title[1].x,resultSkill_Title[1].y, {Timeout: 0}) ; (1*Delay_Short+0)})
 				return
 			}
 			Else
-				DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+				DllCall("Sleep","UInt",(1*Delay_Short+0))
 		}
 
 		; Gosub Get_Window_Geometry
@@ -2213,7 +2309,7 @@ Reserve_Factory:
 	; *******************************
 	; Upgrade, Add Energy, Use, Etc, X Times
 	; *******************************
-	Loop, 2
+	Loop, 3
 	{
 		Gosub Alliance_Help_Open
 
@@ -2252,12 +2348,12 @@ Reserve_Factory:
 	return
 
 	Alliance_Help_Open:
-	GraphicSearch := new graphicsearch()
+	oGraphicSearch := new graphicsearch()
 	{
 		loop, 2
 		{
 			Mouse_Click(610,1200, {Timeout: (2*Delay_Long+0)}) ; Tap Alliance Menu
-			oGraphicSearch := new graphicsearch()
+			; oGraphicSearch := new graphicsearch()
 					
 			Loop, 40
 			{
@@ -2265,7 +2361,7 @@ Reserve_Factory:
 				if (resultObj)
 					break
 				Else
-					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+					DllCall("Sleep","UInt",(1*Delay_Short+0))
 			}
 				
 			oGraphicSearch := new graphicsearch()
@@ -2278,7 +2374,7 @@ Reserve_Factory:
 					goto Alliance_Help_Continue
 				}
 				Else
-					DllCall("Sleep","UInt",(rand_wait + 1*Delay_Short+0))
+					DllCall("Sleep","UInt",(1*Delay_Short+0))
 			}
 			if !Go_Back_To_Home_Screen()
 				Reload_LEWZ()
@@ -2288,8 +2384,8 @@ Reserve_Factory:
 
 		Alliance_Help_Continue:
 		; Mouse_Click(355,825, {Timeout: (1*Delay_Medium+0)}) ; Tap Alliance Help
-		DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))		
-		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
+		DllCall("Sleep","UInt",(1*Delay_Medium+0))		
+		; DllCall("Sleep","UInt",(1*Delay_Long+0))
 
 		Mouse_Click(480,140, {Timeout: (1*Delay_Medium+0)}) ; Tap Reserve Factory Help Tab	
 		; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
@@ -2315,7 +2411,8 @@ Reserve_Factory:
 	
 	Reserve_Factory_Build:
 	{		
-		GraphicSearch := new graphicsearch()
+		oBuildIcon := new graphicsearch()
+		oBuildBuild := new graphicsearch()
 		Build_Yes := 8742_BuildIcon_Button_Graphic 8743_BuildBuild_Button_Graphic
 		; 8742_BuildIcon_Button_Graphic, build Icon on world map
 		; 8743_BuildBuild_Button_Graphic, Green build button on Build menu
@@ -2323,14 +2420,15 @@ Reserve_Factory:
 		{
 			loop, 20
 			{
-				resultObj := oGraphicSearch.search(8742_BuildIcon_Button_Graphic, optionsObjCoords)
-				if (resultObj)
+				resultBuildIcon := oBuildIcon.search(8742_BuildIcon_Button_Graphic, optionsObjCoords)
+				if (resultBuildIcon)
 				{
-					Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Long+0)}) ;
-					resultObj := oGraphicSearch.search(8743_BuildBuild_Button_Graphic, optionsObjCoords)
-					if (resultObj)
+					Mouse_Click(resultBuildIcon[1].x,resultBuildIcon[1].y, {Timeout: (1*Delay_Long+0)}) ;
+					
+					resultBuildBuild := oBuildBuild.search(8743_BuildBuild_Button_Graphic, optionsObjCoords)
+					if (resultBuildBuild)
 					{
-						Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Long+0)}) ;
+						Mouse_Click(resultBuildBuild[1].x,resultBuildBuild[1].y, {Timeout: (1*Delay_Long+0)}) ;
 						goto Reserve_Factory_Build_Next ; break
 					}
 				}
@@ -2348,24 +2446,25 @@ Reserve_Factory:
 			; drag factory left, and tap build
 		loop, 30
 		{
-			GraphicSearch := new graphicsearch()
-			resultObj := oGraphicSearch.search(Build_Button, optionsObjCoords)
-			if (resultObj)
+			oBuild_Button := new graphicsearch()
+			oFactoryWorld := new graphicsearch()
+			resultBuild_Button := oBuild_Button.search(Build_Button, optionsObjCoords)
+			if (resultBuild_Button)
 			{
-				Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Medium+0)}) ;
-				; Mouse_Click(resultObj[1].x,resultObj[1].y) ;
+				Mouse_Click(resultBuild_Button[1].x,resultBuild_Button[1].y, {Timeout: (1*Delay_Medium+0)}) ;
+				; Mouse_Click(resultBuild_Button[1].x,resultBuild_Button[1].y) ;
 				
 				; if button still visible, reposition and try again
-				GraphicSearch := new graphicsearch()
-				resultObj := oGraphicSearch.search(Build_Button, optionsObjCoords)
-				if (resultObj)
+				; oBuild_Button := new graphicsearch()
+				resultBuild_Button := oBuild_Button.search(Build_Button, optionsObjCoords)
+				if (resultBuild_Button)
 				{
-					resultObj := oGraphicSearch.search(FactoryWorld_Graphic, optionsObjCoords)
-					if (resultObj)
+					resultoFactoryWorld := oFactoryWorld.search(FactoryWorld_Graphic, optionsObjCoords)
+					if (resultoFactoryWorld)
 					{
-						Drag_X1 := resultObj[1].x
+						Drag_X1 := resultoFactoryWorld[1].x
 						Drag_X2 := (Drag_X1 - 200)
-						Drag_Y := resultObj[1].y
+						Drag_Y := resultoFactoryWorld[1].y
 						Mouse_Drag(Drag_X1, Drag_Y, Drag_X2, Drag_Y, {EndMovement: F, SwipeTime: 1000})
 						; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Medium+0))
 					}
@@ -3195,9 +3294,9 @@ Alliance_Wages:
 	{
 		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
-		Mouse_Click(352,982, {Timeout: (1*Delay_Micro+0)}) ; Tap Collect Daily Rewards Chest
+		Mouse_Click(352,982, {Timeout: (1*Delay_Short+0)}) ; Tap Collect Daily Rewards Chest
 
-		Mouse_Click(320,70, {Timeout: (1*Delay_Micro+0)}) ; Tap top title bar
+		Mouse_Click(320,70, {Timeout: (1*Delay_Short+0)}) ; Tap top title bar
 		; Mouse_Click(366,175, {Timeout: (1*Delay_Micro+0)}) ; Tap Outside Chest
 
 		return
@@ -3448,7 +3547,10 @@ Gather_Resources:
 	Search_And_Deploy_Resources:
 	{
 		Mouse_Click(637,1112, {Timeout: (1*Delay_Medium+0)}) ; Mouse_Click(637,1112) ; Tap Level Box
-		Command_To_Screen("{6}")
+		if Desert_Event
+			Command_To_Screen("{8}")
+		Else
+			Command_To_Screen("{6}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 		Command_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
@@ -3710,7 +3812,9 @@ Enter_Coordinates_From_World()
 {
 	Subroutine_Running := "Enter_Coordinates_From_World"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
-	Mouse_Click(337,1000, {Timeout: (1*Delay_Long+0)}) ; Tap on Enter Coordinates Button
+	; Mouse_Click(337,1000, {Timeout: (1*Delay_Long+0)}) ; Tap on Enter Coordinates Button
+	Mouse_Click(223,1041, {Timeout: (1*Delay_Long+0)}) ; Tap on Enter Coordinates Button
+	
 	
 	; (Mouse_Click\([^\,\)]+\,[^\,\)]+)[\)\h]+([^\r\n]+)[\r\n\h]+DllCall[^\r\n]+rand_wait[\h\+]+([^\r\n\)]+)[\)]+
 	; \1\, {Timeout\: \(\3\)} \2
@@ -3919,8 +4023,8 @@ Golden_Chest:
 	; }
 
 	Mouse_Click(633,600, {Timeout: (1*Delay_Long+0)}) ; Tap rankings
-	Mouse_Click(157,367, {Timeout: (1*Delay_Medium+0)}) ; Tap Open box
-	Mouse_Click(330,1000, {Timeout: (1*Delay_Medium+0)}) ; Tap Collect Rewards
+	Mouse_Click(157,367, {Timeout: (2*Delay_Short+0)}) ; Tap Open box
+	Mouse_Click(330,1000, {Timeout: (2*Delay_Short+0)}) ; Tap Collect Rewards
 
 	Golden_Chest_END:
 	if !Go_Back_To_Home_Screen()
@@ -3938,12 +4042,13 @@ Golden_Chest:
 			loop, % resultObj.Count()
 				Mouse_Click(resultObj[A_Index].x,resultObj[A_Index].y, {Timeout: (1*Delay_Medium+0)})
 			; Mouse_Click(125, 1200, {Timeout: (1*Delay_Long+0)}) ; Tap "Open for free" button
-			loop, 2
-				Mouse_Click(320,70, {Timeout: (1*Delay_Long+0)}) ; Tap top title bar
+			loop, 4
+				Mouse_Click(320,70, {Timeout: (3*Delay_Short+0)}) ; Tap top title bar
 			break
 		}
 		Else
-			Mouse_Click(320,70, {Timeout: (1*Delay_Short+0)}) ; Tap top title bar
+			loop, 2
+				Mouse_Click(320,70, {Timeout: (1*Delay_Short+0)}) ; Tap top title bar
 	}
 	return
 }
@@ -4039,7 +4144,7 @@ Send_Mail_To_Boss:
 	; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	Mouse_Click(433,327, {Timeout: (3*Delay_Short+0)}) ; Tap Message text body
 	Text_To_Screen(Message_To_The_Boss_01) ; Type Message to user
-	; DllCall("Sleep","UInt",(3*Delay_Short+0))
+	DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	/*
 	Command_To_Screen("{Enter}")
 	DllCall("Sleep","UInt",(3*Delay_Short+0))
