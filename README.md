@@ -142,7 +142,7 @@ Threaded_Routine_Execution.ahk
 - [ ] Search_Pixels(Search_Pixels_Array, Options := "")
 - [ ] Search_Images(Search_Images_Array, Options := "")
 - [ ] Text_To_Log(ByRef Input_Array)
-- [ ] Text_To_Screen(Text_To_Send, Options := "")
+- [ ] Command_To_Screen(Text_To_Send, Options := "")
 - [ ] IsWindowChildOf(aChild, aParent)
 - [ ] EnumChildFindHwnd(aWnd, lParam)
 - [ ] EnumChildFindPoint(aWnd, lParam)
