@@ -4,6 +4,7 @@
 ;
 ; find functions: ^[^\h][^\(\r\n\h]+\(
 ; or: ^([^\h\r\n\(]+\()
+; or: ^([^\h\r\n\(]+\()|^([^\h\r\n\(]+\:)
 ;
 ;	Win_GetInfo(App_Title:="", App_ID:="", App_Class:="", Options := ""){	; Win_GetInfo(Options := ""){
 ;	IsWindowVisible(App_Title) {
