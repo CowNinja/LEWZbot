@@ -4,8 +4,8 @@
 ; Recent:    2018-04-04
 
 #include <Gdip_All>
-; #include <JSON>
-#Include json.ahk\export.ahk
+#include <JSON>
+; #Include json.ahk\export.ahk
 
 ; ImageIdentify() - Label and identify objects in images.
 ImageIdentify(image:="", search:="", options:=""){
