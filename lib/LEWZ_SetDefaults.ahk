@@ -200,6 +200,7 @@ MsgMonitor(wParam, lParam, msg)
 	[options.joinqueries:=1] (boolean) ; Join all GraphicsSearch queries for combination lookup.
 	[options.offsetx:=1] (number), [options.offsety:=0] (number) ; Set the Max offset for combination lookup
 	*/
+
 	Global optionsObjCoords := {   x1: Client_Area_X
                 , y1: Client_Area_Y
                 , x2: Client_Area_X2
@@ -209,6 +210,7 @@ MsgMonitor(wParam, lParam, msg)
                 , screenshot: 1
                 , findall: 1
                 , joinqueries: 0}
+
 	Global optionsObjALL := {   x1: 1
                 , y1: 32
                 , x2: 689
@@ -586,7 +588,7 @@ Select_App()
 ; Renamed GraphicSearch_query (auto), commented out graphics
     Global 011_Icon_LEWZ_Graphic := "|<011_Icon_LEWZ>0xF2F0F1@0.72$35.k0000NU0000n03kD1i0DkzDw0tna6M1Va6Ak03C0NU1yD0n0DwDVa0MM7XA0kn36M1Xa6AznzDsTzXqDkS"
 ;    Global 022_Quit_OK_Button_Graphic := "|<022_Quit_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
-    Global 021_Quit_Title_Graphic := "|<021_Quit_Title>*200$41.VXzzzbqDnzzzzYznzzzz/zbzzzw7zjbttUDzDDnntTySTbbmzwwzDDZzttyST/znnwwyLzbbttwjzTDnntTwyTbbmTlwzDDaT7twSTC0Ts0wyC0zsNtyE"
+    Global 021_Quit_Title_Graphic := "|<021_Quit_Title>*10$41.01zzz3U71zzzD0TVvySw1z3XssE3z73lkUDy67XV0TwAD33UzsMS671zkkwAC3zVVsMQ3z73kks7yC7VVkDsQD33U7UsS67003k0AC00Dk0MQA0Dk0kwE"
     Global 023_Rebuild_Button_Graphic := "|<023_Rebuild_Button>*80$23.07zyw7zxyDzvwTVrsw0jlk0T33k0CDk0wTU3s073k0D7XzS77yyC7xwA73wQ07sQ0k"
 ;  Global 10_Commander_Title_Graphic := "|<10_Commander_Title>*200$48.7zzzszzz7zzztzzz7zzztzzz7zzztzzz7zzzlzzz7nUz0Dw77m0T0Dk17kyDlzXt7lzDlz7w7nzDlzDw7nzDlzDy7nzDlyDy7nzDlyDy7nzDlyTy7nzDlyDy7nzDlzDy7nzDlzDw7nzDlz7w7nzDlzXs7nzDlzk1U"
   Global 1A_Settings_Button_Graphic := "|<1A_Settings_Button>#1474@0.38$66.z6Tzztzznzzsszzztyjnzztzzzxty7zzznzzzytyDrzzrzzzzszzrzzjzzzzszzbzzrzzzzwzzbzznzzzzwTzDzzzzzzzz7yDzwXzzTzzUkzztTzzzzzk1zzzzzznzzzzzzrzzzvzvzzzzrzzzvzvzzzzvzzzvzvzzzztzzzvzvzzzzxzyzvzvzzzzxTzzrzvzzzzx7zbjz7zzzztzzsTyzzzzzbvzzzyzzzzzjrzzzzVzzkzTjzzzz0zzaSzbzzzzTTzjdzrzzzzTTzDnzU"
@@ -678,7 +680,7 @@ Select_App()
 ;      Global 8774_MaxClear_Button_Graphic := "|<8774_MaxClear_Button>*130$51.s3szzzzzw0D7zzzzz7sszzzzztzX7zzzzzDyMy3w3t3zz70D0D0Tzststssvzz6DbTbDTzsnwTstvzz603k7DTyMk0M0ttzn6TyDbDDwMnynwtsz76DaT7DU1ssklUty0T7UD0XDwDzy7wSTw"
 ;      Global 8775_MaxCD_Title_Graphic := "|<8775_MaxCD_Title>0xFC0000@0.67$41.003k0A000Ds0s000tk3k003VkDU0061UT3U0A31a700M76A601kCQM003UQkk0070v3U0061rzk00A3DzU00M60A000sQ0MA00zk0ks00z01Us"
 ;      Global 8776_TechBuy_Title_Graphic := "|<8776_TechBuy_Title>*83$35.07zzzy03zzzwz7zzztz7zzznySTAz7wwy9wDVtwFs07nsnk07blb1z7DX6HzCT7AbyQyCFDwtwQ6TllkwA07U1ss0zUrtzzzzzXzzzzzDzzzzsT"
-    Global 878_Boss_Button_Graphic := "|<878_Boss_Button>*45$21.00033XUTwTll16600UE083830C0k0X44"
+    Global 878_Boss_Button_Graphic := "|<878_Boss_Button>*35$20.000DyDxzXyTkTW00EE007020s304MU1008"
 ;      Global 8780_Boss_Title_Graphic := "|<8780_Boss_Title>*130$63.U7zzzzzzzzs07zzzzzzzz00TzzzzzzzsTVzzzzzzzz3yDzzzzzzzsTkzzzzzzzz3z7w3zk7z0sTky07w0TU13yDksT3VsQ8T3wTXsyD7s00z3yCDtsz003szlszz7z3wD7zD1zsDsTkszsw1zUD3z77z7s3zU8TssztzsDzU3z77yDzkzz0TssTllz7Ds3y7XwCDssz0T1wD3syD3k00Tk0z01w080DzUDy0zk3U"
 ;    Global 901_Menu_Expand_Button_Graphic := "|<901_Menu_Expand_Button>*200$36.Dzzzzs1zzzzU0Tzzy0U7zzs1k0zzUDw0Ty0Tz07s0zzk003zzs007zzw00Tzzz00zzzzk3zzzzs7zzzzyTzzU"
 ;    Global 902_Menu_Collapse_Button_Graphic := "|<902_Menu_Collapse_Button>*200$36.zzwTzzzzs7zzzzU1zzzz00zzzw00Dzzk007zzU1U1zy0Ds0zw0Ty0Dk3zzU30Dzzw10zzzy03zzzzkDzzzzwU"
@@ -696,13 +698,13 @@ Select_App()
       Global 9222_Claim_Button_Graphic := "|<9222_Claim_Button>*55$30.0sk000Mk00QMksAwMksQ0MUMQ08U8QU"
     Global 923_DailySignin_Button_Graphic := "|<923_DailySignin_Button>*200$36.00s07100M07300M07300M07LDwMD7LTwszbTTwtzaTTsvzbTTwvzjTTyvzzTDzzzzyQDzzzwTzvzztTznzrlTsk7bn01k0Dr01k0Dr01k0Dz01k0TzU"
     Global 924_MonthlyPackage_Button_Graphic := "|<924_MonthlyPackage_Button>**45$13.U000UM8z0Rk7wVzMDz3zsTy6nlAQXDVa4"
-      Global 9251_MonthlySignin_Button_Graphic := "|<9251_MonthlySignin_Button>*200$20.zzzjzzvzzwzzzDzzXzzszzwTzz7zzVzzsTzy7zzVzzkkzsA003k00zy0S"
+      Global 9251_MonthlySignin_Button_Graphic := "|<9251_MonthlySignin_Button>*55$15.0004D1zkTw7zXzwzzbzwzz7Vszz7zs00000U"
       Global 9252_MonthlySignin_Button_Graphic := "|<9252_MonthlySignin_Button>0xFFFFFF@0.22$20.s0TC0Dlk3ws1zC0TXUDs83y00zg0DvzzyzzzDzzrzzzzzzxzzz0zzs"
     Global 926_SelectReward_Button_Graphic := "|<926_SelectReward_Button>0xDDC35E@0.40$54.1zzzU01zz0zzs0003z3zy00000T7zs000003DzU1U0001zy07zk000zs0zzzk00zk3zzzz00z07zzzzy0w0zzzzzzws3zzzzzzzkDzzzzzzzUzzzzzzzz3zzzzzzzzDzzzzzzzzU"
       Global 9271_SelectionChest_Button_Graphic := "|<9271_SelectionChest_Button>*50$23.000000000000Tw0ELM0U0021k08zk0nzU1zr07zg0TzM0zzU3z"
       Global 9272_SelectionChest_Button_Graphic := "|<9272_SelectionChest_Button>**40$23.zzzz0k0a001Azy2NoQ1n0s3a3UBw60FsM1U1U6070M0A1k0k21"
     Global 928_SingleCumulation_Button_Graphic := "|<928_SingleCumulation_Button>0xEFF3F5@0.40$59.000001s000000001w00000C0k1w000003tk1s000007s03s000007w07s00000Ts0Ty00004zs3Tzk300/z0Dzzk6007zADzzsBUM7ywDzzwGDn3zwTvzysTjzzzzrzxzvzzzzzrTtzrzzzzzwznzDzzjzzszbyDzzjzzvyDyDzzDzzzczwDzzTzzzlzxzzyzzzyBzzzzzzzzsvzzzzzzzzrs"
-    Global 929_WarriorTrial_Button_Graphic := "|<929_WarriorTrial_Button>*50$21.zszzy3zzkDzy0zzU3zs07z00Dk00w007U00U"
+    Global 929_WarriorTrial_Button_Graphic := "|<929_WarriorTrial_Button>**50$25.3UUk7kEADk87zk40w0200010000U000E000804040Dk20yz11w3wbk07L08"
 ;      Global 929A_Steel250k_Title_Graphic := "|<929A_Steel250k_Title>*200$19.zxzzwzzwzzyzzw1twUNwk1w01w01w01w01z01zw0zzUzzwzw"
 ;      Global 929B_Alloy62k_Title_Graphic := "|<929B_Alloy62k_Title>*200$41.szzzzztnzzzzznDzzzzzqTzzzzzdzzzzzzHzzyzzybzzrzzwTzyTzzszzxzzzlzzzzzzXzzzzzz7zzzzzxDzzzxzuTzzzjzozzzxzz9zzzrzyzzzzzzxzzzzzznzzzzzzjzzzzzzzzzzzzxzzzzzzvs"
 ;      Global 929C_Food1_5M_Title_Graphic := "|<929C_Food1_5M_Title>*200$41.wTzzzzltzzzzznbzzzzzbDzzzzzCzzrzyzNzzjzzynzzsyzxDzzkTzuTzzkzzozzzVzzfzzz3zz7zzy7zyDz7wDztTUTwTzmy0Tszzhs03vzzPk01rzyrk07zzvjw1tzzrzyDzzzjzzTzzyzzzzzzxs"
