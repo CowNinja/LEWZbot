@@ -191,23 +191,23 @@ while WinExist(FoundAppTitle)
 				; add/remove or uncomment routines to check them
 				; ******************************************
 				; Gosub Speaker_Help
-				; gosub Adventure_Missions
-				; gosub Alliance_Boss_Feed
-				; gosub Speaker_Help
-				; gosub Active_Skill
-				; gosub Alliance_Wages
+				; Gosub Adventure_Missions
+				; Gosub Alliance_Boss_Feed
+				; Gosub Speaker_Help
+				; Gosub Active_Skill
+				; Gosub Alliance_Wages
 				
-				; gosub Speaker_Help
-				; gosub Benefits_Center
+				; Gosub Speaker_Help
+				; Gosub Benefits_Center
 				/*
-				gosub Speaker_Help
+				Gosub Speaker_Help
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				Go_Back_To_Home_Screen()
-				gosub Alliance_Wages
-				gosub Active_Skill
-				gosub Speaker_Help
+				Gosub Alliance_Wages
+				Gosub Active_Skill
+				Gosub Speaker_Help
 				; Go_Back_To_Home_Screen()
-				gosub Gather_Resources
+				Gosub Gather_Resources
 				goto END_of_user_loop
 				*/
 				
@@ -215,42 +215,42 @@ while WinExist(FoundAppTitle)
 				; Goto_Coordinates()
 				
 				; Login_Password_PIN_BruteForce()
-				; gosub Check_Window_Geometry
-				; gosub Collect_Cafeteria
-				; gosub Collect_Chips_Underground
-				; gosub Collect_Collisions
-				; gosub Collect_Equipment_Crafting
-				; gosub Collect_Recruits
-				; gosub Collect_Red_Envelopes
-				; gosub Collect_Runes
-				; gosub Depot_Rewards
-				; gosub Desert_Oasis
-				; gosub Desert_Wonder
-				; gosub Donate_Tech
-				; gosub Drop_Zone
-				; gosub Game_Start_popups
-				; gosub Gather_On_Base_RSS
-				; gosub Gather_Resources
-				; gosub Get_Inventory
-				; gosub Get_User_Info
-				; gosub Get_User_Location
-				; gosub Golden_Chest
-				; gosub Mail_Collection
-				; gosub Peace_Shield
+				; Gosub Check_Window_Geometry
+				; Gosub Collect_Cafeteria
+				; Gosub Collect_Chips_Underground
+				; Gosub Collect_Collisions
+				; Gosub Collect_Equipment_Crafting
+				; Gosub Collect_Recruits
+				; Gosub Collect_Red_Envelopes
+				; Gosub Collect_Runes
+				; Gosub Depot_Rewards
+				; Gosub Desert_Oasis
+				; Gosub Desert_Wonder
+				; Gosub Donate_Tech
+				; Gosub Drop_Zone
+				; Gosub Game_Start_popups
+				; Gosub Gather_On_Base_RSS
+				; Gosub Gather_Resources
+				; Gosub Get_Inventory
+				; Gosub Get_User_Info
+				; Gosub Get_User_Location
+				; Gosub Golden_Chest
+				; Gosub Mail_Collection
+				; Gosub Peace_Shield
 				
-				; gosub Golden_Chest
+				; Gosub Golden_Chest
 				; Gosub Speaker_Help
-				; gosub Benefits_Center
-				; gosub Active_Skill
+				; Gosub Benefits_Center
+				; Gosub Active_Skill
 				; Gosub Speaker_Help
-				; gosub Reserve_Factory
+				; Gosub Reserve_Factory
 				; Gosub Speaker_Help
 				
-				; gosub Send_Mail_To_Boss
-				; gosub Send_Message_In_Chat
-				; gosub Speaker_Help
-				; gosub Switch_Account
-				; gosub VIP_Shop
+				; Gosub Send_Mail_To_Boss
+				; Gosub Send_Message_In_Chat
+				; Gosub Speaker_Help
+				; Gosub Switch_Account
+				; Gosub VIP_Shop
 				; Reset_Posit()
 				; Reload_MEmu()
 				; Reload_LEWZ()
@@ -266,12 +266,19 @@ while WinExist(FoundAppTitle)
 				; Check_For_Zombie_Popup()
 				; Select_App()
 				; Key_Menu()
-				/*
-				gosub Benefits_Center
-				gosub Active_Skill
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				goto END_of_user_loop
-				*/
+				
+				; Gosub Benefits_Center
+				; Gosub Active_Skill
+				
+				; Gosub Collect_Chips_Underground
+				; Gosub Speaker_Help
+				; Gosub Get_User_Location	
+				; Gosub Get_User_Info
+				; Gosub Get_Inventory
+				; Gosub Send_Mail_To_Boss
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; goto END_of_user_loop
+				
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
 				; ******************************************
@@ -290,6 +297,7 @@ while WinExist(FoundAppTitle)
 				Gosub Collect_Runes
 				Gosub Collect_Cafeteria
 				Gosub Depot_Rewards
+				Gosub Collect_Chips_Underground
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				;	Gosub Golden_Chest
 				Gosub Speaker_Help
@@ -342,14 +350,14 @@ while WinExist(FoundAppTitle)
 					
 				
 				if ((Current_Day_UTC = "Monday") || (Current_Day_UTC = "Tuesday") || (Current_Day_UTC = "Wednesday")) 
-					gosub Gather_Resources
+					Gosub Gather_Resources
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if (Routine = "New_Day") || if (Routine = "End_Of_Day")
 				; Reset_Posit()
 				Gosub Get_User_Location	
-					Gosub Collect_Recruits
-					Gosub Collect_Runes
+				;	Gosub Collect_Recruits
+				;	Gosub Collect_Runes
 				Gosub Get_User_Info
 				Gosub Get_Inventory
 				Gosub Send_Mail_To_Boss
@@ -388,7 +396,7 @@ while WinExist(FoundAppTitle)
 		; relaunch LEWZ
 		; Reload_LEWZ()
 		; Launch_Lewz()
-		gosub Reload_Script
+		Gosub Reload_Script
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
 	}
@@ -461,12 +469,12 @@ Reload_MEmu()
 	MEmu_Instance := "MEmu_1" ; MEmu_1 MEmu_2
 	
 	Reload_MEmu_START:
-	gosub Reload_MEmu_Kill
-	; gosub Reload_MEmu_Launch
+	Gosub Reload_MEmu_Kill
+	; Gosub Reload_MEmu_Launch
 		
 	Loop, 10
 	{
-		gosub Reload_MEmu_Launch
+		Gosub Reload_MEmu_Launch
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		loop, 3
 		{
@@ -479,15 +487,15 @@ Reload_MEmu()
 				return 1
 			}
 			Else
-				gosub Reload_MEmu_Launch
+				Gosub Reload_MEmu_Launch
 		}
 
 		Gui, Status:add,text,, Reoading MEmu %A_Index%
 		Gui, Status:show, x731 y0 w300 h500
 		GUI_Count++
 				
-		gosub Reload_MEmu_Kill
-		; gosub Reload_MEmu_Launch
+		Gosub Reload_MEmu_Kill
+		; Gosub Reload_MEmu_Launch
 	}
 	Gui, Status:add,text,, MEmu NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
@@ -572,7 +580,7 @@ Launch_LEWZ()
 
 	Launch_LEWZ_Continue:
 	
-	gosub Account_Loading
+	Gosub Account_Loading
 	
 	if Go_Back_To_Home_Screen()
 	{
@@ -623,9 +631,20 @@ Go_Back_To_Home_Screen()
 		resultRebuild := oRebuildSearch.search(023_Rebuild_Button_Graphic, optionsObjCoords)
 		if (resultRebuild)
 			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
+			
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
+		
+		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if (resultGoBack)
+			goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
+			
+		resultRebuild := oRebuildSearch.search(023_Rebuild_Button_Graphic, optionsObjCoords)
+		if (resultRebuild)
+			Mouse_Click(resultRebuild[1].x,resultRebuild[1].y, {Timeout: (2*Delay_Long+0)}) ; Tap "Rebuild" and wait
 				
 		Command_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(8*Delay_Short+0))
 		; DllCall("Sleep","UInt",(3*Delay_Micro+0))
 		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry	
@@ -639,9 +658,16 @@ Go_Back_To_Home_Screen()
 		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
 		if !(resultGoBack)
 			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
+			
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
 
+		resultGoBack := oGoBackSearch.search(021_Quit_Title_Graphic, optionsObjCoords)
+		if !(resultGoBack)
+			return 1 ; goto Go_Back_To_Home_Screen_OCR_NOT_Quit
+			
 		Command_To_Screen("{F5}")
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(8*Delay_Short+0))
 		; DllCall("Sleep","UInt",(3*Delay_Micro+0))
 		; DllCall("Sleep","UInt",(5*Delay_Micro+0))
 		Gosub Check_Window_Geometry
@@ -793,7 +819,7 @@ Switch_Account:
 	{
 		loop, 2
 			Mouse_Click(220,382, {Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(8*Delay_Short+0))
 
 		Text_To_Screen(User_Email)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
@@ -807,7 +833,7 @@ Switch_Account:
 	{
 		loop, 2
 			Mouse_Click(209,527, {Timeout: (1*Delay_Short+0)}) ; Tap inside Email Text Box
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(8*Delay_Short+0))
 
 		Text_To_Screen(User_Pass)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
@@ -1033,9 +1059,9 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "1
 					if (Mod(A_Index, Reload_After_Loops) == 0) ; if !Text_Found
 					{
 						loop, 2
-							gosub Reload_LEWZ_Kill
+							Gosub Reload_LEWZ_Kill
 						loop, 2
-							gosub Reload_LEWZ_Launch
+							Gosub Reload_LEWZ_Launch
 						
 						loop, 500
 						{	
@@ -1071,8 +1097,8 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "1
 					; if Go_Back_To_Home_Screen()
 					;	break
 					
-					gosub Reload_LEWZ_Kill
-					gosub Reload_LEWZ_Launch
+					Gosub Reload_LEWZ_Kill
+					Gosub Reload_LEWZ_Launch
 										
 					Resume_BruteForce:
 				}
@@ -1359,7 +1385,8 @@ Collect_Collisions:
 	loop, 2
 	{
 		Mouse_Click(430,280, {Timeout: (1*Delay_Long+0)}) ; Tap Command Center
-		Mouse_Click(515,375) ; Tap Collision
+		Mouse_Click(481,384) ; Tap XXXXX
+		; Mouse_Click(515,375) ; Tap Collision
 			
 		oGraphicSearch := new graphicsearch()	
 		loop, 10
@@ -1408,7 +1435,8 @@ Collect_Equipment_Crafting:
 	loop, 2
 	{
 		Mouse_Click(430,280, {Timeout: (1*Delay_Long+0)}) ; Tap Command Center
-		Mouse_Click(430,390) ; Tap Craft
+		Mouse_Click(387,396) ; Tap XXXXX
+		; Mouse_Click(430,390) ; Tap Craft
 			
 		oGraphicSearch := new graphicsearch()	
 		loop, 10
@@ -1458,7 +1486,8 @@ Collect_Recruits:
 	loop, 2
 	{
 		Mouse_Click(430,280, {Timeout: (1*Delay_Long+0)}) ; Tap Command Center
-		Mouse_Click(350,375) ; Tap Recruit
+		Mouse_Click(309,352) ; Tap XXXXX
+		; Mouse_Click(350,375) ; Tap Recruit
 			
 		oGraphicSearch := new graphicsearch()	
 		loop, 10
@@ -1510,7 +1539,8 @@ Collect_Runes:
 	loop, 2
 	{
 		Mouse_Click(430,280, {Timeout: (1*Delay_Long+0)}) ; Tap Command Center
-		Mouse_Click(570,340) ; Rune Extraction
+		Mouse_Click(552,344) ; Tap XXXXX
+		; Mouse_Click(570,340) ; Rune Extraction
 			
 		oGraphicSearch := new graphicsearch()	
 		loop, 10
@@ -1647,8 +1677,8 @@ Desert_Wonder:
 	
 	loop, 2
 	{
-		gosub Wonder_Reward_Boxes
-		gosub Receive_Rewards
+		Gosub Wonder_Reward_Boxes
+		Gosub Receive_Rewards
 	}
 	goto Desert_Wonder_END
 	
@@ -1714,13 +1744,13 @@ Benefits_Center:
 	, Claim_Buttons : [9222_Claim_Button_Graphic, True]
 	, Daily_Signin : [923_DailySignin_Button_Graphic, True]
 	, Monthly_Package_Collect : [924_MonthlyPackage_Button_Graphic, True]
-	, Monthly_Signin : [9251_MonthlySignin_Button_Graphic, True]
-	, Monthly_Signin : [9252_MonthlySignin_Button_Graphic, True]
 	, Select_Reward : [926_SelectReward_Button_Graphic, True]
 	, Selection_Chest : [9271_SelectionChest_Button_Graphic, True]
 	, Selection_Chest : [9272_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
 	, Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
+	, Monthly_Signin : [9251_MonthlySignin_Button_Graphic, True]
+	, Monthly_Signin : [9252_MonthlySignin_Button_Graphic, True]
 	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]}
 
 	loop, 2
@@ -1731,16 +1761,17 @@ Benefits_Center:
 	
 	loop, 10
 	{
-		; loop, 2
+		; loop, 4
 			Gosub Benefits_Check_Tabs_New
-		gosub Swipe_Right
+		Gosub Swipe_Right
 	}
 	
 	Go_Back_To_Home_Screen()
 	loop, 2
 		Mouse_Click(625,310, {Timeout: (1*Delay_Micro+0)}) ; Tap Benefits Center
 	Gosub Benefits_Center_Reload
-	Gosub Benefits_Check_Tabs_New
+	; loop, 4
+		Gosub Benefits_Check_Tabs_New
 
 	Goto Benefits_Center_END
 
@@ -2184,7 +2215,7 @@ Active_Skill:
 			loop, % sortedUse_Button.Count()
 			{	
 				Mouse_Click(sortedUse_Button[Reverse_Index].x,sortedUse_Button[Reverse_Index].y, {Timeout: (6*Delay_Short+0)}) ; (3*Delay_Short+0)})
-				gosub Active_Skill_Titles
+				Gosub Active_Skill_Titles
 				Mouse_Click(350,350, {Timeout: (1*Delay_Micro+0)}) ; Tap Active skill title bar
 				Gosub Active_Skill_Reload
 				Reverse_Index--
@@ -2272,6 +2303,11 @@ Collect_Chips_Underground:
 	; Swipe from lower right to upper left
 	; Tap on each Chip Plant
 	; Hit F5 for back button
+	
+	Mouse_Drag(81, 781, 321, 774, {EndMovement: T, SwipeTime: 1000}) ; Drag left to right to bring underground into view
+	Mouse_Click(171, 953, {Timeout: (3*Delay_Long+0)}) ; Tap underground Icon and wait
+	Mouse_Drag(28, 820, 596, 578, {EndMovement: T, SwipeTime: 1000}) ; Drag left to right to bring chip factories into view
+	Mouse_Click(161,826, {Timeout: (1*Delay_Medium+0)}) ; tap chip factory
 
 	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
@@ -2399,7 +2435,7 @@ Reserve_Factory:
 			{
 				return ;  skip build factory
 				Mouse_Click(resultObj[1].x,resultObj[1].y) ; Mouse_Click(350,400) ; Tap "Go Build."
-				gosub Reserve_Factory_Build
+				Gosub Reserve_Factory_Build
 				goto Alliance_Help_Open ; break
 			}
 			Else
@@ -2721,13 +2757,13 @@ Depot_Rewards:
 	goto Depot_Rewards_END
 
 	Continue_Depot_Treasures:	
-	gosub Find_Rewards_FREE
+	Gosub Find_Rewards_FREE
 
 	Mouse_Click(340,150) ; Tap Tab 2 My Treasures
-	gosub Find_Rewards_ALL
+	Gosub Find_Rewards_ALL
 
 	Mouse_Click(570,150) ; Tap Tab 3 Help_List
-	gosub Find_Rewards_ALL
+	Gosub Find_Rewards_ALL
 
 	Depot_Rewards_END:
 	if !Go_Back_To_Home_Screen()
@@ -2911,7 +2947,7 @@ Mail_Collection:
 		Mouse_Click(200,700, {Timeout: (1*Delay_Long+0)}) ; Tap "CONFIRM"
 		Loop, 2
 			Mouse_Click(340,70, {Timeout: (2*Delay_Short+0)}) ; Tap header to clear message
-		gosub Mail_Collection_Open
+		Gosub Mail_Collection_Open
 		return
 	}
 
@@ -2947,7 +2983,7 @@ Mail_Collection:
 		
 		Loop, 2
 			Mouse_Click(340,70, {Timeout: (3*Delay_Short+0)}) ; Tap header to clear message
-		gosub Mail_Collection_Open
+		Gosub Mail_Collection_Open
 		return
 	}	
 	
@@ -3605,7 +3641,7 @@ Desert_Oasis:
 	loop, 3
 		if Enter_Coordinates_From_Home()
 		{
-			gosub Desert_Oasis_Enter_Coordinates_Next
+			Gosub Desert_Oasis_Enter_Coordinates_Next
 			break
 		}
 
@@ -3672,7 +3708,7 @@ Goto_Coordinates(GotoCoordinates_X := "", GotoCoordinates_Y := "")
 	loop, 3
 		if Enter_Coordinates_From_Home()
 		{
-			gosub GotoCoordinates_Next
+			Gosub GotoCoordinates_Next
 			break
 		}
 
@@ -4135,6 +4171,7 @@ Send_Mail_To_Boss:
 	Open_Mail:
 
 	Mouse_Click(492,1202) ; Tap mail
+	DllCall("Sleep","UInt",(5*Delay_Short+0))
 	Gosub Send_Mail_Open
 
 	Compose_Message:
@@ -4470,6 +4507,9 @@ Get_User_Location:
 		User_City_Location := OCR([298, 660, 100, 34], "eng")
 		; User_City_Location := Trim(User_City_Location)
 		; User_City_Location := % RegExMatch(User_City_Location,"X:\d+[^\d]*Y:\d+[^\d]*", User_City_Location_XY)
+		
+		; MsgBox, % "User_City_Location: " . User_City_Location . " User_City_Location_XY: " . User_City_Location_XY
+		
 		if (RegExMatch(User_City_Location,"X:\d+[^\d]*Y:\d+[^\d]*", User_City_Location_XY))
 		{
 			User_City_Location_XY := % RegExReplace(User_City_Location_XY,"[^0-9,]+")
