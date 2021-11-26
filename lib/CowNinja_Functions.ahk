@@ -586,20 +586,22 @@ DropFiles(window, files*)
 		DllCall("GlobalFree", "ptr", hGlobal)
 }
 
-; example: Search_Captured_Text_OCR(["Wages"], {Pos: [115, 30], Size: [560, 75], Timeout: 8})
+; example: Search_Captured_Text_OCR(["Wages"], {Pos: [115, 30], Size: [560, 60], Timeout: 8})
 Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	if (isEmptyOrEmptyStringsOnly(Search_Text_Array))
 	{
 		Timeout := 8
 		goto Search_Captured_Text_MessageBox
 	}
+	
+	highlight_OCR := False ; True ; 
 
 	Win_Control := (Options.HasKey("Control")) ? Options.Control : FoundAppControl
 	Win_Title := (Options.HasKey("Title")) ? Options.Title : FoundAppTitle
 	OCR_X1 := (Options.HasKey("Pos")) ? Options.Pos[1] : "200" ; "185" ; "115"
 	OCR_Y1 := (Options.HasKey("Pos")) ? Options.Pos[2] : "40" ; "54" ; "30"
 	OCR_W := (Options.HasKey("Size")) ? Options.Size[1] : "300" ; "450"	;  "560"
-	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "40" ; "28" ; "75"
+	OCR_H := (Options.HasKey("Size")) ? Options.Size[2] : "30" ; "28" ; "75"
 	OCR_X2 := (OCR_X1 + OCR_W ) ; + X_Pixel_offset)
 	OCR_Y2 := (OCR_Y1 + OCR_H ) ; + Y_Pixel_offset)
 	Timeout := (Options.HasKey("Timeout")) ? Options.Timeout : 0 ; "8"
@@ -639,7 +641,45 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 	; Gosub Capture2Text_CLI
 	; Gosub Capture2Text_EXE
 	Capture_Screen_Text := OCR([OCR_X1, OCR_Y1, OCR_W, OCR_H], "eng")
+	
+	
+	if highlight_OCR
+	{
+		CreateBox("FF0000")
+		Box(OCR_X1, OCR_Y1, OCR_W, OCR_H, 2, "in")
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
+	}
+	
+	/*
+	Loop
+	{
+		MouseGetPos, , , Window, Control, 2
+		WinGetPos, x1, y1, , , ahk_id %Window%
+		ControlGetPos, x, y, w, h, , ahk_id %Control%
+		Box(x + x1, y + y1, w, h, 2, "in")
+		Sleep 100
+	}
+	*/
+		
 	; ClipBoard_Restore()
+
+	if( Capture_Screen_Text != "")
+	{
+		; Capture_Screen_Text_Display := RegExReplace(Capture_Screen_Text,"[\r\n\h]+")
+		Gui, Status:add,text,, % "OCR:" RegExReplace(Capture_Screen_Text,"[\r\n]+")
+		; Gui, Status:add,text,, % "OCR Text:" Capture_Screen_Text
+		; Gui, Status:add,text,, % "OCR Text:""" Capture_Screen_Text """"
+		Gui, Status:show, x731 y0 w300 h500
+		GUI_Count++
+		GUI_Update()
+	}
+	
+	if highlight_OCR
+	{
+		MsgBox, 0, Pause, Press OK to end (No Timeout)
+		RemoveBox()
+	}
 	
 	For index, value in Search_Text_Array
 	{
@@ -748,6 +788,71 @@ Search_Captured_Text_OCR(Search_Text_Array, Options := "") {
 
 	; Goto Search_Captured_Text_END
 
+}
+
+CreateBox(Color)
+{
+	Gui 81:color, %Color%
+	Gui 81:+ToolWindow -SysMenu -Caption +AlwaysOnTop
+	Gui 82:color, %Color%
+	Gui 82:+ToolWindow -SysMenu -Caption +AlwaysOnTop
+	Gui 83:color, %Color%
+	Gui 83:+ToolWindow -SysMenu -Caption +AlwaysOnTop
+	Gui 84:color, %Color%
+	Gui 84:+ToolWindow -SysMenu -Caption +AlwaysOnTop
+}
+
+Box(XCor, YCor, Width, Height, Thickness, Offset)
+{
+	If InStr(Offset, "In")
+	{
+		StringTrimLeft, offset, offset, 2
+		If not Offset
+			Offset = 0
+		Side = -1
+	} Else {
+		StringTrimLeft, offset, offset, 3
+		If not Offset
+			Offset = 0
+		Side = 1
+	}
+	x := XCor - (Side + 1) / 2 * Thickness - Side * Offset
+	y := YCor - (Side + 1) / 2 * Thickness - Side * Offset
+	h := Height + Side * Thickness + Side * Offset * 2
+	w := Thickness
+	Gui 81:Show, x%x% y%y% w%w% h%h% NA
+	x += Thickness
+	w := Width + Side * Thickness + Side * Offset * 2
+	h := Thickness
+	Gui 82:Show, x%x% y%y% w%w% h%h% NA
+	x := x + w - Thickness
+	y += Thickness
+	h := Height + Side * Thickness + Side * Offset * 2
+	w := Thickness
+	Gui 83:Show, x%x% y%y% w%w% h%h% NA
+	x := XCor - (Side + 1) / 2 * Thickness - Side * Offset
+	y += h - Thickness
+	w := Width + Side * Thickness + Side * Offset * 2
+	h := Thickness
+	Gui 84:Show, x%x% y%y% w%w% h%h% NA
+}
+
+RemoveBox()
+{
+	Gui 81:destroy
+	Gui 82:destroy
+	Gui 83:destroy
+	Gui 84:destroy
+}
+
+DrawRectangle(hdc, left, top, right, bottom) {                                                    	;-- used DLLCall to draw a rectangle
+
+	DllCall("MoveToEx", Int, hdc, Int, left, Int, top, UInt, 0)
+    DllCall("LineTo", Int, hdc, Int, right, Int, top)
+    DllCall("LineTo", Int, hdc, Int, right, Int, bottom)
+    DllCall("LineTo", Int, hdc, Int, left, Int, bottom)
+    DllCall("LineTo", Int, hdc, Int, left, Int, top-1)
+	return
 }
 
 ; example: Search_Pixels("OxFf4B2C", {X1: 115, Y1: 30, W: 560, H: 75, Timeout: 8})
