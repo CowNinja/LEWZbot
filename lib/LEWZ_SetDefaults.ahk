@@ -345,6 +345,8 @@ Loop, Read, LEWZ_User_Logins.ini
 	, User_City_Location_XY : ""
 	, User_Found_Alliance : ""
 	, User_Found_State : ""
+	, Shield_Ends : ""
+	, User_ID : ""
 	, User_VIP : ""
 	, User_Power : ""
 	, User_Diamonds : ""
