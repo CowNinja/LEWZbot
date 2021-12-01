@@ -589,7 +589,7 @@ Select_App()
 
 ; Renamed GraphicSearch_query (auto), commented out graphics
     Global 011_Icon_LEWZ_Graphic := "|<011_Icon_LEWZ>0xF2F0F1@0.72$35.k0000NU0000n03kD1i0DkzDw0tna6M1Va6Ak03C0NU1yD0n0DwDVa0MM7XA0kn36M1Xa6AznzDsTzXqDkS"
-;    Global 022_Quit_OK_Button_Graphic := "|<022_Quit_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
+    Global 022_Quit_OK_Button_Graphic := "|<022_Quit_OK_Button>*200$25.sDvyFltyFwwyNzCSRzbCSzvaDTwlDjyM7rzA9vziCRzbDCTnbn7vnwlltzA1wzY"
     Global 021_Quit_Title_Graphic := "|<021_Quit_Title>*10$41.01zzz3U71zzzD0TVvySw1z3XssE3z73lkUDy67XV0TwAD33UzsMS671zkkwAC3zVVsMQ3z73kks7yC7VVkDsQD33U7UsS67003k0AC00Dk0MQA0Dk0kwE"
     Global 023_Rebuild_Button_Graphic := "|<023_Rebuild_Button>*80$23.07zyw7zxyDzvwTVrsw0jlk0T33k0CDk0wTU3s073k0D7XzS77yyC7xwA73wQ07sQ0k"
 ;  Global 10_Commander_Title_Graphic := "|<10_Commander_Title>*200$48.7zzzszzz7zzztzzz7zzztzzz7zzztzzz7zzzlzzz7nUz0Dw77m0T0Dk17kyDlzXt7lzDlz7w7nzDlzDw7nzDlzDy7nzDlyDy7nzDlyDy7nzDlyTy7nzDlyDy7nzDlzDy7nzDlzDw7nzDlz7w7nzDlzXs7nzDlzk1U"
