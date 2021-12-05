@@ -55,7 +55,7 @@ SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 ; If WinExist("MEmu") or WinExist("MEmu") or WinExist("MEmu.exe") or WinExist("MEmu.exe")
 while WinExist(FoundAppTitle)
 {
-	Gosub Elivate_program
+	Elivate_program()
 	; If WinExist(FoundAppTitle)
 	main_program:
 	loop
@@ -75,8 +75,8 @@ while WinExist(FoundAppTitle)
 		; For User,Val in User_Logins
 		for User,Val in Base_Array
 		{
-			; Gosub Get_Window_Geometry
-			Gosub Check_Window_Geometry
+			; Get_Window_Geometry()
+			Check_Window_Geometry()
 			; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 			; ([FoundAppTitle,FoundAppClass,FoundAppControl,FoundAppProcess])
@@ -112,13 +112,13 @@ while WinExist(FoundAppTitle)
 			; Output .= "Password: " User_Pass " "
 			; Output .= "PIN: " User_PIN
 			
-			; Gosub Switch_Account
+			; Switch_Account()
 			; OR
 			{
 				MsgBox, 3, , Login to %Output% ? (3 second Timeout & auto),3 ; 5
 				vRet := MsgBoxGetResult()
 				if ((vRet = "Yes") || (vRet = "Timeout"))
-					Gosub Switch_Account
+					Switch_Account()
 				else if (vRet = "No")
 					goto END_of_user_loop
 			}
@@ -190,23 +190,23 @@ while WinExist(FoundAppTitle)
 				; DEBUG / Troubleshooting block - BEGIN
 				; add/remove or uncomment routines to check them
 				; ******************************************
-				; Gosub Speaker_Help
-				; Gosub Adventure_Missions
-				; Gosub Alliance_Boss_Feed
-				; Gosub Speaker_Help
-				; Gosub Active_Skill
-				; Gosub Alliance_Wages
+				; Speaker_Help()
+				; Adventure_Missions()
+				; Alliance_Boss_Feed()
+				; Speaker_Help()
+				; Active_Skill()
+				; Alliance_Wages()
 				
-				; Gosub Speaker_Help
+				; Speaker_Help()
 				/*
-				Gosub Speaker_Help
+				Speaker_Help()
 				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				Go_Back_To_Home_Screen()
-				Gosub Alliance_Wages
-				Gosub Active_Skill
-				Gosub Speaker_Help
+				Alliance_Wages()
+				Active_Skill()
+				Speaker_Help()
 				; Go_Back_To_Home_Screen()
-				Gosub Gather_Resources
+				Gather_Resources()
 				goto END_of_user_loop
 				*/
 				
@@ -214,42 +214,42 @@ while WinExist(FoundAppTitle)
 				; Goto_Coordinates()
 				
 				; Login_Password_PIN_BruteForce()
-				; Gosub Check_Window_Geometry
-				; Gosub Collect_Cafeteria
-				; Gosub Collect_Chips_Underground
-				; Gosub Collect_Collisions
-				; Gosub Collect_Equipment_Crafting
-				; Gosub Collect_Recruits
-				; Gosub Collect_Red_Envelopes
-				; Gosub Collect_Runes
-				; Gosub Depot_Rewards
-					; Gosub Desert_Oasis
-				; Gosub Desert_Wonder
-				; Gosub Donate_Tech
-				; Gosub Drop_Zone
-				; Gosub Game_Start_popups
-				; Gosub Gather_On_Base_RSS
-				; Gosub Gather_Resources
-				; Gosub Get_Inventory
-				; Gosub Get_User_Info
-				; Gosub Get_User_Location
-				; Gosub Golden_Chest
-				; Gosub Mail_Collection
-				; Gosub Peace_Shield
+				; Check_Window_Geometry()
+				; Collect_Cafeteria()
+				; Collect_Chips_Underground()
+				; Collect_Collisions()
+				; Collect_Equipment_Crafting()
+				; Collect_Recruits()
+				; Collect_Red_Envelopes()
+				; Collect_Runes()
+				; Depot_Rewards()
+					; Desert_Oasis()
+				; Desert_Wonder()
+				; Donate_Tech()
+				; Drop_Zone()
+				; Game_Start_popups()
+				; Gather_On_Base_RSS()
+				; Gather_Resources()
+				; Get_Inventory()
+				; Get_User_Info()
+				; Get_User_Location()
+				; Golden_Chest()
+				; Mail_Collection()
+				; Peace_Shield()
 				
-				; Gosub Golden_Chest
-				; Gosub Speaker_Help
-				; Gosub Benefits_Center
-				; Gosub Active_Skill
-				; Gosub Speaker_Help
-				; Gosub Reserve_Factory
-				; Gosub Speaker_Help
+				; Golden_Chest()
+				; Speaker_Help()
+				; Benefits_Center()
+				; Active_Skill()
+				; Speaker_Help()
+				; Reserve_Factory()
+				; Speaker_Help()
 				
-				; Gosub Send_Mail_To_Boss
-				; Gosub Send_Message_In_Chat
-				; Gosub Speaker_Help
-				; Gosub Switch_Account
-				; Gosub VIP_Shop
+				; Send_Mail_To_Boss()
+				; Send_Message_In_Chat()
+				; Speaker_Help()
+				; Switch_Account()
+				; VIP_Shop()
 				; Reset_Posit()
 				; Reload_MEmu()
 				; Reload_LEWZ()
@@ -266,15 +266,15 @@ while WinExist(FoundAppTitle)
 				; Select_App()
 				; Key_Menu()
 				
-				; Gosub Benefits_Center
-				; Gosub Active_Skill
+				; Benefits_Center()
+				; Active_Skill()
 				
-				; Gosub Collect_Chips_Underground
-				; Gosub Speaker_Help
-				; Gosub Get_User_Location	
-				; Gosub Get_User_Info
-				; Gosub Get_Inventory
-				; Gosub Send_Mail_To_Boss
+				; Collect_Chips_Underground()
+				; Speaker_Help()
+				; Get_User_Location()	
+				; Get_User_Info()
+				; Get_Inventory()
+				; Send_Mail_To_Boss()
 				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				
@@ -287,21 +287,21 @@ while WinExist(FoundAppTitle)
 				; ** Position dependant **
 				; ****************************
 				if Peace_Shield_Needed
-					Gosub Peace_Shield
+					Peace_Shield()
 				; Reset_Posit()
 				
-				Gosub Collect_Collisions
-				Gosub Collect_Recruits
-				Gosub Collect_Equipment_Crafting
-				Gosub Collect_Runes
-				Gosub Collect_Cafeteria
-				Gosub Depot_Rewards
-				Gosub Collect_Chips_Underground
+				Collect_Collisions()
+				Collect_Recruits()
+				Collect_Equipment_Crafting()
+				Collect_Runes()
+				Collect_Cafeteria()
+				Depot_Rewards()
+				Collect_Chips_Underground()
 				; if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
-				;	Gosub Golden_Chest
-				Gosub Speaker_Help
+				;	Golden_Chest()
+				Speaker_Help()
 				; if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
-					Gosub Drop_Zone
+					Drop_Zone()
 
 				; ****************************
 				; ** Not position dependant **
@@ -309,24 +309,24 @@ while WinExist(FoundAppTitle)
 				/*
 				if CSB_Event ; || Desert_Event
 					if !(Current_Hour_UTC = 00 && A_Min <= 30)
-						Gosub Reserve_Factory
+						Reserve_Factory()
 				*/
-				Gosub Active_Skill
-				; Gosub Donate_tech
-				Gosub Speaker_Help
+				Active_Skill()
+				; Donate_tech()
+				Speaker_Help()
 
 				; if (Routine = "New_Day")
-				{
-					Gosub VIP_Shop
-					Gosub Benefits_Center
-					Gosub Alliance_Boss_Feed
-				}
-				Gosub Speaker_Help
+				; {
+					VIP_Shop()
+					Benefits_Center()
+					Alliance_Boss_Feed()
+				; }
+				Speaker_Help()
 				; if (Routine = "End_Of_Day")
-				{
-					Gosub Mail_Collection
-					Gosub Alliance_Wages
-				}
+				; {
+					Mail_Collection()
+					Alliance_Wages()
+				; }
 				
 				; *************************
 				; DEBUG_SKIP:
@@ -334,33 +334,33 @@ while WinExist(FoundAppTitle)
 				
 
 				if Desert_Event
-					Gosub Desert_Oasis
+					Desert_Oasis()
 					
-				; Gosub Gather_Resources
+				; Gather_Resources()
 
 				if Desert_Event
 					if ((Current_Day_UTC = "Saturday") || (Current_Day_UTC = "Sunday")) ; || ((Current_Day_UTC = "Friday")
 						if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
-							Gosub Desert_Wonder
-				Gosub Speaker_Help
-				; Gosub Collect_Red_Envelopes
+							Desert_Wonder()
+				Speaker_Help()
+				; Collect_Red_Envelopes()
 				; if !Desert_Event
-				;	Gosub Gather_On_Base_RSS
+				;	Gather_On_Base_RSS()
 					
 				
 				; if ((Current_Day_UTC = "Monday") || (Current_Day_UTC = "Tuesday") || (Current_Day_UTC = "Wednesday")) 
-				; 	Gosub Gather_Resources
+				; 	Gather_Resources()
 
 				Message_To_The_Boss := User_Name . " " . Routine . " Routine,"
 				; if ((Routine = "New_Day") || (Routine = "End_Of_Day"))
 				; Reset_Posit()
-				Gosub Get_User_Location	
-				;	Gosub Collect_Recruits
-				;	Gosub Collect_Runes
-				Gosub Get_User_Info
-				Gosub Get_Inventory
-				Gosub Send_Mail_To_Boss
-				; Gosub Send_Message_In_Chat
+				Get_User_Location()	
+				;	Collect_Recruits()
+				;	Collect_Runes()
+				Get_User_Info()
+				Get_Inventory()
+				Send_Mail_To_Boss()
+				; Send_Message_In_Chat()
 
 				if Pause_Script	
 				{
@@ -384,14 +384,14 @@ while WinExist(FoundAppTitle)
 			F10::
 				; A_Index++
 				Continue
-				Gosub Switch_Account
+				Switch_Account()
 			return			
 
 			END_of_user_loop:
 		}
 
 		; start new log files
-		Gosub Refresh_LogFiles
+		Refresh_LogFiles()
 		; relaunch LEWZ
 		; Reload_LEWZ()
 		; Launch_Lewz()
@@ -415,7 +415,7 @@ Reload_LEWZ()
 {
 	Gosub Reload_LEWZ_Kill
 	Gosub Reload_LEWZ_Launch
-	Gosub Account_Loading
+	Account_Loading()
 	if !Go_Back_To_Home_Screen()
 		return 1
 	Else
@@ -468,12 +468,12 @@ Reload_MEmu()
 	MEmu_Instance := "MEmu_1" ; MEmu_1 MEmu_2
 	
 	Reload_MEmu_START:
-	Gosub Reload_MEmu_Kill
-	; Gosub Reload_MEmu_Launch
+	Reload_MEmu_Kill()
+	; Reload_MEmu_Launch()
 		
 	Loop, 10
 	{
-		Gosub Reload_MEmu_Launch
+		Reload_MEmu_Launch()
 		; DllCall("Sleep","UInt",(rand_wait + 2*Delay_Long+0))
 		loop, 3
 		{
@@ -482,19 +482,19 @@ Reload_MEmu()
 				Gui, Status:add,text,, MEmu finished Loaded!!
 				Gui, Status:show, x731 y0 w300 h500
 				GUI_Count++
-				Gosub Elivate_program
+				Elivate_program()
 				return 1
 			}
 			Else
-				Gosub Reload_MEmu_Launch
+				Reload_MEmu_Launch()
 		}
 
 		Gui, Status:add,text,, Reoading MEmu %A_Index%
 		Gui, Status:show, x731 y0 w300 h500
 		GUI_Count++
 				
-		Gosub Reload_MEmu_Kill
-		; Gosub Reload_MEmu_Launch
+		Reload_MEmu_Kill()
+		; Reload_MEmu_Launch()
 	}
 	Gui, Status:add,text,, MEmu NOT Loaded!
 	Gui, Status:show, x731 y0 w300 h500
@@ -503,35 +503,35 @@ Reload_MEmu()
 	return 0
 }	
 	
-	Reload_MEmu_Kill:
+Reload_MEmu_Kill()
+{
+	Gui, Status:new, , Status
+	Gui, Status:Margin, 0, 0
+	Gui, Status:add,text,, MEmu VM Shutdown...
+	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
+	loop, 2
 	{
-		Gui, Status:new, , Status
-		Gui, Status:Margin, 0, 0
-		Gui, Status:add,text,, MEmu VM Shutdown...
-		Gui, Status:show, x731 y0 w300 h500
-		GUI_Count++
-		loop, 2
-		{
-			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm " . MEmu_Instance)
-			DllCall("Sleep","UInt",(3*Delay_Long+0))
-		}
-		DllCall("Sleep","UInt",(4*Delay_Long+0))
-		return
+		RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" ShutdownVm " . MEmu_Instance)
+		DllCall("Sleep","UInt",(3*Delay_Long+0))
 	}
+	DllCall("Sleep","UInt",(4*Delay_Long+0))
+	return
+}
 
-	Reload_MEmu_Launch:
-	{		
-		Gui, Status:add,text,, MEmu VM Startup...
-		Gui, Status:show, x731 y0 w300 h500
-		GUI_Count++
-		loop, 2
-		{
-			RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" " . MEmu_Instance)
-			DllCall("Sleep","UInt",(3*Delay_Long+0))
-		}
-		DllCall("Sleep","UInt",(4*Delay_Long+0))
-		return
+Reload_MEmu_Launch()
+{		
+	Gui, Status:add,text,, MEmu VM Startup...
+	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
+	loop, 2
+	{
+		RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\MEmuConsole.exe"" " . MEmu_Instance)
+		DllCall("Sleep","UInt",(3*Delay_Long+0))
 	}
+	DllCall("Sleep","UInt",(4*Delay_Long+0))
+	return
+}
 
 ; Launch_LEWZ() calls Go_Back_To_Home_Screen() and NOT Reload_MEmu()
 ; Launch LEWZ app from android main screen
@@ -547,7 +547,7 @@ Launch_LEWZ()
 
 	Launch_LEWZ_Click_Icon:
 	Select_App()
-	Gosub Check_Window_Geometry
+	Check_Window_Geometry()
 	
 	oIcon_LEWZSearch := new graphicsearch()	
 	loop, 60
@@ -579,7 +579,7 @@ Launch_LEWZ()
 
 	Launch_LEWZ_Continue:
 	
-	Gosub Account_Loading
+	Account_Loading()
 	
 	if Go_Back_To_Home_Screen()
 	{
@@ -605,7 +605,7 @@ Launch_LEWZ()
 ; Go back until "Quit" dialog pop-ups, then make sure dialog goes away
 Go_Back_To_Home_Screen()
 {
-	Gosub Check_Window_Geometry
+	Check_Window_Geometry()
 	loop, 10
 	{
 		Command_To_Screen("{F5}")
@@ -616,7 +616,7 @@ Go_Back_To_Home_Screen()
 	
 	loop, 10
 	{
-		Gosub Check_Window_Geometry
+		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
 		loop, 10
 			if Quit_GraphicSearch()
@@ -627,16 +627,17 @@ Go_Back_To_Home_Screen()
 	return 0
 	
 	Go_Back_To_Home_Screen_OCR_NOT_Quit:
-		Gosub Check_Window_Geometry
+	Check_Window_Geometry()
 
 	Command_To_Screen("{F5}")
+	DllCall("Sleep","UInt",(3*Delay_Short+0))
 	loop, 2
 		if !Quit_GraphicSearch()
 			return 1
 	
 	loop, 10
 	{
-		Gosub Check_Window_Geometry
+		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
 		loop, 5
 			if !Quit_GraphicSearch()
@@ -651,7 +652,7 @@ Quit_GraphicSearch() {
 	oGoBackSearch := new graphicsearch()	
 	oRebuildSearch := new graphicsearch()
 	Quit_Graphics := 022_Quit_OK_Button_Graphic 021_Quit_Title_Graphic
-	; Gosub Check_Window_Geometry
+	; Check_Window_Geometry()
 	
 	resultGoBack := oGoBackSearch.search(Quit_Graphics, optionsObjCoords)
 	if (resultGoBack)
@@ -666,7 +667,7 @@ Quit_GraphicSearch() {
 
 Quit_OCR()
 {
-	; Gosub Check_Window_Geometry
+	; Check_Window_Geometry()
 	; OCR search for "quit" 151, 522 to 202, 554
 	Find_Quit := Search_Captured_Text_OCR(["Quit"], {Pos: [150, 520], Size: [50, 35]})
 	If (Find_Quit.Found)
@@ -676,7 +677,7 @@ Quit_OCR()
 }
 
 ; Clear in-game splash pages
-Game_Start_popups:
+Game_Start_popups()
 {
 	Subroutine_Running := "Game_Start_popups"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -742,7 +743,7 @@ Reset_Posit()
 
 
 ; Login to account using stored credentials
-Switch_Account:
+Switch_Account()
 {
 	Subroutine_Running := "Switch_Account"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -861,7 +862,7 @@ Switch_Account:
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	Mouse_Click(455,739, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Tap Use your email to log in
 	
-	Gosub Account_Loading
+	Account_Loading()
 	
 	; Switch_Account_END:
 	; Login_Password_PIN_Enter()
@@ -869,7 +870,7 @@ Switch_Account:
 	return
 }
 
-Account_Loading:
+Account_Loading()
 {
 	oGraphicSearch := new graphicsearch()	
 	Loading_Text_Array := ["2nd","Anniversary","Arms","Base","Benefit","Celebrat","Center","Deal","Detail","Dio","Doomsday","element","Festival","Hot","Hunter","Invest","Iron","Master","Mutation","New","Officer","Online","Pack","Racer","relocat","Reynolds","Sale","state","Supply","Today","View","Wall","Weekly"]
@@ -1124,7 +1125,7 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "1
 	return
 }
 
-Peace_Shield:
+Peace_Shield()
 {
 	Subroutine_Running := "Peace_Shield"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1395,7 +1396,7 @@ Peace_Shield:
 }
 
 ; collect collisions
-Collect_Collisions:
+Collect_Collisions()
 {
 	Subroutine_Running := "Collect_Collisions"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1445,7 +1446,7 @@ Collect_Collisions:
 }
 
 ; collect Equipment Crafting
-Collect_Equipment_Crafting:
+Collect_Equipment_Crafting()
 {
 	Subroutine_Running := "Collect_Equipment_Crafting"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1496,7 +1497,7 @@ Collect_Equipment_Crafting:
 }
 
 ; Collect Recruits
-Collect_Recruits:
+Collect_Recruits()
 {
 	Subroutine_Running := "Collect_Recruits"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1549,7 +1550,7 @@ Collect_Recruits:
 }
 
 ; Collect Runes
-Collect_Runes:
+Collect_Runes()
 {
 	Subroutine_Running := "Collect_Runes"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1586,7 +1587,7 @@ Collect_Runes:
 	return
 }
 
-Collect_Red_Envelopes:
+Collect_Red_Envelopes()
 {
 	Subroutine_Running := "Collect_Red_Envelopes"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1607,8 +1608,8 @@ Collect_Red_Envelopes:
 		Command_To_Screen("!{F2}")
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 
-		; Gosub Get_Window_Geometry
-		Gosub Check_Window_Geometry
+		; Get_Window_Geometry()
+		Check_Window_Geometry()
 
 		Mouse_Click(33,62, {Timeout: (1*Delay_Medium+0)}) ; Tap back Button
 
@@ -1649,7 +1650,7 @@ Activity_Center_Open()
 	return 0
 }
 
-Desert_Wonder:
+Desert_Wonder()
 {
 	if !Activity_Center_Open()
 		goto Desert_Wonder_END
@@ -1751,7 +1752,7 @@ Desert_Wonder:
 	return
 }
 
-Benefits_Center:
+Benefits_Center()
 {
 	Subroutine_Running := "Benefits_Center"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -1801,7 +1802,7 @@ Benefits_Center:
 		; Mouse_Drag(580, 187, 116, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(580, 187, 90, 187, {EndMovement: T, SwipeTime: 500})
 		; Mouse_Drag(500, 187, 120, 187, {EndMovement: T, SwipeTime: 500})
-		Mouse_Drag(500, 187, 300, 187, {EndMovement: F, SwipeTime: 300}) ; 324 is half
+		Mouse_Drag(500, 187, 100, 187, {EndMovement: F, SwipeTime: 300}) ; 324 is half
 		; Mouse_Drag(500, 187, 300, 187, {EndMovement: T, SwipeTime: 500}) ; 324 is half
 		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
@@ -1823,8 +1824,8 @@ Benefits_Center:
 			;		DllCall("Sleep","UInt",(2*Delay_Micro+0))
 		}
 
-		; Gosub Get_Window_Geometry
-		Gosub Check_Window_Geometry
+		; Get_Window_Geometry()
+		Check_Window_Geometry()
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
 		loop, 4
@@ -2104,7 +2105,7 @@ Benefits_Center:
 }
 
 ; Tap Speaker/help
-Speaker_Help:
+Speaker_Help()
 {
 	Subroutine_Running := "Speaker_Help"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2131,11 +2132,13 @@ Speaker_Help:
 	}
 	
 	if !Go_Back_To_Home_Screen()
+		Reload_LEWZ()	
+	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
 	return
 }
 
-Drop_Zone:
+Drop_Zone()
 {
 	Subroutine_Running := "Drop_Zone"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2164,7 +2167,7 @@ Drop_Zone:
 	return
 }
 
-Adventure_Missions:
+Adventure_Missions()
 {
 	Subroutine_Running := "Adventure_Missions"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2175,7 +2178,7 @@ Adventure_Missions:
 	return
 }
 
-Collect_Cafeteria:
+Collect_Cafeteria()
 {
 	Subroutine_Running := "Collect_Cafeteria"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2188,7 +2191,7 @@ Collect_Cafeteria:
 	return
 }
 
-Active_Skill:
+Active_Skill()
 {
 	Subroutine_Running := "Active_Skill"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2293,7 +2296,7 @@ Active_Skill:
 	{
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
-		; Gosub Check_Window_Geometry
+		; Check_Window_Geometry()
 		Mouse_Click(195,1195, {Timeout: (3*Delay_Short+0)}) ; Tap Activate Skills
 		; DllCall("Sleep","UInt",(rand_wait + 3*Delay_Medium+0))
 		
@@ -2317,7 +2320,7 @@ Active_Skill:
 
 }
 
-Collect_Chips_Underground:
+Collect_Chips_Underground()
 {
 	Subroutine_Running := "Collect_Chips_Underground"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2342,7 +2345,7 @@ Collect_Chips_Underground:
 }
 
 ; upgrade and ask for factory help during csb
-Reserve_Factory:
+Reserve_Factory()
 {
 	Subroutine_Running := "Reserve_Factory"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2551,7 +2554,7 @@ Reserve_Factory:
 }
 
 ; open alliance technology menu and tap donate until time > 4 hours
-Donate_Tech:
+Donate_Tech()
 {
 	Subroutine_Running := "Donate_tech"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2760,7 +2763,7 @@ Donate_Tech:
 	return
 }
 
-Depot_Rewards:
+Depot_Rewards()
 {
 	Subroutine_Running := "Depot_Rewards"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2837,7 +2840,7 @@ Depot_Rewards:
 	return
 }
 
-VIP_Shop:
+VIP_Shop()
 {
 	Subroutine_Running := "VIP_Shop"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -2888,12 +2891,12 @@ VIP_Shop:
 	{
 		Gosub VIP_Shop_Search_text ; search first box
 		
-		return
+		; return
 		
 		; Troop Donations?
 		; Monday = Yes ; No
 		; Tuesday = Yes ; No
-		; Wednesday = Yes ; No
+		; Wednesday = Yes
 		; Thursday = No
 		; Friday = No
 		; Saturday = Yes
@@ -2979,7 +2982,7 @@ VIP_Shop:
 	return
 }
 
-Mail_Collection:
+Mail_Collection()
 {
 	Subroutine_Running := "Mail_Collection"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3104,8 +3107,8 @@ Mail_Collection:
 			Mouse_Click(50,60, {Timeout: (1*Delay_Medium+0)}) ; Tap Message back
 		}
 
-		; Gosub Get_Window_Geometry
-		Gosub Check_Window_Geometry
+		; Get_Window_Geometry()
+		Check_Window_Geometry()
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
 		Mouse_Click(500,1200, {Timeout: (1*Delay_Medium+0)}) ; Tap Mail Icon
@@ -3173,7 +3176,7 @@ Open_Menu_Alliance(SubMenu := "")
 }
 */
 
-Alliance_Boss_Feed:
+Alliance_Boss_Feed()
 {
 	Subroutine_Running := "Alliance_Boss"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3229,7 +3232,7 @@ Alliance_Boss_Feed:
 		return
 }
 
-Alliance_Wages:
+Alliance_Wages()
 {
 	Subroutine_Running := "Alliance_Wages"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3437,7 +3440,7 @@ Alliance_Wages:
 
 }
 
-Train_Daily_Requirement:
+Train_Daily_Requirement()
 {
 	Subroutine_Running := "Train_Daily_Requirement"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3499,7 +3502,7 @@ Train_Daily_Requirement:
 	loop, 2
 	{
 		Mouse_Click(390,940) ; Tap Vehicle Factory
-		Gosub Click_Middle_Screen
+		Click_Middle_Screen()
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 	}
 	; Tap Train Button
@@ -3512,7 +3515,7 @@ Train_Daily_Requirement:
 	loop, 2
 	{
 		Mouse_Click(220,845) ; Tap Warrior Camp
-		Gosub Click_Middle_Screen
+		Click_Middle_Screen()
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 	}
 	; Tap Train Button
@@ -3526,7 +3529,7 @@ Train_Daily_Requirement:
 	loop, 2
 	{
 		Mouse_Click(100,800) ; Tap Shooter Camp
-		Gosub Click_Middle_Screen
+		Click_Middle_Screen()
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 	}
 	; Tap Train Button
@@ -3540,7 +3543,7 @@ Train_Daily_Requirement:
 	loop, 2
 		{
 		Mouse_Click(10,717) ; Tap Biochemical Center
-		Gosub Click_Middle_Screen
+		Click_Middle_Screen()
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 	}
 	; Tap Train Button
@@ -3577,7 +3580,7 @@ Train_Daily_Requirement:
 	}
 }
 
-Gather_Resources:
+Gather_Resources()
 {
 	Subroutine_Running := "Gather_Resources"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3730,7 +3733,7 @@ Gather_Resources:
 	}
 }
 
-Desert_Oasis:
+Desert_Oasis()
 {
 	Subroutine_Running := "Desert_Oasis"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -3956,7 +3959,7 @@ Enter_Coordinates_From_World()
 		if Enter_Coordinates_Open_Check()
 			return 1
 
-	Gosub Check_Window_Geometry
+	Check_Window_Geometry()
 	return 0
 }
 
@@ -3971,7 +3974,7 @@ Enter_Coordinates_Open_Check()
 }
 
 ; Gather available Fuel, Food, Steel and alloy RSS from base farms
-Gather_On_Base_RSS:
+Gather_On_Base_RSS()
 {
 	Subroutine_Running := "Gather_On_Base_RSS"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4102,7 +4105,7 @@ Gather_On_Base_RSS:
 }
 
 ; Claim Golden_Chest items
-Golden_Chest:
+Golden_Chest()
 {
 	Subroutine_Running := "Golden_Chest"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4187,7 +4190,7 @@ Golden_Chest:
 }
 
 ; Send in-game message to "BOSS" with retrieved info
-Send_Mail_To_Boss:
+Send_Mail_To_Boss()
 {
 	Subroutine_Running := "Send_Mail_To_Boss"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4196,7 +4199,60 @@ Send_Mail_To_Boss:
 	; FormatTime, LogDateTimeString,, yyyy-MM-dd HH:mm:ss
 	FormatTime, LogDateTimeString,, yyyy-MM-dd @ HHmm
 	FormatTime, DayOfWeek,, ddd
-	CSVout.WriteLine(LogDateTimeString "," Message_To_The_Boss)
+	
+	/*
+	Message_To_The_Boss := "LogDateTimeString"
+	. ",User_Name_new"
+	. ",User_Name_old"
+	. ",User_Email"
+	. ",User_Pass"
+	. ",User_PIN"
+	. ",User_Name_Captured"
+	. ",User_City_Location_XY"
+	. ",User_Found_Alliance"
+	. ",User_Found_State"
+	. ",Shield_Ends"
+	. ",User_ID"
+	. ",User_VIP"
+	. ",User_Power"
+	. ",User_Diamonds"
+	. ",Available_Fuel"
+	. ",Available_Food"
+	. ",Available_Steel"
+	. ",Available_Alloy"
+	. ",Inventory_Fuel"
+	. ",Inventory_Food"
+	. ",Inventory_Steel"
+	. ",Inventory_Alloy`n"
+	*/
+	
+	Message_To_The_Boss := LogDateTimeString
+	. "," . Base_Array[User].User_Name_new
+	. "," . Base_Array[User].User_Name_old
+	. "," . Base_Array[User].User_Email
+	. "," . Base_Array[User].User_Pass
+	. "," . Base_Array[User].User_PIN
+	. "," . Base_Array[User].User_Name_Captured
+	. "," . Base_Array[User].User_City_Location_XY
+	. "," . Base_Array[User].User_Found_Alliance
+	. "," . Base_Array[User].User_Found_State
+	. "," . Base_Array[User].Shield_Ends
+	. "," . Base_Array[User].User_ID
+	. "," . Base_Array[User].User_VIP
+	. "," . Base_Array[User].User_Power
+	. "," . Base_Array[User].User_Diamonds
+	. "," . Base_Array[User].Available_Fuel
+	. "," . Base_Array[User].Available_Food
+	. "," . Base_Array[User].Available_Steel
+	. "," . Base_Array[User].Available_Alloy
+	. "," . Base_Array[User].Inventory_Fuel
+	. "," . Base_Array[User].Inventory_Food
+	. "," . Base_Array[User].Inventory_Steel
+	. "," . Base_Array[User].Inventory_Alloy
+	
+	; CSVout.WriteLine(LogDateTimeString "," RegExReplace(Message_To_The_Boss,"[\r\n ]+"," "))
+	CSVout.WriteLine(Message_To_The_Boss)
+	; CSVout.WriteLine(LogDateTimeString "," Message_To_The_Boss)
 	FormatTime, TimeString_Message, R
 	; Message_To_The_Boss .= DayOfWeek . ", " . LogDateTimeString
 
@@ -4336,8 +4392,8 @@ Send_Mail_To_Boss:
 			Mouse_Click(50,60) ; Tap Message back
 		}
 
-		; Gosub Get_Window_Geometry
-		Gosub Check_Window_Geometry
+		; Get_Window_Geometry()
+		Check_Window_Geometry()
 		if !Go_Back_To_Home_Screen()
 			Reload_LEWZ()
 		Mouse_Click(500,1200) ; Tap Mail Icon
@@ -4347,7 +4403,7 @@ Send_Mail_To_Boss:
 }
 
 ; Send message via in-game chat interface
-Send_Message_In_Chat:
+Send_Message_In_Chat()
 {
 	Subroutine_Running := "Send_Message_In_Chat"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4384,7 +4440,7 @@ Send_Message_In_Chat:
 }
 
 ; OCR capture available and stored RSS levels
-Get_Inventory:
+Get_Inventory()
 {
 	Subroutine_Running := "Get_Inventory"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4481,13 +4537,14 @@ Get_Inventory:
 	Base_Array[User].Inventory_Alloy :=  Convert_OCR_Value(Inventory_Alloy)
 	
 	; Array_Gui(Base_Array)
+	
+	/*
 
 	; CSV entry
 	Message_To_The_Boss .= "Fuel:`," . Available_Fuel . "`," . Inventory_Fuel
 	. "`,Food:`," . Available_Food . "`," . Inventory_Food
 	. "`,Steel:`," . Available_Steel . "`," . Inventory_Steel
 	. "`,Alloy:`," . Available_Alloy . "`," . Inventory_Alloy . "`,"
-	/*
 	Message_To_The_Boss .= "Fuel:," . Available_Fuel . "," . Inventory_Fuel
 	. ",Food:," . Available_Food . "," . Inventory_Food
 	. ",Steel:," . Available_Steel . "," . Inventory_Steel
@@ -4523,7 +4580,7 @@ Get_Inventory:
 }
 
 ; OCR capture User info like VIP level, combat power, alliance and state
-Get_User_Info:
+Get_User_Info()
 {
 	Subroutine_Running := "Get_User_Info"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4546,13 +4603,13 @@ Get_User_Info:
 
 	; capture text from commander info screen
 	; DllCall("Sleep","UInt",(7*Delay_Short+0))
-	User_Name_Captured := Search_Captured_Text_OCR(["0"], {Pos: [205, 186], Size: [180, 22]}).Text
+	User_Name_Captured := Search_Captured_Text_OCR(["0"], {Pos: [205, 186], Size: [180, 23]}).Text
 	; User_Name_Captured := OCR([205, 187, 180, 22], "eng")
-	User_State_Alliance := Search_Captured_Text_OCR(["0"], {Pos: [290, 131], Size: [220, 24]}).Text
+	User_State_Alliance := Search_Captured_Text_OCR(["0"], {Pos: [290, 131], Size: [230, 25]}).Text
 	; User_State_Alliance := OCR([290, 154, 220, 23], "eng")
-	User_VIP := Search_Captured_Text_OCR(["0"], {Pos: [183, 129], Size: [116, 26]}).Text
+	User_VIP := Search_Captured_Text_OCR(["0"], {Pos: [183, 129], Size: [116, 28]}).Text
 	; User_VIP := OCR([183, 151, 116, 24], "eng")
-	User_Power := Search_Captured_Text_OCR(["0"], {Pos: [480, 366], Size: [142, 26]}).Text
+	User_Power := Search_Captured_Text_OCR(["0"], {Pos: [470, 366], Size: [152, 26]}).Text
 	; User_Power := OCR([480, 366, 142, 24], "eng")
 	User_ID := Search_Captured_Text_OCR(["0"], {Pos: [190, 160], Size: [160, 24]}).Text
 
@@ -4564,9 +4621,13 @@ Get_User_Info:
 	; Extract User_Found_Alliance from User_State_Alliance
 	RegExMatch(User_State_Alliance, "`[[A-Za-z]+`]" , User_Found_Alliance)
 	User_Found_Alliance := % RegExReplace(User_Found_Alliance,"[^A-Za-z0-9 ]+")
+	Base_Array[User].User_Found_Alliance := User_Found_Alliance
+
 
 	; Extract User_Found_State from User_State_Alliance
-	RegExMatch(User_State_Alliance, "\d\d\d" , User_Found_State)
+	RegExMatch(User_State_Alliance, "\#\d+" , User_Found_State)
+	User_Found_State := % RegExReplace(User_Found_State,"[^\d]+")
+	Base_Array[User].User_Found_State := User_Found_State
 
 	; Clean up User_VIP
 	User_VIP := % RegExReplace(User_VIP,"[^A-Za-z0-9]+")
@@ -4582,21 +4643,23 @@ Get_User_Info:
 
 	; MsgBox, % "User_State_Alliance:" User_State_Alliance " and User_Found_Alliance: " User_Found_Alliance " User_Found_State: " User_Found_State
 
-	; User_Name_Captured := trim(User_Name_Captured)
-	; User_VIP := trim(User_VIP)
-	; User_State_Alliance := trim(User_State_Alliance)
-	; User_Power := trim(User_Power)
+	Base_Array[User].User_Name_Captured := trim(User_Name_Captured)
+	Base_Array[User].User_VIP := trim(User_VIP)
+	Base_Array[User].User_State_Alliance := trim(User_State_Alliance)
+	Base_Array[User].User_Power := trim(User_Power)
 	; MsgBox, % "2. after trim " User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 
 	if !Go_Back_To_Home_Screen()
 		Reload_LEWZ()
-
+	
+	/*
 	Message_To_The_Boss .= User_Name_Captured
 	. "`,Alliance:`," . User_Found_Alliance
 	. "`,State:`," . User_Found_State
 	. "`,VIP:`," . User_VIP
 	. "`,Power:`," . User_Power . "`,"
 	. "`,Diamonds:`," . Base_Array[User].User_Diamonds . "`,"
+	*/
 	
 	
 	; Base_Array[User] := {User_Name_Captured : User_Name_Captured, User_State_Alliance: User_State_Alliance, User_VIP: User_VIP, User_Power: User_Power, User_Diamonds: User_Diamonds}
@@ -4606,6 +4669,7 @@ Get_User_Info:
 	Base_Array[User].User_Found_Alliance := User_Found_Alliance
 	Base_Array[User].User_VIP := User_VIP
 	Base_Array[User].User_Power := User_Power
+	User_ID := % RegExReplace(User_ID,"ID\:")
 	Base_Array[User].User_ID := User_ID
 	
 	
@@ -4615,12 +4679,12 @@ Get_User_Info:
 }
 
 ; OCR capture Map coordinates of base
-Get_User_Location:
+Get_User_Location()
 {
 	Subroutine_Running := "Get_User_Location"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
-
+			
 	loop, 3
 	{
 		Mouse_Click(76,1200, {Timeout: (3*Delay_Long+0)}) ; Tap World/home button
@@ -4670,7 +4734,7 @@ Get_User_Location:
 
 /*
 ; Search for bases in world map, NINJA style
-Base_Search_World_Map:
+Base_Search_World_Map()
 {
 	Subroutine_Running := "Base_Search_World_Map"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -4941,7 +5005,7 @@ Base_Search_World_Map:
 ; Function to clear zombie pop-up messages
 Check_For_Zombie_Popup()
 {
-	Gosub Check_Window_Geometry
+	Check_Window_Geometry()
 	; Red Attack button
 	; 210, 887 to 473, 938 - red 0x830D01 Attack zombie button
 	; 162, 838 to 523, 890 - red 0x720D06 attack rover button
@@ -4986,7 +5050,7 @@ Check_For_Zombie_Popup()
 */
 
 ; Elivate MEMU processes
-Elivate_program:
+Elivate_program()
 {
 	Subroutine_Running := "Elivate_program"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -5059,7 +5123,7 @@ Elivate_program:
 }
 
 ; Elivate MEMU processes
-Elivate_program_old:
+Elivate_program_old()
 {
 	/*
 	C:\Program Files\AutoHotkey\AutoHotkey.exe
@@ -5206,7 +5270,7 @@ Elivate_program_old:
 }
 
 ; Find out size of app window
-Get_Window_Geometry:
+Get_Window_Geometry()
 {
 	Subroutine_Running := "Get_Window_Geometry"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -5239,7 +5303,7 @@ Get_Window_Geometry:
 }
 
 ; check and Reposition window according to predefined settings
-Check_Window_Geometry:
+Check_Window_Geometry()
 {
 	; Subroutine_Running := "Check_Window_Geometry"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -5269,7 +5333,7 @@ Check_Window_Geometry:
 		if FoundAppY = App_Win_Y
 			if FoundAppWidth = App_WinWidth
 				if FoundAppHeight = App_WinHeight
-					return
+					return 1
 
 	; Changes the position and/or size of the specified window.
 	; WinMove, X, Y
@@ -5279,7 +5343,7 @@ Check_Window_Geometry:
 	else
 		WinMove, %FoundAppTitle%, , App_Win_X, App_Win_Y, App_WinWidth, App_WinHeight ; Move the window preset coords
 	; MsgBox, %FoundAppTitle% Upper: %FoundAppX%, %FoundAppY% %FoundAppWidth%x%FoundAppHeight% Lower: %LowerX%, %LowerY%
-	return
+	return 0
 
 	MEmu_Operation_Recorder_X := App_Win_X
 	MEmu_Operation_Recorder_Y := (App_Win_Y+App_WinHeight+1)
@@ -5338,7 +5402,7 @@ Check_Window_Geometry:
 }
 
 ; Tap in the middle of the screen
-Click_Middle_Screen:
+Click_Middle_Screen()
 {
 	Subroutine_Running := "Click_Middle_Screen"
 	stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
@@ -5346,7 +5410,7 @@ Click_Middle_Screen:
 }
 
 ; Close and reopen log file for troubleshooting
-Refresh_LogFiles:
+Refresh_LogFiles()
 {
 	stdout.Close()
 	CSVout.Close()
@@ -5355,6 +5419,30 @@ Refresh_LogFiles:
 	AppendCSVFile := ".\CSV\" . FileDateTimeString . "_Append.csv"
 	stdout := FileOpen(LogFile, "w `n")
 	CSVout := FileOpen(CSVFile, "w `n")
+		CSVout_Header := "LogDateTimeString"
+	. ",User_Name_new"
+	. ",User_Name_old"
+	. ",User_Email"
+	. ",User_Pass"
+	. ",User_PIN"
+	. ",User_Name_Captured"
+	. ",User_City_Location_XY"
+	. ",User_Found_Alliance"
+	. ",User_Found_State"
+	. ",Shield_Ends"
+	. ",User_ID"
+	. ",User_VIP"
+	. ",User_Power"
+	. ",User_Diamonds"
+	. ",Available_Fuel"
+	. ",Available_Food"
+	. ",Available_Steel"
+	. ",Available_Alloy"
+	. ",Inventory_Fuel"
+	. ",Inventory_Food"
+	. ",Inventory_Steel"
+	. ",Inventory_Alloy`n"
+	CSVout.WriteLine(CSVout_Header)
 
 	return
 }
@@ -5438,8 +5526,8 @@ F7::
 return
 
 Check_AppWindows_Timer:
-	; Gosub Get_Window_Geometry
-	Gosub Check_Window_Geometry
+	; Get_Window_Geometry()
+	Check_Window_Geometry()
 	Key_Menu()
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 return
