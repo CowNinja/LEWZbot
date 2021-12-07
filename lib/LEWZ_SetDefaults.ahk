@@ -331,7 +331,7 @@ Loop, Read, LEWZ_User_Logins.ini
 */
 
 
-Base_Array := {}
+global Base_Array := {}
 Loop, Read, LEWZ_User_Logins.ini
 {
 	row := StrSplit(A_LoopReadLine, ",")
