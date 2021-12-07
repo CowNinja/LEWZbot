@@ -88,7 +88,7 @@ while WinExist(FoundAppTitle)
 			global User_PIN := Base_Array[User].User_PIN
 			
 			/*
-			global Current_User_Name := Base_Array[User]
+			global Current_User_Name := Base_Array[User_Name]
 			global Current_User_Email := Val[2]
 			global Current_User_Pass := Val[3]
 			global Current_User_PIN := Val[4]
@@ -132,8 +132,8 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
-			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -751,8 +751,7 @@ Switch_Account()
 	Gui, Status:add,text,, Switching to %User_Name%
 	; Gui, Status:show, x%MsgWinMove_X% y0 w300 h500
 	Gui, Status:show, x731 y0 w300 h500
-	loop, 2
-		GUI_Count++
+	GUI_Count+=2
 	oAccountSearch := new graphicsearch()	
 	oLoginSearch := new graphicsearch()			
 	allQueries_Account := 1A_Settings_Button_Graphic 1A1_Account_Button_Graphic 1A12_Switch_Button_Graphic 1A123_WarZ_Button_Graphic 1A1232_OtherAccount_Button_Graphic
@@ -1196,7 +1195,7 @@ Peace_Shield()
 
 	; Shield_Ends_Capture := Search_Captured_Text_OCR(["Ends"], {Pos: [171, 126], Size: [238, 36]})
 	Shield_Ends_Capture := Search_Captured_Text_OCR(["Ends"], {Pos: [205, 130], Size: [195, 26]})
-	Base_Array[User].Shield_Ends := RegExReplace(Shield_Ends_Capture.Text,":",";")
+	Base_Array[User_Name].Shield_Ends := RegExReplace(Shield_Ends_Capture.Text,":",";")
 	
 	if (Shield_Ends_Capture.Found)
 	{
@@ -1257,7 +1256,7 @@ Peace_Shield()
 				
 		; MsgBox, % "3. Shield_Ends:" Shield_Ends "`nShield Duration D:" Shield_DD " hh:mm:ss:" Shield_HH ":" Shield_MM ":" Shield_SS "`nA_NowUTC:" A_NowUTC "`nShield_NOW_Plus_Duration:" Shield_NOW_Plus_Duration
 		
-		; Base_Array[User].Shield_Ends := "Ends in " . Shield_DD . " days, " . Shield_HH . " Hr, and " . Shield_MM . "min"
+		; Base_Array[User_Name].Shield_Ends := "Ends in " . Shield_DD . " days, " . Shield_HH . " Hr, and " . Shield_MM . "min"
 		
 		/*
 		Shield_Expires_Day := Shield_NOW_Plus_Duration
@@ -1281,7 +1280,7 @@ Peace_Shield()
 		Else
 			Shield_Expires_DateTime := "Shield expires on " . Shield_Expires_Day . " @ " Shield_Expires_HH ":" Shield_Expires_MM
 
-		Base_Array[User].Shield_Ends := Shield_Expires_DateTime
+		Base_Array[User_Name].Shield_Ends := Shield_Expires_DateTime
 		
 		if ((At_War && (Shield_DD <= 1)) || (Shield_Expires_Day = "Thursday") || (Shield_Expires_Day = "Friday") || (Shield_Expires_Day = "Saturday") || ((Shield_Expires_Day = "Sunday") && (Shield_Expires_HH <= 19)))
 		{
@@ -1316,7 +1315,7 @@ Peace_Shield()
 		goto Peace_Shield_END
 	
 	Activate_Shield:
-	Base_Array[User].Shield_Ends := "Shield is Expired"
+	Base_Array[User_Name].Shield_Ends := "Shield is Expired"
 	; Mouse_Click(Click_X,Click_Y, {Timeout: (Delay_Medium+0)}) ; Click first box to enable shield
 
 	; change button text: "Yes" to "3Day", "No" to "24hour", and "Cancel" to "8hour"
@@ -4227,28 +4226,28 @@ Send_Mail_To_Boss()
 	*/
 	
 	Message_To_The_Boss := LogDateTimeString
-	. "," . Base_Array[User].User_Name_new
-	. "," . Base_Array[User].User_Name_old
-	. "," . Base_Array[User].User_Email
-	. "," . Base_Array[User].User_Pass
-	. "," . Base_Array[User].User_PIN
-	. "," . Base_Array[User].User_Name_Captured
-	. "," . Base_Array[User].User_City_Location_XY
-	. "," . Base_Array[User].User_Found_Alliance
-	. "," . Base_Array[User].User_Found_State
-	. "," . Base_Array[User].Shield_Ends
-	. "," . Base_Array[User].User_ID
-	. "," . Base_Array[User].User_VIP
-	. "," . Base_Array[User].User_Power
-	. "," . Base_Array[User].User_Diamonds
-	. "," . Base_Array[User].Available_Fuel
-	. "," . Base_Array[User].Available_Food
-	. "," . Base_Array[User].Available_Steel
-	. "," . Base_Array[User].Available_Alloy
-	. "," . Base_Array[User].Inventory_Fuel
-	. "," . Base_Array[User].Inventory_Food
-	. "," . Base_Array[User].Inventory_Steel
-	. "," . Base_Array[User].Inventory_Alloy
+	. "," . Base_Array[User_Name].User_Name_new
+	. "," . Base_Array[User_Name].User_Name_old
+	. "," . Base_Array[User_Name].User_Email
+	. "," . Base_Array[User_Name].User_Pass
+	. "," . Base_Array[User_Name].User_PIN
+	. "," . Base_Array[User_Name].User_Name_Captured
+	. "," . Base_Array[User_Name].User_City_Location_XY
+	. "," . Base_Array[User_Name].User_Found_Alliance
+	. "," . Base_Array[User_Name].User_Found_State
+	. "," . Base_Array[User_Name].Shield_Ends
+	. "," . Base_Array[User_Name].User_ID
+	. "," . Base_Array[User_Name].User_VIP
+	. "," . Base_Array[User_Name].User_Power
+	. "," . Base_Array[User_Name].User_Diamonds
+	. "," . Base_Array[User_Name].Available_Fuel
+	. "," . Base_Array[User_Name].Available_Food
+	. "," . Base_Array[User_Name].Available_Steel
+	. "," . Base_Array[User_Name].Available_Alloy
+	. "," . Base_Array[User_Name].Inventory_Fuel
+	. "," . Base_Array[User_Name].Inventory_Food
+	. "," . Base_Array[User_Name].Inventory_Steel
+	. "," . Base_Array[User_Name].Inventory_Alloy
 	
 	; CSVout.WriteLine(LogDateTimeString "," RegExReplace(Message_To_The_Boss,"[\r\n ]+"," "))
 	CSVout.WriteLine(Message_To_The_Boss)
@@ -4260,60 +4259,60 @@ Send_Mail_To_Boss()
 
 	; Message_To_The_Boss := RegExReplace(Message_To_The_Boss,"[\r\n ]+"," ")
 	/*
-	Message_To_The_Boss_01 := % Base_Array[User].User_Name_Captured
-	. " (" . Base_Array[User].User_City_Location_XY . ")"
-	. " {#}" . Base_Array[User].User_Found_State
-	. " [" . Base_Array[User].User_Found_Alliance . "]"
-	. " " .  Base_Array[User].User_VIP
-	Message_To_The_Boss_02 := "Power: " . Convert_Value(Base_Array[User].User_Power)
-	. " Diamonds: " . Convert_Value(Base_Array[User].User_Diamonds)
-	Message_To_The_Boss_03 := "Fuel: " . Convert_Value(Base_Array[User].Available_Fuel)
-	. " {+} " . Convert_Value(Base_Array[User].Inventory_Fuel) . " = " . Convert_Value(Base_Array[User].Available_Fuel + Base_Array[User].Inventory_Fuel)
-	Message_To_The_Boss_04 := "Food: " . Convert_Value(Base_Array[User].Available_Food)
-	. " {+} " . Convert_Value(Base_Array[User].Inventory_Food) . " = " . Convert_Value(Base_Array[User].Available_Food + Base_Array[User].Inventory_Food)
-	Message_To_The_Boss_05 := "Steel: " . Convert_Value(Base_Array[User].Available_Steel)
-	. " {+} " . Convert_Value(Base_Array[User].Inventory_Steel) . " = " . Convert_Value(Base_Array[User].Available_Steel + Base_Array[User].Inventory_Steel)
-	Message_To_The_Boss_06 := "Alloy: " . Convert_Value(Base_Array[User].Available_Alloy)
-	. " {+} " . Convert_Value(Base_Array[User].Inventory_Alloy) . " = " . Convert_Value(Base_Array[User].Available_Alloy + Base_Array[User].Inventory_Alloy)
+	Message_To_The_Boss_01 := % Base_Array[User_Name].User_Name_Captured
+	. " (" . Base_Array[User_Name].User_City_Location_XY . ")"
+	. " {#}" . Base_Array[User_Name].User_Found_State
+	. " [" . Base_Array[User_Name].User_Found_Alliance . "]"
+	. " " .  Base_Array[User_Name].User_VIP
+	Message_To_The_Boss_02 := "Power: " . Convert_Value(Base_Array[User_Name].User_Power)
+	. " Diamonds: " . Convert_Value(Base_Array[User_Name].User_Diamonds)
+	Message_To_The_Boss_03 := "Fuel: " . Convert_Value(Base_Array[User_Name].Available_Fuel)
+	. " {+} " . Convert_Value(Base_Array[User_Name].Inventory_Fuel) . " = " . Convert_Value(Base_Array[User_Name].Available_Fuel + Base_Array[User_Name].Inventory_Fuel)
+	Message_To_The_Boss_04 := "Food: " . Convert_Value(Base_Array[User_Name].Available_Food)
+	. " {+} " . Convert_Value(Base_Array[User_Name].Inventory_Food) . " = " . Convert_Value(Base_Array[User_Name].Available_Food + Base_Array[User_Name].Inventory_Food)
+	Message_To_The_Boss_05 := "Steel: " . Convert_Value(Base_Array[User_Name].Available_Steel)
+	. " {+} " . Convert_Value(Base_Array[User_Name].Inventory_Steel) . " = " . Convert_Value(Base_Array[User_Name].Available_Steel + Base_Array[User_Name].Inventory_Steel)
+	Message_To_The_Boss_06 := "Alloy: " . Convert_Value(Base_Array[User_Name].Available_Alloy)
+	. " {+} " . Convert_Value(Base_Array[User_Name].Inventory_Alloy) . " = " . Convert_Value(Base_Array[User_Name].Available_Alloy + Base_Array[User_Name].Inventory_Alloy)
 	Message_To_The_Boss_07 := DayOfWeek . ", " . LogDateTimeString
 	*/
 
-	Power_Total := Convert_Value(Base_Array[User].User_Power)
-	Diamonds_Total := Convert_Value(Base_Array[User].User_Diamonds)
+	Power_Total := Convert_Value(Base_Array[User_Name].User_Power)
+	Diamonds_Total := Convert_Value(Base_Array[User_Name].User_Diamonds)
 	
-	Fuel_Available := Convert_Value(Base_Array[User].Available_Fuel)
-	Fuel_Inventory := Convert_Value(Base_Array[User].Inventory_Fuel)
-	Fuel_Total  := Convert_Value(Base_Array[User].Available_Fuel + Base_Array[User].Inventory_Fuel)
+	Fuel_Available := Convert_Value(Base_Array[User_Name].Available_Fuel)
+	Fuel_Inventory := Convert_Value(Base_Array[User_Name].Inventory_Fuel)
+	Fuel_Total  := Convert_Value(Base_Array[User_Name].Available_Fuel + Base_Array[User_Name].Inventory_Fuel)
 	
-	Food_Available := Convert_Value(Base_Array[User].Available_Food)
-	Food_Inventory := Convert_Value(Base_Array[User].Inventory_Food)
-	Food_Total  := Convert_Value(Base_Array[User].Available_Food + Base_Array[User].Inventory_Food)
+	Food_Available := Convert_Value(Base_Array[User_Name].Available_Food)
+	Food_Inventory := Convert_Value(Base_Array[User_Name].Inventory_Food)
+	Food_Total  := Convert_Value(Base_Array[User_Name].Available_Food + Base_Array[User_Name].Inventory_Food)
 	
-	Steel_Available := Convert_Value(Base_Array[User].Available_Steel)
-	Steel_Inventory := Convert_Value(Base_Array[User].Inventory_Steel)
-	Steel_Total := Convert_Value(Base_Array[User].Available_Steel + Base_Array[User].Inventory_Steel)
+	Steel_Available := Convert_Value(Base_Array[User_Name].Available_Steel)
+	Steel_Inventory := Convert_Value(Base_Array[User_Name].Inventory_Steel)
+	Steel_Total := Convert_Value(Base_Array[User_Name].Available_Steel + Base_Array[User_Name].Inventory_Steel)
 	
-	Alloy_Available := Convert_Value(Base_Array[User].Available_Alloy)
-	Alloy_Inventory := Convert_Value(Base_Array[User].Inventory_Alloy)
-	Alloy_Total := Convert_Value(Base_Array[User].Available_Alloy + Base_Array[User].Inventory_Alloy)
+	Alloy_Available := Convert_Value(Base_Array[User_Name].Available_Alloy)
+	Alloy_Inventory := Convert_Value(Base_Array[User_Name].Inventory_Alloy)
+	Alloy_Total := Convert_Value(Base_Array[User_Name].Available_Alloy + Base_Array[User_Name].Inventory_Alloy)
 	
 	/*
 	Message_To_The_Boss_01 := % "O:" . Fuel_Total . " F:" . Food_Total . " S:" . Steel_Total . " A:" . Alloy_Total
-	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User].User_VIP
-	. "`n(" . Base_Array[User].User_Found_Alliance . ")"	
+	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User_Name].User_VIP
+	. "`n(" . Base_Array[User_Name].User_Found_Alliance . ")"	
 	*/
 	
 	Message_To_The_Boss_01 := % Fuel_Total . " " . Food_Total . " " . Steel_Total . " " . Alloy_Total
-	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User].User_VIP
-	. " " . Base_Array[User].User_City_Location_XY	
-	. "`n(" . Base_Array[User].User_Found_Alliance . ")"
-	. Base_Array[User].User_Name_Captured
-	. "#" . Base_Array[User].User_Found_State . " " . Base_Array[User].User_ID
+	. " PWR:" . Power_Total	. " $" . Diamonds_Total . " " .  Base_Array[User_Name].User_VIP
+	. " " . Base_Array[User_Name].User_City_Location_XY	
+	. "`n(" . Base_Array[User_Name].User_Found_Alliance . ")"
+	. Base_Array[User_Name].User_Name_Captured
+	. "#" . Base_Array[User_Name].User_Found_State . " " . Base_Array[User_Name].User_ID
 	. "`n" . "Fuel: " . Fuel_Available . " + " . Fuel_Inventory . " = " . Fuel_Total
 	. "; " . "Food: " . Food_Available . " + " . Food_Inventory . " = " . Food_Total
 	. "; " . "Steel: " . Steel_Available . " + " . Steel_Inventory . " = " . Steel_Total
 	. "; " . "Alloy: " . Alloy_Available . " + " . Alloy_Inventory . " = " . Alloy_Total
-	. "`nShield: " . Base_Array[User].Shield_Ends
+	. "`nShield: " . Base_Array[User_Name].Shield_Ends
 	. "`nTime: " . DayOfWeek . ", " . LogDateTimeString
 
 	; MsgBox, After: %Message_To_The_Boss%
@@ -4464,7 +4463,7 @@ Get_Inventory()
 		DllCall("Sleep","UInt",(3*Delay_Short+0))
 	}
 	User_Diamonds := % Convert_OCR_Value(User_Diamonds.Text)
-	Base_Array[User].User_Diamonds := User_Diamonds
+	Base_Array[User_Name].User_Diamonds := User_Diamonds
 	
 	; Available_Food := OCR([244, 132, 90, 25], "eng") ; capture Available Food number
 	; Available_Steel := OCR([414, 132, 90, 25], "eng") ; capture Available Steel number
@@ -4527,14 +4526,14 @@ Get_Inventory()
 	Inventory_Steel := % Convert_OCR_Value(Inventory_Steel)
 	Inventory_Alloy := % Convert_OCR_Value(Inventory_Alloy)
 	
-	Base_Array[User].Available_Fuel :=   Convert_OCR_Value(Available_Fuel)
-	Base_Array[User].Available_Food :=   Convert_OCR_Value(Available_Food)
-	Base_Array[User].Available_Steel :=  Convert_OCR_Value(Available_Steel)
-	Base_Array[User].Available_Alloy :=  Convert_OCR_Value(Available_Alloy)
-	Base_Array[User].Inventory_Fuel :=   Convert_OCR_Value(Inventory_Fuel)
-	Base_Array[User].Inventory_Food :=   Convert_OCR_Value(Inventory_Food)
-	Base_Array[User].Inventory_Steel :=  Convert_OCR_Value(Inventory_Steel)
-	Base_Array[User].Inventory_Alloy :=  Convert_OCR_Value(Inventory_Alloy)
+	Base_Array[User_Name].Available_Fuel :=   Convert_OCR_Value(Available_Fuel)
+	Base_Array[User_Name].Available_Food :=   Convert_OCR_Value(Available_Food)
+	Base_Array[User_Name].Available_Steel :=  Convert_OCR_Value(Available_Steel)
+	Base_Array[User_Name].Available_Alloy :=  Convert_OCR_Value(Available_Alloy)
+	Base_Array[User_Name].Inventory_Fuel :=   Convert_OCR_Value(Inventory_Fuel)
+	Base_Array[User_Name].Inventory_Food :=   Convert_OCR_Value(Inventory_Food)
+	Base_Array[User_Name].Inventory_Steel :=  Convert_OCR_Value(Inventory_Steel)
+	Base_Array[User_Name].Inventory_Alloy :=  Convert_OCR_Value(Inventory_Alloy)
 	
 	; Array_Gui(Base_Array)
 	
@@ -4621,13 +4620,13 @@ Get_User_Info()
 	; Extract User_Found_Alliance from User_State_Alliance
 	RegExMatch(User_State_Alliance, "`[[A-Za-z]+`]" , User_Found_Alliance)
 	User_Found_Alliance := % RegExReplace(User_Found_Alliance,"[^A-Za-z0-9 ]+")
-	Base_Array[User].User_Found_Alliance := User_Found_Alliance
+	Base_Array[User_Name].User_Found_Alliance := User_Found_Alliance
 
 
 	; Extract User_Found_State from User_State_Alliance
 	RegExMatch(User_State_Alliance, "\#\d+" , User_Found_State)
 	User_Found_State := % RegExReplace(User_Found_State,"[^\d]+")
-	Base_Array[User].User_Found_State := User_Found_State
+	Base_Array[User_Name].User_Found_State := User_Found_State
 
 	; Clean up User_VIP
 	User_VIP := % RegExReplace(User_VIP,"[^A-Za-z0-9]+")
@@ -4643,10 +4642,10 @@ Get_User_Info()
 
 	; MsgBox, % "User_State_Alliance:" User_State_Alliance " and User_Found_Alliance: " User_Found_Alliance " User_Found_State: " User_Found_State
 
-	Base_Array[User].User_Name_Captured := trim(User_Name_Captured)
-	Base_Array[User].User_VIP := trim(User_VIP)
-	Base_Array[User].User_State_Alliance := trim(User_State_Alliance)
-	Base_Array[User].User_Power := trim(User_Power)
+	Base_Array[User_Name].User_Name_Captured := trim(User_Name_Captured)
+	Base_Array[User_Name].User_VIP := trim(User_VIP)
+	Base_Array[User_Name].User_State_Alliance := trim(User_State_Alliance)
+	Base_Array[User_Name].User_Power := trim(User_Power)
 	; MsgBox, % "2. after trim " User_Name_Captured ", " User_State_Alliance ", " User_VIP ", " User_Power
 
 	if !Go_Back_To_Home_Screen()
@@ -4658,19 +4657,19 @@ Get_User_Info()
 	. "`,State:`," . User_Found_State
 	. "`,VIP:`," . User_VIP
 	. "`,Power:`," . User_Power . "`,"
-	. "`,Diamonds:`," . Base_Array[User].User_Diamonds . "`,"
+	. "`,Diamonds:`," . Base_Array[User_Name].User_Diamonds . "`,"
 	*/
 	
 	
-	; Base_Array[User] := {User_Name_Captured : User_Name_Captured, User_State_Alliance: User_State_Alliance, User_VIP: User_VIP, User_Power: User_Power, User_Diamonds: User_Diamonds}
+	; Base_Array[User_Name] := {User_Name_Captured : User_Name_Captured, User_State_Alliance: User_State_Alliance, User_VIP: User_VIP, User_Power: User_Power, User_Diamonds: User_Diamonds}
 	
-	Base_Array[User].User_Name_Captured := User_Name_Captured
-	Base_Array[User].User_Found_State := User_Found_State
-	Base_Array[User].User_Found_Alliance := User_Found_Alliance
-	Base_Array[User].User_VIP := User_VIP
-	Base_Array[User].User_Power := User_Power
+	Base_Array[User_Name].User_Name_Captured := User_Name_Captured
+	Base_Array[User_Name].User_Found_State := User_Found_State
+	Base_Array[User_Name].User_Found_Alliance := User_Found_Alliance
+	Base_Array[User_Name].User_VIP := User_VIP
+	Base_Array[User_Name].User_Power := User_Power
 	User_ID := % RegExReplace(User_ID,"ID\:")
-	Base_Array[User].User_ID := User_ID
+	Base_Array[User_Name].User_ID := User_ID
 	
 	
 	; Array_Gui(Base_Array)
@@ -4717,7 +4716,7 @@ Get_User_Location()
 
 	Message_To_The_Boss .= "Location:`,""(" . User_City_Location_XY . ")""`,"
 	
-	Base_Array[User].User_City_Location_XY := User_City_Location_XY
+	Base_Array[User_Name].User_City_Location_XY := User_City_Location_XY
 
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
 	; User_City_Location := OCR([304, 663, 85, 22], "eng")
