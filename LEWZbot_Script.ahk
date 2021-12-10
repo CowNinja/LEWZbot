@@ -798,6 +798,9 @@ Switch_Account()
 	Switch_Account_Dialog:
 	oEmailSearch := new graphicsearch()	
 	oPWSearch := new graphicsearch()
+	
+	Gosub Switch_Account_User_Email
+	Gosub Switch_Account_User_Password
 	loop, 5
 	{
 		if (oEmailSearch.search(1A1234_Email_Box_Button_Graphic, optionsObjCoords))
@@ -1765,7 +1768,7 @@ Benefits_Center()
 	, Selection_Chest : [9271_SelectionChest_Button_Graphic, True]
 	, Selection_Chest : [9272_SelectionChest_Button_Graphic, True]
 	, Single_Cumulation : [928_SingleCumulation_Button_Graphic, True]
-	, Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, False]
+	, Battle_Honor_Collect : [921_BattleHonor_Button_Graphic, True]
 	, Monthly_Signin : [9251_MonthlySignin_Button_Graphic, True]
 	, Monthly_Signin : [9252_MonthlySignin_Button_Graphic, True]
 	, Warrior_Trial : [929_WarriorTrial_Button_Graphic, True]}
