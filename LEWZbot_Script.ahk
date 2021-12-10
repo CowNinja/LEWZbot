@@ -26,7 +26,7 @@ SetKeyDelay, -1, 20 ; -1 ; default
 SetMouseDelay, -1 ; -1 ; default
 SetDefaultMouseSpeed, 0 ; 3 ; 0 ; Move the mouse SPEED.
 SetWinDelay, -1 ; -1 ; default
-SetControlDelay, -1 ; -1 ; default
+SetControlDelay, -1 ; -1 ; default ; Sets the delay that will occur after each control-modifying command.
 SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
 ;OPTIMIZATIONS END
 
@@ -275,8 +275,8 @@ while WinExist(FoundAppTitle)
 				; Get_User_Info()
 				; Get_Inventory()
 				; Send_Mail_To_Boss()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				goto END_of_user_loop
 				
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
@@ -413,8 +413,8 @@ MsgBox, Unexpected exit
 ;
 Reload_LEWZ()
 {
-	Gosub Reload_LEWZ_Kill
-	Gosub Reload_LEWZ_Launch
+	Reload_LEWZ_Kill()
+	Reload_LEWZ_Launch()
 	Account_Loading()
 	if !Go_Back_To_Home_Screen()
 		return 1
@@ -422,39 +422,41 @@ Reload_LEWZ()
 		return 0
 }
 
-	Reload_LEWZ_Kill:
+Reload_LEWZ_Kill()
+{
+	Gui, Status:new, , Status
+	Gui, Status:Margin, 0, 0
+	Gui, Status:add,text,, LEWZ Shutdown...
+	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
+	; loop, 2
 	{
-		Gui, Status:new, , Status
-		Gui, Status:Margin, 0, 0
-		Gui, Status:add,text,, LEWZ Shutdown...
-		Gui, Status:show, x731 y0 w300 h500
-		GUI_Count++
-		; loop, 2
-		{
-			; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell am force-stop com.longtech.lastwars.gp")
-			RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell am force-stop com.longtech.lastwars.gp")
-			DllCall("Sleep","UInt",(1*Delay_Long+0))
-		}
-		; DllCall("Sleep","UInt",(4*Delay_Long+0))
-		return
+		; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
+		RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
+		; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell am force-stop com.longtech.lastwars.gp")
+		RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell am force-stop com.longtech.lastwars.gp")
+		DllCall("Sleep","UInt",(1*Delay_Long+0))
 	}
+	; DllCall("Sleep","UInt",(4*Delay_Long+0))
+	return
+}
 
-	Reload_LEWZ_Launch:
-	{		
-		Gui, Status:add,text,, LEWZ Startup...
-		Gui, Status:show, x731 y0 w300 h500
-		GUI_Count++
-		; loop, 2
-		{
-			; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
-			RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
-			; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell monkey -p com.longtech.lastwars.gp -v 500")
-			RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell monkey -p com.longtech.lastwars.gp -v 500")
-			; DllCall("Sleep","UInt",(3*Delay_Long+0))
-		}
-		; DllCall("Sleep","UInt",(4*Delay_Long+0))
-		return
+Reload_LEWZ_Launch()
+{		
+	Gui, Status:add,text,, LEWZ Startup...
+	Gui, Status:show, x731 y0 w300 h500
+	GUI_Count++
+	; loop, 2
+	{
+		; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
+		RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" connect 127.0.0.1:21513")
+		; RunNoWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell monkey -p com.longtech.lastwars.gp -v 500")
+		RunWaitOne("""C:\Program Files\Microvirt\MEmu\adb.exe"" shell monkey -p com.longtech.lastwars.gp -v 500")
+		; DllCall("Sleep","UInt",(3*Delay_Long+0))
 	}
+	; DllCall("Sleep","UInt",(4*Delay_Long+0))
+	return
+}
 
 
 ; Reload_MEmu() <--> Launch_LEWZ() <--> Go_Back_To_Home_Screen()
@@ -798,9 +800,11 @@ Switch_Account()
 	Switch_Account_Dialog:
 	oEmailSearch := new graphicsearch()	
 	oPWSearch := new graphicsearch()
-	
+
 	Gosub Switch_Account_User_Email
 	Gosub Switch_Account_User_Password
+
+	/*
 	loop, 5
 	{
 		if (oEmailSearch.search(1A1234_Email_Box_Button_Graphic, optionsObjCoords))
@@ -811,9 +815,8 @@ Switch_Account()
 			goto Switch_Account_Next
 	}
 	goto Switch_Account_START
+	*/
 	
-	/*
-	; old version
 	loop, 5
 	{
 		resultEmail := oEmailSearch.search(1A1234_Email_Box_Button_Graphic, optionsObjCoords)
@@ -825,19 +828,15 @@ Switch_Account()
 			Gosub Switch_Account_User_Password
 		Else
 			goto Switch_Account_Next
-		
-		DllCall("Sleep","UInt",(1*Delay_Short+0))
-		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	}
 	goto Switch_Account_START
-	*/
-
+	
 	Switch_Account_User_Email:
 	{
 		loop, 2
 			Mouse_Click(220,382, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(2*Delay_Short+0))
-
+		Check_Window_Geometry()
 		Text_To_Screen(User_Email)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
 		; DllCall("Sleep","UInt",(4*Delay_Short+0))
@@ -851,7 +850,7 @@ Switch_Account()
 		loop, 2
 			Mouse_Click(209,527, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
 		DllCall("Sleep","UInt",(2*Delay_Short+0))
-
+		Check_Window_Geometry()
 		Text_To_Screen(User_Pass)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
 		; DllCall("Sleep","UInt",(4*Delay_Short+0))
@@ -862,8 +861,25 @@ Switch_Account()
 
 	Switch_Account_Next:
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long+0))
-	Mouse_Click(455,739, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Tap Use your email to log in
+	; Mouse_Click(455,739, {Clicks: 2,Timeout: (1*Delay_Short+0)}) ; Tap Use your email to log in
+	Mouse_Click(455,739, {Timeout: (2*Delay_Short+0)}) ; Tap Use your email to log in
 	
+	oGraphicSearch := new graphicsearch()	
+	loop, 50
+	{
+		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
+		if (resultObj)
+		{
+			Gui, Status:add,text,, % "Found ""OK"" loops:" A_Index
+			Gui, Status:show, x731 y0 w300 h500
+			GUI_Count++
+			; loop, 2
+			Goto Switch_Account_Finish
+		}
+	}
+	goto Switch_Account_START
+	
+	Switch_Account_Finish:
 	Account_Loading()
 	
 	; Switch_Account_END:
@@ -1073,9 +1089,9 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "1
 					if (Mod(A_Index, Reload_After_Loops) == 0) ; if !Text_Found
 					{
 						loop, 2
-							Gosub Reload_LEWZ_Kill
+							Reload_LEWZ_Kill()
 						loop, 2
-							Gosub Reload_LEWZ_Launch
+							Reload_LEWZ_Launch()
 						
 						loop, 500
 						{	
@@ -1111,8 +1127,8 @@ Login_Password_PIN_BruteForce(User_PIN_INIT := "468000", Check_After_Loops := "1
 					; if Go_Back_To_Home_Screen()
 					;	break
 					
-					Gosub Reload_LEWZ_Kill
-					Gosub Reload_LEWZ_Launch
+					Reload_LEWZ_Kill()
+					Reload_LEWZ_Launch()
 										
 					Resume_BruteForce:
 				}
@@ -5492,7 +5508,7 @@ return
 
 
 ^F6::
-Reload_MEmu:
+Reload_MEmu_F6:
 {
 	Reload_LEWZ()
 	; Reload_MEmu()
