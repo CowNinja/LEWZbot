@@ -275,8 +275,8 @@ while WinExist(FoundAppTitle)
 				; Get_User_Info()
 				; Get_Inventory()
 				; Send_Mail_To_Boss()
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
-				goto END_of_user_loop
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; goto END_of_user_loop
 				
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
@@ -287,6 +287,7 @@ while WinExist(FoundAppTitle)
 				; ** Position dependant **
 				; ****************************
 				if Peace_Shield_Needed
+				loop, 2
 					Peace_Shield()
 				; Reset_Posit()
 				
@@ -865,16 +866,44 @@ Switch_Account()
 	Mouse_Click(455,739, {Timeout: (2*Delay_Short+0)}) ; Tap Use your email to log in
 	
 	oGraphicSearch := new graphicsearch()	
-	loop, 50
+	loop, 20
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
 		if (resultObj)
 		{
-			Gui, Status:add,text,, % "Found ""OK"" loops:" A_Index
+			Gui, Status:add,text,, % "Found 1st ""OK"" loops:" A_Index
 			Gui, Status:show, x731 y0 w300 h500
 			GUI_Count++
 			; loop, 2
+			Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Short+0)}) ; Tap "OK"
+			Goto Switch_Account_OK2
+		}		
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
+		{
+			MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
+			Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
+		}
+	}
+	goto Switch_Account_START
+	
+	Switch_Account_OK2:
+	oGraphicSearch := new graphicsearch()	
+	loop, 10
+	{
+		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
+		if (resultObj)
+		{
+			Gui, Status:add,text,, % "Found 2nd ""OK"" loops:" A_Index
+			Gui, Status:show, x731 y0 w300 h500
+			GUI_Count++
+			; loop, 2
+			Mouse_Click(resultObj[1].x,resultObj[1].y, {Timeout: (1*Delay_Short+0)}) ; Tap "OK"
 			Goto Switch_Account_Finish
+		}		
+		if Search_Captured_Text_OCR(["Yes"], {Pos: [315, 860], Size: [60, 35]}).Found
+		{
+			MsgBox, 4, Yes Dialog, Press OK to resume (No Timeout)
+			Mouse_Click(340,870, {Timeout: (2*Delay_Short+0)}) ; Tap Yes	
 		}
 	}
 	goto Switch_Account_START
@@ -893,6 +922,7 @@ Account_Loading()
 	oGraphicSearch := new graphicsearch()	
 	Loading_Text_Array := ["2nd","Anniversary","Arms","Base","Benefit","Celebrat","Center","Deal","Detail","Dio","Doomsday","element","Festival","Hot","Hunter","Invest","Iron","Master","Mutation","New","Officer","Online","Pack","Racer","relocat","Reynolds","Sale","state","Supply","Today","View","Wall","Weekly"]
 	Last_Game_Loading := "0"
+	
 	loop, 10
 	{
 		resultObj := oGraphicSearch.search(1A12371_OK_Button_Graphic, optionsObjCoords)
