@@ -224,7 +224,7 @@ while WinExist(FoundAppTitle)
 				; Collect_Runes()
 				; Depot_Rewards()
 					; Desert_Oasis()
-				Desert_Wonder()
+				; Desert_Wonder()
 				; Donate_Tech()
 				; Drop_Zone()
 				; Game_Start_popups()
@@ -275,7 +275,7 @@ while WinExist(FoundAppTitle)
 				; Get_User_Info()
 				; Get_Inventory()
 				; Send_Mail_To_Boss()
-				MsgBox, 0, Pause, Press OK to end (No Timeout)
+				; MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				
 				; ******************************************
@@ -790,7 +790,7 @@ Switch_Account()
 		Mouse_Click(315, 720, {Timeout: (3*Delay_Short+0)}) ; "WarZ" Button
 		Mouse_Click(480,1150, {Timeout: (3*Delay_Short+0)}) ; "Other Account" button
 		
-		loop, 7
+		loop, 20
 		{
 			resultLogin := oLoginSearch.search(allQueries_Login, optionsObjCoords)
 			if (resultLogin)
@@ -850,9 +850,9 @@ Switch_Account()
 	
 	Switch_Account_User_Email:
 	{
-		loop, 2
+		; loop, 2
 			Mouse_Click(220,382, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
-		DllCall("Sleep","UInt",(2*Delay_Short+0))
+		; DllCall("Sleep","UInt",(2*Delay_Short+0))
 		Check_Window_Geometry()
 		Text_To_Screen(User_Email)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
@@ -864,9 +864,9 @@ Switch_Account()
 
 	Switch_Account_User_Password:
 	{
-		loop, 2
+		; loop, 2
 			Mouse_Click(209,527, {Timeout: (2*Delay_Short+0)}) ; Tap inside Email Text Box
-		DllCall("Sleep","UInt",(2*Delay_Short+0))
+		; DllCall("Sleep","UInt",(2*Delay_Short+0))
 		Check_Window_Geometry()
 		Text_To_Screen(User_Pass)
 		DllCall("Sleep","UInt",(1*Delay_Short+0))
@@ -1669,6 +1669,7 @@ Collect_Red_Envelopes()
 		Mouse_Click(227,1215, {Timeout: (1*Delay_Medium+0)}) ; Tap in Message Box
 
 		; Shake phone
+		Check_Window_Geometry()
 		Command_To_Screen("!{F2}")
 		DllCall("Sleep","UInt",(1*Delay_Long+0))
 
@@ -3515,6 +3516,7 @@ Train_Daily_Requirement()
 	DllCall("Sleep","UInt",(2*Delay_Long+0))
 
 	; Zoom out
+	Check_Window_Geometry()
 	loop, 10
 	{
 		Command_To_Screen("{F2}")
@@ -3530,6 +3532,7 @@ Train_Daily_Requirement()
 		; Mouse_Click(630,75, {Timeout: (2*Delay_Long+0)}) ; Tap Message back
 
 		; Zoom out
+		Check_Window_Geometry()
 		loop, 10
 		{
 			Command_To_Screen("{F2}")
@@ -3540,6 +3543,7 @@ Train_Daily_Requirement()
 	; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 	; Zoom out
+	Check_Window_Geometry()
 	loop, 10
 	{
 		Command_To_Screen("{F2}") ; 2}
@@ -3619,7 +3623,8 @@ Train_Daily_Requirement()
 		; WinActivate, %FoundAppTitle% ; Automatically uses the window found above.
 
 		Mouse_Click(550,1100, {Timeout: (1*Delay_Medium+0)}) ; Tap Troop Number Box
-
+		
+		Check_Window_Geometry()
 		loop, 8
 		{
 			Command_To_Screen("{Backspace}")
@@ -3746,13 +3751,14 @@ Gather_Resources()
 	Search_And_Deploy_Resources:
 	{
 		Mouse_Click(637,1112, {Timeout: (1*Delay_Medium+0)}) ; Mouse_Click(637,1112) ; Tap Level Box
+		Check_Window_Geometry()
 		if Desert_Event
 			Command_To_Screen("{8}")
 		Else
 			Command_To_Screen("{6}")
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
 		Command_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
 
 		Mouse_Click(346,1200, {Timeout: (3*Delay_Medium+0)}) ; Tap Search Button
 
@@ -3940,33 +3946,33 @@ Goto_Coordinates(GotoCoordinates_X := "", GotoCoordinates_Y := "")
 		return ; goto Goto_Coordinates_END
 
 		GotoCoordinates_GOTO:
-		Subroutine_Running := "GotoCoordinates_GOTO"
-		stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
+		; Subroutine_Running := "GotoCoordinates_GOTO"
+		; stdout.WriteLine(A_NowUTC ",Subroutine_Running," Subroutine_Running ",A_ThisLabel," A_ThisLabel ",StartTime," A_TickCount )
 		; Default_NW_Tower Coordinates X: 595-596 Y: 599-600 (595,599) steal: 439, 681
 		; Default_NE_Tower Coordinates X: 599-600 Y: 595-596 (599,595) steal: 441, 681
 		; Default_SW_Tower Coordinates X: 599-600 Y: 604-605 (599,604) steal: 447, 678
 		; Default_SE_Tower Coordinates X: 604-605 Y: 599-600 (604,599) steal: 440, 680
 		; MsgBox, 4, Coordinates, Are GotoCoordinates_X`,Y %GotoCoordinates_X% %GotoCoordinates_X% Correct? (8 Second Timeout & auto),5 ; 8
 			
-		loop, 2
-		{
-			Mouse_Click(242,526, {Timeout: (3*Delay_Short+0)}) ; Tap inside X Coordinate Text box
-		}
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; loop, 2
+			Mouse_Click(242,526, {Timeout: (2*Delay_Short+0)}) ; Tap inside X Coordinate Text box
+			
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Check_Window_Geometry()
 		Command_To_Screen("{Raw}" . GotoCoordinates_X)
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
 		Command_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 
-		loop, 2
-		{
-			Mouse_Click(484,530, {Timeout: (3*Delay_Short+0)}) ; Tap inside Y Coordinate Text box
-		}
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		; loop, 2
+			Mouse_Click(484,530, {Timeout: (2*Delay_Short+0)}) ; Tap inside Y Coordinate Text box
+
+		; DllCall("Sleep","UInt",(3*Delay_Short+0))
+		Check_Window_Geometry()
 		Command_To_Screen("{Raw}" . GotoCoordinates_Y)
-		DllCall("Sleep","UInt",(3*Delay_Short+0))
+		DllCall("Sleep","UInt",(1*Delay_Short+0))
 		Command_To_Screen("{Enter}")
-		DllCall("Sleep","UInt",(1*Delay_Medium+0))
+		; DllCall("Sleep","UInt",(1*Delay_Medium+0))
 		
 		if Pause_Script
 		{
@@ -4393,10 +4399,12 @@ Send_Mail_To_Boss()
 
 	Compose_Message:
 	Mouse_Click(636,55, {Timeout: (7*Delay_Short+0)}) ; Tap new Message
-	Mouse_Click(500,173, {Timeout: (3*Delay_Short+0)}) ; Tap User Name Text Box
+	Mouse_Click(500,173, {Timeout: (2*Delay_Short+0)}) ; Tap User Name Text Box
+	Check_Window_Geometry()
 	Text_To_Screen(Boss_User_name) ; Type user name to send message to
 	; DllCall("Sleep","UInt",(1*Delay_Medium+0))
-	Mouse_Click(433,327, {Timeout: (3*Delay_Short+0)}) ; Tap Message text body
+	Mouse_Click(433,327, {Timeout: (2*Delay_Short+0)}) ; Tap Message text body
+	Check_Window_Geometry()
 	Text_To_Screen(Message_To_The_Boss_01) ; Type Message to user
 	DllCall("Sleep","UInt",(1*Delay_Medium+0))
 	/*
@@ -4854,11 +4862,13 @@ Base_Search_World_Map()
 		; Mouse_Click(189,870, {Timeout: (3*Delay_Short+0)}) ; Tap Map Coordinate button
 
 		Mouse_Click(200,530, {Timeout: (2*Delay_Short+0)}) ; Tap inside X coordinate Box
+		Check_Window_Geometry()
 		Text_To_Screen(Map_X)
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Command_To_Screen("{Enter}")
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Mouse_Click(449,530, {Timeout: (2*Delay_Short+0)}) ; Tap inside Y coordinate Box
+		Check_Window_Geometry()
 		Text_To_Screen(Map_Y)
 		DllCall("Sleep","UInt",(rand_wait + 2*Delay_Short+0))
 		Command_To_Screen("{Enter}")
