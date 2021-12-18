@@ -22,7 +22,7 @@ ListLines Off	; Omits subsequently-executed lines from the history.
 ; ListLines On	; Includes subsequently-executed lines in the history. This is the starting default for all scripts.
 Process, Priority, , H
 SetBatchLines, -1
-SetKeyDelay, -1, 20 ; -1 ; default
+SetKeyDelay, -1 ; , 20 ; -1 ; default
 SetMouseDelay, -1 ; -1 ; default
 SetDefaultMouseSpeed, 0 ; 3 ; 0 ; Move the mouse SPEED.
 SetWinDelay, -1 ; -1 ; default
@@ -132,8 +132,8 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
-			CSB_Event := True ; True ; True if CSB Event is going on
-			Desert_Event := False ; False ; True ; True if Desert Event is going on
+			CSB_Event := False ; True ; True if CSB Event is going on
+			Desert_Event := True ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -224,7 +224,7 @@ while WinExist(FoundAppTitle)
 				; Collect_Runes()
 				; Depot_Rewards()
 					; Desert_Oasis()
-				; Desert_Wonder()
+				Desert_Wonder()
 				; Donate_Tech()
 				; Drop_Zone()
 				; Game_Start_popups()
@@ -275,7 +275,7 @@ while WinExist(FoundAppTitle)
 				; Get_User_Info()
 				; Get_Inventory()
 				; Send_Mail_To_Boss()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
+				MsgBox, 0, Pause, Press OK to end (No Timeout)
 				; goto END_of_user_loop
 				
 				; ******************************************
@@ -621,8 +621,8 @@ Go_Back_To_Home_Screen()
 	{
 		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
-		loop, 10
-			if Quit_GraphicSearch()
+		loop, 2
+			if Quit_Rebuild_GraphicSearch()
 				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
 		if Quit_OCR()
 			goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
@@ -633,8 +633,12 @@ Go_Back_To_Home_Screen()
 	Check_Window_Geometry()
 
 	Command_To_Screen("{F5}")
-	DllCall("Sleep","UInt",(3*Delay_Short+0))
-	loop, 2
+	DllCall("Sleep","UInt",(1*Delay_Short+0))
+	loop, 50
+		if !Quit_GraphicSearch()
+			break
+		
+	loop, 3
 		if !Quit_GraphicSearch()
 			return 1
 	
@@ -642,8 +646,8 @@ Go_Back_To_Home_Screen()
 	{
 		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
-		loop, 5
-			if !Quit_GraphicSearch()
+		loop, 2
+			if !Quit_Rebuild_GraphicSearch()
 				return 1
 		if !Quit_OCR()
 			return 1
@@ -652,6 +656,18 @@ Go_Back_To_Home_Screen()
 }
 
 Quit_GraphicSearch() {
+	oGoBackSearch := new graphicsearch()	
+	Quit_Graphics := 022_Quit_OK_Button_Graphic 021_Quit_Title_Graphic
+	; Check_Window_Geometry()
+	
+	resultGoBack := oGoBackSearch.search(Quit_Graphics, optionsObjCoords)
+	if (resultGoBack)
+		return 1
+		
+	return 0
+}
+
+Quit_Rebuild_GraphicSearch() {
 	oGoBackSearch := new graphicsearch()	
 	oRebuildSearch := new graphicsearch()
 	Quit_Graphics := 022_Quit_OK_Button_Graphic 021_Quit_Title_Graphic
@@ -1742,10 +1758,9 @@ Desert_Wonder()
 	Mouse_Click(259, 144, {Timeout: (2*Delay_Long+0)}) ; Tap Activity Tab
 	
 	loop, 2
-	{
 		Gosub Wonder_Reward_Boxes
-		Gosub Receive_Rewards
-	}
+	Gosub Receive_Rewards
+	
 	goto Desert_Wonder_END
 	
 	Wonder_Reward_Boxes:
@@ -1757,12 +1772,12 @@ Desert_Wonder()
 	Click_Y_Delta := 0
 	Click_X := Min_X
 	Click_Y := Min_Y
-	Loop, 6
+	Loop, 3
 	{
 		Mouse_Click(Click_X,Click_Y, {Timeout: (1*Delay_Short+0)}) ; Tap Wonder reward boxes
 		Mouse_Click(330,1000, {Timeout: (1*Delay_Short+0)}) ; Tap Collect Rewards
 		loop, 2
-			Mouse_Click(330,70, {Clicks: 2,Timeout: (1*Delay_Medium+0)})
+			Mouse_Click(330,70, {Timeout: (1*Delay_Short+0)})
 		if ((Click_X <= Max_X) && (Click_X >= Min_X))
 			Click_X += Click_X_Delta
 		else
@@ -1779,12 +1794,12 @@ Desert_Wonder()
 	Click_Y_Delta := 165
 	Click_X := Min_X
 	Click_Y := Min_Y
-	Loop, 6
+	Loop, 3
 	{
 		Mouse_Click(Click_X,Click_Y, {Timeout: (1*Delay_Short+0)}) ; Tap "Receive Rewards"
 		Mouse_Click(330,1000, {Timeout: (1*Delay_Short+0)}) ; Tap Collect Rewards
 		loop, 2
-			Mouse_Click(330,70, {Clicks: 2,Timeout: (1*Delay_Medium+0)})
+			Mouse_Click(330,70, {Timeout: (1*Delay_Short+0)})
 		if ((Click_Y <= Max_Y) && (Click_Y >= Min_Y))
 			Click_Y += Click_Y_Delta
 		else
