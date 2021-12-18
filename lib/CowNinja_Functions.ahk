@@ -973,8 +973,10 @@ Text_To_Screen(Text_To_Send, Options := "") {
 	; ClipSave := Clipboard, Clipboard := ""
 	Clipboard := Text_To_Send
 	ClipWait, 3
+	SetKeyDelay, 20, 20 ; -1 ; default
 	ControlSend, %Win_Control%, ^v, %Win_Title%
 	; ControlSend, %Win_Control%, {ctrl down}v{ctrl up}, %Win_Title%
+	SetKeyDelay, -1 ; -1 ; default
 	ClipBoard_Restore()
 	; Clipboard := ClipSave, ClipSave := ""
 	; DllCall("Sleep","UInt",(rand_wait + 1*Delay_Long))
