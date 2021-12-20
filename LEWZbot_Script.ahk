@@ -132,8 +132,8 @@ while WinExist(FoundAppTitle)
 			; Main DEBUG and event Variables - START
 			; ***************************************
 			global Pause_Script := False ; Pause_Script := True
-			CSB_Event := False ; True ; True if CSB Event is going on
-			Desert_Event := True ; False ; True ; True if Desert Event is going on
+			CSB_Event := True ; True ; True if CSB Event is going on
+			Desert_Event := False ; False ; True ; True if Desert Event is going on
 			; if CSB_Event ; || Desert_Event
 			At_War := False ; if set to True, peace shield will be enabled
 			; ***************************************
@@ -270,13 +270,13 @@ while WinExist(FoundAppTitle)
 				; Active_Skill()
 				
 				; Collect_Chips_Underground()
-				; Speaker_Help()
+			;	Speaker_Help()
 				; Get_User_Location()	
 				; Get_User_Info()
 				; Get_Inventory()
 				; Send_Mail_To_Boss()
-				; MsgBox, 0, Pause, Press OK to end (No Timeout)
-				; goto END_of_user_loop
+			;	MsgBox, 0, Pause, Press OK to end (No Timeout)
+			;	goto END_of_user_loop
 				
 				; ******************************************
 				; DEBUG / Troubleshooting block - END
@@ -621,7 +621,7 @@ Go_Back_To_Home_Screen()
 	{
 		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
-		loop, 2
+		loop, 3
 			if Quit_Rebuild_GraphicSearch()
 				goto Go_Back_To_Home_Screen_OCR_NOT_Quit ; return 1
 		if Quit_OCR()
@@ -634,7 +634,7 @@ Go_Back_To_Home_Screen()
 
 	Command_To_Screen("{F5}")
 	DllCall("Sleep","UInt",(1*Delay_Short+0))
-	loop, 50
+	loop, 30
 		if !Quit_GraphicSearch()
 			break
 		
@@ -646,7 +646,7 @@ Go_Back_To_Home_Screen()
 	{
 		Check_Window_Geometry()
 		Command_To_Screen("{F5}")
-		loop, 2
+		loop, 3
 			if !Quit_Rebuild_GraphicSearch()
 				return 1
 		if !Quit_OCR()
